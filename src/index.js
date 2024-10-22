@@ -1,8 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom';
+import WelcomeHome from './components/home';
 
-const App = () => <h1>hello world</h1>;
 const container = (document.getElementById('root'));
 const root = createRoot(container)
 
-root.render(<App />);
+root.render(<WelcomeHome />);
