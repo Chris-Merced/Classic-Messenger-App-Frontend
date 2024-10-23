@@ -56,4 +56,4 @@ const WebSocketComponent = () => {
         </>
     );
 }
-export default WelcomeHome;
+export default WebSocketComponent;
