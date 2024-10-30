@@ -1,5 +1,6 @@
 import React from "react";
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 const WebSocketComponent = () => {
     const[message, setMessage] = useState("");
@@ -53,6 +54,7 @@ const WebSocketComponent = () => {
                 <input type="text" onChange={(e) => setMessage(e.target.value)} value={message}></input>
                 <button onClick={sendMessage}>Send Message</button>
             </form>
+            <Link to="/signup">Go To Signup</Link>
         </>
     );
 }
