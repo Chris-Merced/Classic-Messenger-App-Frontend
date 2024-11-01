@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-//Need to set up submitHandler to post form results to back end and ensure connection
+//Need to create login functionality on the frontend and then set up the
+//backend to handle the login functionality along with it
 
 const signUpComponent = () => {
     const [username, setUsername] = useState("");
@@ -21,7 +22,6 @@ const signUpComponent = () => {
     }
 
     const validateUsername = (username) => {
-        console.log(username);
         if (username === "") {
             return "Please enter in a username";
         }
@@ -33,10 +33,10 @@ const signUpComponent = () => {
             return "Please enter in an email";
         }
         return "";
-    }   
+    }
 
     
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         console.log("handler initiated");
         setIsSubmitted(true);
@@ -48,11 +48,33 @@ const signUpComponent = () => {
         setPasswordError(passwordErrorMessage);
         setUsernameError(usernameErrorMessage);
         setEmailError(emailErrorMessage);
-
+        
         if (!passwordError && !usernameError) {
-            
-        }
+            console.log("signup conditionals met");
+            const data = {
+                username: username,
+                email: email,
+                password: password
+            };
+            try {
+                const response = await fetch("http://localhost:3000/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
 
+                });
+                if (response.ok) {
+                    const results = await response.json();
+                    console.log("Signup Successful:", results);
+                } else {
+                    console.error("Signup Failed:", response.status, response.statusText);
+                }
+                
+            } catch (error) {
+                console.error("Error during fetch:", error)
+            }
+
+        };
     }
 
 
@@ -60,28 +82,28 @@ const signUpComponent = () => {
         <div>
             <h1>SignupPage</h1>
             <form onSubmit={submitHandler}>
-                
+            
                 <div>
                     <label htmlFor="username">Username:</label>
                     <input
-                    id="username"
-                    maxLength="30"
-                    name="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    aria-invalid={usernameError}>    
+                        id="username"
+                        maxLength="30"
+                        name="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        aria-invalid={usernameError}>
                     </input>
                     {isSubmitted && usernameError && <span>{usernameError}</span>}
                 </div>
-                
+            
                 <div>
                     <label htmlFor="password">Password:</label>
                     <input
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    aria-invalid={!!passwordError}>   
+                        id="password"
+                        name="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        aria-invalid={!!passwordError}>
                     </input>
                     {isSubmitted && passwordError && <span>{passwordError}</span>}
                 </div>
@@ -89,12 +111,12 @@ const signUpComponent = () => {
                 <div>
                     <label htmlFor="email">Email:</label>
                     <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    aria-invalid={!!emailError}>
+                        id="email"
+                        type="email"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        aria-invalid={!!emailError}>
                     </input>
                     {isSubmitted && emailError && <span>{emailError}</span>}
 
@@ -106,5 +128,6 @@ const signUpComponent = () => {
         </div>
     )
 }
+
 
 export default signUpComponent;
