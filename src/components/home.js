@@ -44,7 +44,6 @@ const WebSocketComponent = () => {
 
     return (
         <>
-            <h1>Welcome Home</h1>
             <ul>
                 {messages.map((message, index) => (
                     <li key={index}>{message}</li>

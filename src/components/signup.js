@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-//Need to create login functionality on the frontend and then set up the
-//backend to handle the login functionality along with it
 
 const signUpComponent = () => {
     const [username, setUsername] = useState("");
