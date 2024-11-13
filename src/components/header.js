@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 const headerComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    
 
     const loginHandler = async (e) => {
         e.preventDefault();
@@ -26,6 +25,9 @@ const headerComponent = () => {
 
     }
 
+    useEffect(() => {
+        
+    }, [])
     
     return (
         <div>
