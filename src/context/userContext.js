@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
                 }
 
                 const data = await response.json();
-                setUser(data);
+                setUser(data.user);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -33,7 +33,7 @@ export const UserProvider = ({ children }) => {
 
         fetchUserData();
     }, [])
-
+    
     return (
         <UserContext.Provider value={{ user, loading, error }}>
             {children}

@@ -1,9 +1,17 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../context/userContext";
+
+
+//NEED TO SET LOG OUT FUNCTION NEXT
 
 const headerComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const context = useContext(UserContext);
+    const userData = context.user;
+    
 
     const loginHandler = async (e) => {
         e.preventDefault();
@@ -26,20 +34,25 @@ const headerComponent = () => {
 
     }
 
-    useEffect(() => {
-        
+    useEffect(() => {     
     }, [])
     
+    if (userData?.error) {
+        console.log("Error occured in authentication", userData?.error)
+    }
+
     return (
         <div>
             <h1>Welcome Home</h1>
-            <form onSubmit={loginHandler}>
-                <label htmlFor="username">Username: </label>
-                <input name="username" id="username" value={username} onChange={(e)=>setUsername(e.target.value)}></input>
-                <label htmlFor="password">Password: </label>
-                <input name="password" id="password" value={password} onChange={(e)=>setPassword(e.target.value)}></input>
-                <button type="submit">Log In</button>
-            </form>
+            {userData ? (<div> Hello {userData.username}</div>) : (
+                <form onSubmit={loginHandler}>
+                    <label htmlFor="username">Username: </label>
+                    <input name="username" id="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
+                    <label htmlFor="password">Password: </label>
+                    <input name="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                    <button type="submit">Log In</button>
+                </form>
+            )}
         </div>
 
     )
