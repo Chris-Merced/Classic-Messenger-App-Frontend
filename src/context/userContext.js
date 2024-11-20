@@ -1,14 +1,12 @@
 import React, { createContext, useState, useEffect } from 'react';
 
 export const UserContext = createContext();
-console.log('made it to top level')
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    console.log("made it to userContext")
 
     useEffect(() => {
         const fetchUserData = async () => {
