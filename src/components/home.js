@@ -1,13 +1,23 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 const WebSocketComponent = () => {
     const[message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
+    const [user, setUser] = useState('');
+
+    const context = useContext(UserContext);
+    const userData = context.user;
     const socketRef = useRef(null);
     
     useEffect(() => {
+        setUser(userData);
+   }, [userData])
+    
+    useEffect(() => { 
         socketRef.current = new WebSocket("ws://localhost:3000")
 
         socketRef.current.onopen = () => {
@@ -49,11 +59,14 @@ const WebSocketComponent = () => {
                     <li key={index}>{message}</li>
                 ))}
             </ul>
-            <form>
-                <input type="text" onChange={(e) => setMessage(e.target.value)} value={message}></input>
-                <button onClick={sendMessage}>Send Message</button>
-            </form>
-            <Link to="/signup">Go To Signup</Link>
+            { user  && <>
+                <form>
+                    <input type="text" onChange={(e) => setMessage(e.target.value)} value={message}></input>
+                    <button onClick={sendMessage}>Send Message</button>
+                </form>
+                <Link to="/signup">Go To Signup</Link>
+                </>
+            }
         </>
     );
 }

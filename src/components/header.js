@@ -2,8 +2,7 @@ import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/userContext";
 
-
-//FIND OUT HOW TO CAUSE AUTOMATIC PAGE REFRESH ON LOGOUT
+//Clean up all environment variables, ensure that 
 
 const headerComponent = () => {
     const [username, setUsername] = useState("");
@@ -26,12 +25,13 @@ const headerComponent = () => {
 
     const logoutHandler = async () => {
         try {
-            const response = await fetch('http://localhost:3000/logout', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/logout`, {
                 method: "DELETE",
                 credentials: 'include'
             })
 
             const data = await response.json();
+            context.logout();
             setUser('');
         } catch (err) {
             console.log("Error with fetch: ", err);
@@ -45,22 +45,11 @@ const headerComponent = () => {
             username: username,
             password: password
         }
-        const response = await fetch("http://localhost:3000/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-            credentials:'include'
-        });
 
-        const newUser = await response.json();
-        if (newUser) {
-            setUser(newUser);
-            console.log(newUser);
-        } else {console.log("no data recieved")}
-
+        const response = await context.login(data);
+        
         setPassword('');
         setUsername('');
-
 
     }
 
@@ -70,7 +59,8 @@ const headerComponent = () => {
             {user ? (<><div> Hello {user.username}</div>
                 <div className="DropDown">
                     <button onClick={isDropDown}>Drop-Down</button>
-                    {dropDown && <div className="Menu">
+                    {dropDown && 
+                    <div className="Menu">
                         <div>User Menu: </div>
                         <button className="logout" onClick={logoutHandler}>Log Out</button>
                     </div>}

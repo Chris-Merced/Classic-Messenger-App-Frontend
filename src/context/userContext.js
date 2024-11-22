@@ -31,9 +31,27 @@ export const UserProvider = ({ children }) => {
 
         fetchUserData();
     }, [])
+
+    const login = async (data) => {
+        const response = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+            credentials:'include'
+        });
+        
+        const newData = await response.json();
+        console.log(newData);
+        setUser(newData);
+        return response;
+    }
+
+    const logout = () => {
+        setUser(null);
+    }
     
     return (
-        <UserContext.Provider value={{ user, loading, error }}>
+        <UserContext.Provider value={{ user, loading, error, logout, login}}>
             {children}
         </UserContext.Provider>
     )
