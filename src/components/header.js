@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/userContext";
+import { Link } from "react-router-dom";
 
 //Clean up all environment variables, ensure that 
 
@@ -54,25 +55,31 @@ const headerComponent = () => {
     }
 
     return (
-        <div>
+        <div className="websiteHeader">
             <h1>Welcome Home</h1>
-            {user ? (<><div> Hello {user.username}</div>
-                <div className="DropDown">
-                    <button onClick={isDropDown}>Drop-Down</button>
-                    {dropDown && 
-                    <div className="Menu">
-                        <div>User Menu: </div>
-                        <button className="logout" onClick={logoutHandler}>Log Out</button>
-                    </div>}
-                </div>
-            </>) : (
+            {user ? (
+                <div className="userProfile">
+                    <div> Hello {user.username}</div>
+                    <div className="DropDown">
+                        <button onClick={isDropDown}>Drop-Down</button>
+                        {dropDown &&
+                        <div className="Menu">
+                            <div>User Menu: </div>
+                            <button className="logout" onClick={logoutHandler}>Log Out</button>
+                        </div>}
+                    </div>
+                </div>) : (
+                    <>
                 <form onSubmit={loginHandler}>
                     <label htmlFor="username">Username: </label>
                     <input name="username" id="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
                     <label htmlFor="password">Password: </label>
                     <input name="password" id="password" type="password" onChange={(e) => setPassword(e.target.value)}></input>
                     <button type="submit">Log In</button>
-                </form>
+                    </form>
+                    
+                <Link to="/signup" className="signup">Go To Signup</Link>
+                </>
             )}
         </div>
 

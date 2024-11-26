@@ -4,6 +4,12 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 
+
+//get the website ready for heroku deployment
+//Clean up the visual component of the website
+//set up the database to handle messages so that the last 12 messages are displayed
+//look into getting rid of the flicker on page refresh for the username and password fields
+
 const WebSocketComponent = () => {
     const[message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
@@ -25,8 +31,17 @@ const WebSocketComponent = () => {
         };
 
         socketRef.current.onmessage = (message) => {
-            console.log("message recieved");
-            setMessages((prevMessages) => [...prevMessages, message.data]);
+            message = JSON.parse(message.data);
+            console.log(message);
+            message = {
+                ...message, time: new Date(message.time).toLocaleString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+            })};
+            console.log(message);
+            setMessages((prevMessages) => [...prevMessages, message]);
+            console.log(messages);
         };
 
         socketRef.current.onclose = () => {
@@ -44,9 +59,14 @@ const WebSocketComponent = () => {
 
     const sendMessage = (e) => {
         e.preventDefault();
-        console.log(message);
+        const data = {
+            message: message,
+            user: user.username,
+            time: new Date().toISOString(),
+        }
+        const newdata = new Date(data.time).toLocaleString();
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(message);
+            socketRef.current.send(JSON.stringify(data));
             setMessage("");
         }
         else { console.log("console is not open") }
@@ -54,9 +74,13 @@ const WebSocketComponent = () => {
 
     return (
         <>
-            <ul>
+            <ul className="MessageList">
                 {messages.map((message, index) => (
-                    <li key={index}>{message}</li>
+                    <li className="message" key={index}>
+                        <div className="time">{message.time}</div>
+                        <div className="username">{message.user}:  </div>
+                        <div>{message.message}</div>
+                    </li>
                 ))}
             </ul>
             { user  && <>
@@ -64,7 +88,6 @@ const WebSocketComponent = () => {
                     <input type="text" onChange={(e) => setMessage(e.target.value)} value={message}></input>
                     <button onClick={sendMessage}>Send Message</button>
                 </form>
-                <Link to="/signup">Go To Signup</Link>
                 </>
             }
         </>

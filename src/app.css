@@ -1,0 +1,77 @@
+:root {
+    --primary-color: rgba(243, 237, 237, 0.8);
+}
+
+body {
+    margin: 30em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background: rgba(8, 11, 24, 0.76);
+    list-style-type: none;
+    color: var(--primary-color);
+}
+
+.MessageList {
+    list-style-type: none;
+    width: 30vw;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: -40px;
+    animation: slideIn .2s ease-in-out forwards;
+
+    
+}
+
+.username {
+    font-weight: bolder;
+    font-size: 1.1em;
+}
+
+.websiteHeader {
+    display: flex;
+    align-items: center;
+    gap: 50px
+}
+
+.userProfile {
+    margin-left: auto;
+}
+
+.DropDown{
+    position: relative;
+}
+
+.Menu {
+    position: absolute;
+    animation: appear 1s;
+}
+
+.signup {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bolder;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(-2%); /* Start off-screen to the left */
+  }
+  50%{
+    transform: translateX(2%);
+  }
+  100% {
+    transform: translateX(0); /* End at the normal position */
+  }
+}
+
+@keyframes appear {
+    0%{
+        opacity: 0%;
+    }
+    100%{
+        opacity: 100%;
+    }
+}
