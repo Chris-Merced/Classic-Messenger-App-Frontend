@@ -3,7 +3,6 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/userContext";
 import { Link } from "react-router-dom";
 
-//Clean up all environment variables, ensure that 
 
 const headerComponent = () => {
     const [username, setUsername] = useState("");

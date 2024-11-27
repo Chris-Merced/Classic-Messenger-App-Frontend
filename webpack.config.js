@@ -11,6 +11,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     filename: 'bundle.js',
   },
   module: {
@@ -45,6 +46,5 @@ module.exports = {
     port: 9000,
     hot: true,
     historyApiFallback: true,
-    liveReload: true,
   },
 };

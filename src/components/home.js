@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 
-
+//Add in user profile and search functionality
 //get the website ready for heroku deployment
-//Clean up the visual component of the website
-//set up the database to handle messages so that the last 12 messages are displayed
 //look into getting rid of the flicker on page refresh for the username and password fields
+
 
 const WebSocketComponent = () => {
     const[message, setMessage] = useState("");
