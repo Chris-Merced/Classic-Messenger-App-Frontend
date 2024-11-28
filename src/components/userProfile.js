@@ -5,29 +5,49 @@ import { useEffect, useState } from "react";
 
 const UserProfile = () => {
     const [user, setUser] = useState('');
+    const [error, setError] = useState('');
+    const { userIdentifier } = useParams();
 
-    const { userID } = useParams();
-
-    useEffect(()=> {
+    useEffect(() => {  
+        
         const GetUserProfile = async () => {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/publicProfile?ID=${userID}`, {
-                method: "GET",
-                headers: { 'Content-Type': 'application/json' },
-            })
-            const data = await response.json();
-            setUser(data.user);
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/publicProfile?ID=${userIdentifier}`, {
+                    method: "GET",
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message);
+                }
+
+                setUser(data.user);
+            
+
+            } catch (err) {
+                setError("Error occured on profile retrieval", err)
+            }
         }
 
         GetUserProfile();
-    }, [])
 
+        
+    }, [userIdentifier])
+    
+    
 
-    return (
-        <>
-        <div>Hello {userID} ...</div>
-        <div>Welcome to the page of {user.username}</div>
-        <div>Created at {user.created_at}</div>
-        </>
+    return (<>
+        { user ? (<>
+            <div>Hello {userIdentifier} ...</div>
+            <div>Welcome to the page of {user.username}</div>
+            <div>Created at {user.created_at}</div>
+            </>
+        ) : (
+                <div>{error}</div>
+        )
+        }
+    </>
     );
 };
 

@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 
-//Add in user profile and search functionality
+//Clean up user profile search functionality
+//Start storing main chat messages in database for proof of concept
 //get the website ready for heroku deployment
 //look into getting rid of the flicker on page refresh for the username and password fields
 

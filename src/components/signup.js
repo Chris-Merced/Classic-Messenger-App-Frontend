@@ -122,7 +122,7 @@ const signUpComponent = () => {
 
                 <button type="submit">Assimilate</button>
             </form>
-            <Link to='/'>Come Back Home</Link>
+            <Link to='/' className="signup">Come Back Home</Link>
         </div>
     )
 }
