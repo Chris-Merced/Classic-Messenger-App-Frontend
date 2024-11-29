@@ -14,6 +14,7 @@ const WebSocketComponent = () => {
     const[message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState('');
+    const [conversationName, setConversationName] = useState('');
 
     const context = useContext(UserContext);
     const userData = context.user;
@@ -40,7 +41,9 @@ const WebSocketComponent = () => {
                     hour12: true,
             })};
             console.log(message);
-            setMessages((prevMessages) => [...prevMessages, message]);
+            if (message.conversationName === "main") {
+                setMessages((prevMessages) => [...prevMessages, message]);
+            }
             console.log(messages);
         };
 
@@ -59,12 +62,14 @@ const WebSocketComponent = () => {
 
     const sendMessage = (e) => {
         e.preventDefault();
+        console.log(user);
         const data = {
             message: message,
+            conversationName: conversationName,
             user: user.username,
+            userID: user.id,
             time: new Date().toISOString(),
         }
-        const newdata = new Date(data.time).toLocaleString();
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify(data));
             setMessage("");
@@ -85,7 +90,7 @@ const WebSocketComponent = () => {
             </ul>
             { user  && <>
                 <form>
-                    <input type="text" onChange={(e) => setMessage(e.target.value)} value={message}></input>
+                    <input type="text" onChange={(e) => { setMessage(e.target.value); setConversationName("main"); }} value={message}></input>
                     <button onClick={sendMessage}>Send Message</button>
                 </form>
                 </>
