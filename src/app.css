@@ -55,6 +55,14 @@ body {
     font-weight: bolder;
 }
 
+.searchBar {
+    position: relative;
+}
+
+.searchResults {
+ position: absolute;
+}
+
 @keyframes slideIn {
   0% {
     transform: translateX(-2%); /* Start off-screen to the left */

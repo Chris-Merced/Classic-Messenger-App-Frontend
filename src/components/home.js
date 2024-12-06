@@ -11,10 +11,11 @@ import { UserContext } from "../context/userContext";
 
 
 const WebSocketComponent = () => {
-    const[message, setMessage] = useState("");
+    const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState('');
     const [conversationName, setConversationName] = useState('');
+    const [chatName, setChatName] = useState('main');
 
     const context = useContext(UserContext);
     const userData = context.user;
@@ -24,7 +25,7 @@ const WebSocketComponent = () => {
         setUser(userData);
    }, [userData])
     
-    useEffect(() => { 
+    useEffect(() => {
         socketRef.current = new WebSocket("ws://localhost:3000")
 
         socketRef.current.onopen = () => {
@@ -39,7 +40,8 @@ const WebSocketComponent = () => {
                     hour: '2-digit',
                     minute: '2-digit',
                     hour12: true,
-            })};
+                })
+            };
             console.log(message);
             if (message.conversationName === "main") {
                 setMessages((prevMessages) => [...prevMessages, message]);
@@ -59,6 +61,31 @@ const WebSocketComponent = () => {
             socketRef.current.close();
         }
     }, [])
+
+    
+    useEffect(() => {
+        const getMessages = async () => {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${chatName}`, {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await response.json();
+            const timeFormattedArray = data.messages.map((message) => {
+                return {
+                    ...message, time: new Date(message.time).toLocaleString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    })
+                }
+            })
+        
+            setMessages(timeFormattedArray);
+        }
+        getMessages();
+    }, [chatName])
+
+    
 
     const sendMessage = (e) => {
         e.preventDefault();

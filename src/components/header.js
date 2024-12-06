@@ -79,14 +79,15 @@ const headerComponent = () => {
                 <>
                 <div className="searchBar">
                     <form onSubmit={searchDB}>
-                            <input type="text" name="search" id="search" placeholder="Search Users" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); const username = e.target.value;  searchDB(e, username);}}></input>
-                    </form>
+                        <input type="text" name="search" id="search" placeholder="Search Users" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); const username = e.target.value;  searchDB(e, username);}}></input>
                         <ul className="searchResults">{(users.map((user, index) => (
                             <li key={index}>
                                 <Link to={`/userProfile/${user.id}`}>{user.username}</Link>
                             </li>
                         )))}
                         </ul>
+                    </form>
+                        
                 </div>
                 <div className="userProfile">
                     <div> Hello {user.username}</div>
