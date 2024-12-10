@@ -3,16 +3,16 @@ import { createRoot } from 'react-dom/client';
 import App from './app';
 import Header from './components/header';
 import { BrowserRouter } from 'react-router-dom';
-import { UserProvider } from './context/userContext'
+import { UserProvider } from './context/userContext';
 
-const container = (document.getElementById('root'));
-const root = createRoot(container)
+const container = document.getElementById('root');
+const root = createRoot(container);
 
 root.render(
-    <UserProvider>
-        <BrowserRouter>
-            <Header />
-            <App />
-        </BrowserRouter>
-    </UserProvider>
+  <UserProvider>
+    <BrowserRouter>
+      <Header />
+      <App />
+    </BrowserRouter>
+  </UserProvider>
 );
