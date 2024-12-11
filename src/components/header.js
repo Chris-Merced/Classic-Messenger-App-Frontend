@@ -35,6 +35,9 @@ const HeaderComponent = () => {
         }
       );
 
+      const data = await response.json();
+      console.log(data);
+
       context.logout();
       setUser('');
     } catch (err) {
