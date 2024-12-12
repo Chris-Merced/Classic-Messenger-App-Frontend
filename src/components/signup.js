@@ -45,7 +45,7 @@ const signUpComponent = () => {
     setUsernameError(usernameErrorMessage);
     setEmailError(emailErrorMessage);
 
-    if (!passwordError && !usernameError) {
+    if (!passwordErrorMessage && !usernameErrorMessage) {
       console.log('signup conditionals met');
       const data = {
         username: username,
