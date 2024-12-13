@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import UserProfile from '../src/components/userProfile';
+import UserProfile from '../../src/components/userProfile';
 import { useParams } from 'react-router-dom';
 
 const mockFetch = jest.fn();

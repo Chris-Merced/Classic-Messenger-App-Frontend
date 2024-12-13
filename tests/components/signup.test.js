@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import SignUpComponent from '../src/components/signup';
+import SignUpComponent from '../../src/components/signup';
 
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
