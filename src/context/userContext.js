@@ -10,10 +10,13 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/userProfile', {
-          method: 'GET',
-          credentials: 'include',
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
 
         if (!response.ok) {
           throw new Error('Unauthorized or session expired');
@@ -32,12 +35,15 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const login = async (data) => {
-    const response = await fetch('http://localhost:3000/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/login`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      }
+    );
 
     const newData = await response.json();
     console.log(newData);
