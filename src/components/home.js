@@ -25,7 +25,7 @@ const WebSocketComponent = () => {
   }, [userData]);
 
   useEffect(() => {
-    socketRef.current = new WebSocket('ws://localhost:3000');
+    socketRef.current = new WebSocket(process.env.REACT_APP_WS_URL);
 
     socketRef.current.onopen = () => {
       console.log('Connection Open');
