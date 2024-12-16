@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/Chris-Merced/Classic-Messenger-App-Frontend/issues"
   },
+  "engines": {
+    "node": "20.15.0"  // or whichever version you're using locally
+  },
   "homepage": "https://github.com/Chris-Merced/Classic-Messenger-App-Frontend#readme",
   "description": "",
   "dependencies": {
