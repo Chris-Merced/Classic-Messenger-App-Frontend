@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode development",
+    "dev": "webpack serve --mode development",
+    "start": "webpack serve --mode production --port $PORT",
     "build": "webpack --mode production",
     "test": "jest"
   },
