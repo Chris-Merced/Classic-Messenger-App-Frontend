@@ -20,7 +20,7 @@
     "url": "https://github.com/Chris-Merced/Classic-Messenger-App-Frontend/issues"
   },
   "engines": {
-    "node": "20.15.0"  // or whichever version you're using locally
+    "node": "20.15.0"
   },
   "homepage": "https://github.com/Chris-Merced/Classic-Messenger-App-Frontend#readme",
   "description": "",
