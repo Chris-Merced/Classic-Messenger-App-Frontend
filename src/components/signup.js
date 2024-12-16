@@ -34,6 +34,7 @@ const signUpComponent = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    console.log('Signup form submitted');
     console.log('handler initiated');
     setIsSubmitted(true);
 
