@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/userContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const HeaderComponent = () => {
   const [username, setUsername] = useState('');
@@ -12,6 +12,7 @@ const HeaderComponent = () => {
   const [searchInput, setSearchInput] = useState('');
   const context = useContext(UserContext);
   const userData = context.user;
+  const location = useLocation();
 
   useEffect(() => {
     setUser(userData);
@@ -123,7 +124,8 @@ const HeaderComponent = () => {
           </div>
         </>
       ) : (
-        <>
+        location.pathname !== '/signup' &&(
+          <>
           <form onSubmit={loginHandler}>
             <label htmlFor="username">Username: </label>
             <input
@@ -145,7 +147,8 @@ const HeaderComponent = () => {
           <Link to="/signup" className="signup">
             Go To Signup
           </Link>
-        </>
+          
+        </>)
       )}
     </div>
   );
