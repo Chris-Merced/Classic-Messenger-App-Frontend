@@ -8,6 +8,16 @@ const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 describe('SignUpComponent', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    process.env.REACT_APP_BACKEND_URL = 'http://localhost:3000';
+  });
+
+  afterEach(() => {
+    delete process.env.REACT_APP_BACKEND_URL;
+  });
+
   const renderComponent = () => {
     return render(
       <MemoryRouter>
@@ -15,10 +25,6 @@ describe('SignUpComponent', () => {
       </MemoryRouter>
     );
   };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('renders signup form correctly', () => {
     renderComponent();
@@ -160,7 +166,6 @@ describe('SignUpComponent', () => {
 
   it('has a link back to home page', () => {
     renderComponent();
-
     const homeLink = screen.getByRole('link', { name: /Come Back Home/i });
     expect(homeLink).toHaveAttribute('href', '/');
   });

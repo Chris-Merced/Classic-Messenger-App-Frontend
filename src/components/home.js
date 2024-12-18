@@ -3,11 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context/userContext';
+import { WebsocketContext } from '../context/websocketContext';
 
 //Clean up user profile search functionality
-//Start storing main chat messages in database for proof of concept
-//get the website ready for heroku deployment
-//look into getting rid of the flicker on page refresh for the username and password fields
 
 const WebSocketComponent = () => {
   const [message, setMessage] = useState('');
@@ -17,16 +15,14 @@ const WebSocketComponent = () => {
   const [chatName, setChatName] = useState('main');
 
   const context = useContext(UserContext);
+  const socketRef = useContext(WebsocketContext);
   const userData = context.user;
-  const socketRef = useRef(null);
 
   useEffect(() => {
     setUser(userData);
   }, [userData]);
 
   useEffect(() => {
-    socketRef.current = new WebSocket(process.env.REACT_APP_WS_URL);
-
     socketRef.current.onopen = () => {
       console.log('Connection Open');
     };

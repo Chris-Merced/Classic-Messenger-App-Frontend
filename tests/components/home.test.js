@@ -10,79 +10,180 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import WebSocketComponent from '../../src/components/home';
 import { UserContext } from '../../src/context/userContext';
-
-class MockWebSocket {
-  constructor() {
-    this.readyState = WebSocket.OPEN;
-    this.send = jest.fn();
-    this.close = jest.fn();
-  }
-}
+import { WebsocketContext } from '../../src/context/websocketContext';
 
 describe('WebSocketComponent', () => {
-  let originalWebSocket;
-  let mockWebSocket;
-
-  const mockContext = {
-    user: {
-      id: '123',
-      username: 'testuser',
-    },
+  let mockSocket;
+  const mockUser = {
+    id: '123',
+    username: 'testuser',
   };
 
   beforeEach(() => {
-    originalWebSocket = global.WebSocket;
+    mockSocket = {
+      current: {
+        readyState: WebSocket.OPEN,
+        send: jest.fn(),
+        close: jest.fn(),
+        onopen: null,
+        onmessage: null,
+        onclose: null,
+        onerror: null,
+      },
+    };
 
-    mockWebSocket = new MockWebSocket();
-
-    global.WebSocket = jest.fn(() => mockWebSocket);
-
+    
     global.fetch = jest.fn().mockResolvedValue({
       json: async () => ({
         messages: [
           {
             user: 'olduser',
             message: 'Previous message',
-            time: new Date().toISOString(),
+            time: '2024-01-01T12:00:00.000Z',
+            conversationName: 'main',
           },
         ],
       }),
-      ok: true,
     });
+
+    process.env.REACT_APP_BACKEND_URL = 'http://test-api';
   });
 
   afterEach(() => {
-    global.WebSocket = originalWebSocket;
+    jest.clearAllMocks();
   });
 
-  const renderComponent = (contextOverrides = {}) => {
-    const mergedContext = { ...mockContext, ...contextOverrides };
-    return render(
-      <UserContext.Provider value={mergedContext}>
-        <MemoryRouter>
-          <WebSocketComponent />
-        </MemoryRouter>
-      </UserContext.Provider>
-    );
+  const renderComponent = async (userOverrides = {}) => {
+    const userContext = {
+      user: userOverrides === null ? null : { ...mockUser, ...userOverrides },
+    };
+
+    let result;
+    await act(async () => {
+      result = render(
+        <UserContext.Provider value={userContext}>
+          <WebsocketContext.Provider value={mockSocket}>
+            <MemoryRouter>
+              <WebSocketComponent />
+            </MemoryRouter>
+          </WebsocketContext.Provider>
+        </UserContext.Provider>
+      );
+    });
+    return result;
   };
 
-  it('handles websocket connection lifecycle', async () => {
-    await act(async () => {
-      renderComponent();
+  it('loads and displays initial messages', async () => {
+    await renderComponent();
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test-api/messages/byChatName?chatName=main',
+        expect.any(Object)
+      );
     });
 
-    const websocketInstance = global.WebSocket.mock.results[0].value;
+    const messageElement = await screen.findByText('Previous message');
+    expect(messageElement).toBeInTheDocument();
+  });
 
-    const openSpy = jest.spyOn(websocketInstance, 'onopen');
-    const closeSpy = jest.spyOn(websocketInstance, 'onclose');
-    const errorSpy = jest.spyOn(websocketInstance, 'onerror');
+  it('allows sending messages when user is logged in', async () => {
+    const { getByRole } = await renderComponent();
 
-    websocketInstance.onopen();
-    websocketInstance.onclose();
-    websocketInstance.onerror(new Error('Test error'));
+    const input = getByRole('textbox');
+    const sendButton = getByRole('button', { name: /send message/i });
 
-    expect(openSpy).toHaveBeenCalledTimes(1);
-    expect(closeSpy).toHaveBeenCalledTimes(1);
-    expect(errorSpy).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'Hello World' } });
+    });
+
+    await act(async () => {
+      fireEvent.click(sendButton);
+    });
+
+    expect(mockSocket.current.send).toHaveBeenCalledWith(
+      expect.stringContaining('"message":"Hello World"')
+    );
+    expect(input.value).toBe('');
+  });
+
+  it('handles incoming websocket messages', async () => {
+    await renderComponent();
+
+    await act(async () => {
+      mockSocket.current.onmessage({
+        data: JSON.stringify({
+          message: 'New message',
+          user: 'testuser',
+          time: new Date().toISOString(),
+          conversationName: 'main',
+        }),
+      });
+    });
+
+    await waitFor(() => {
+      const messageElements = screen.getAllByText(/new message/i);
+      expect(messageElements.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('does not show message form when user is not logged in', async () => {
+    await renderComponent(null);
+
+    const form = screen.queryByRole('form');
+    expect(form).not.toBeInTheDocument();
+  });
+
+  it('formats message timestamps correctly', async () => {
+    await renderComponent();
+
+    const testDate = new Date('2024-01-01T15:30:00.000Z');
+
+    await act(async () => {
+      mockSocket.current.onmessage({
+        data: JSON.stringify({
+          message: 'Time test message',
+          user: 'testuser',
+          time: testDate.toISOString(),
+          conversationName: 'main',
+        }),
+      });
+    });
+
+    await waitFor(() => {
+      const timeElements = screen.getAllByText(/\d{1,2}:\d{2} [AP]M/);
+      expect(timeElements.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('only displays messages for main conversation', async () => {
+    await renderComponent();
+
+    await act(async () => {
+      
+      mockSocket.current.onmessage({
+        data: JSON.stringify({
+          message: 'Main conversation',
+          user: 'testuser',
+          time: new Date().toISOString(),
+          conversationName: 'main',
+        }),
+      });
+
+      
+      mockSocket.current.onmessage({
+        data: JSON.stringify({
+          message: 'Other conversation',
+          user: 'testuser',
+          time: new Date().toISOString(),
+          conversationName: 'other',
+        }),
+      });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Main conversation')).toBeInTheDocument();
+      expect(screen.queryByText('Other conversation')).not.toBeInTheDocument();
+    });
   });
 });
