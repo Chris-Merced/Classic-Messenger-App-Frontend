@@ -28,6 +28,8 @@ const WebSocketComponent = () => {
     };
 
     socketRef.current.onmessage = (message) => {
+      
+      //THIS WILL NEED TO BE WRAPPED IN AN IF STATEMENT FOR MESSAGE TYPE: MAIN CHAT
       message = JSON.parse(message.data);
       console.log(message);
       message = {
