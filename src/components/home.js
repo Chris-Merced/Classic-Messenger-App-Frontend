@@ -7,13 +7,16 @@ import { WebsocketContext } from '../context/websocketContext';
 
 //Clean up user profile search functionality
 
-const WebSocketComponent = () => {
+const HomeChatComponent = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState('');
   const [conversationName, setConversationName] = useState('');
   const [chatName, setChatName] = useState('main');
+  const [chatList, setChatList] = useState(['main'])
 
+
+  
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
   const userData = context.user;
@@ -29,7 +32,7 @@ const WebSocketComponent = () => {
 
     socketRef.current.onmessage = (message) => {
       
-      //THIS WILL NEED TO BE WRAPPED IN AN IF STATEMENT FOR MESSAGE TYPE: MAIN CHAT
+      
       message = JSON.parse(message.data);
       console.log(message);
       message = {
@@ -133,4 +136,4 @@ const WebSocketComponent = () => {
     </>
   );
 };
-export default WebSocketComponent;
+export default HomeChatComponent;

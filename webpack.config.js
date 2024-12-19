@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
   const envFile =
     argv.mode === 'production' ? '.env.production' : '.env.development';
   dotenv.config({ path: envFile });
-
+  
   return {
     entry: './src/index.js',
     output: {

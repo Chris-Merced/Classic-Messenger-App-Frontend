@@ -5,6 +5,8 @@ import Header from './components/header';
 import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './context/userContext';
 import { WebSocketProvider } from './context/websocketContext';
+import { UserChats } from './context/chatListContext';
+import './app.css';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -12,10 +14,12 @@ const root = createRoot(container);
 root.render(
   <UserProvider>
     <WebSocketProvider>
-      <BrowserRouter>
-        <Header />
-        <App />
-      </BrowserRouter>
+      <UserChats>
+        <BrowserRouter>
+          <Header />
+          <App />
+        </BrowserRouter>
+      </UserChats>
     </WebSocketProvider>
   </UserProvider>
 );

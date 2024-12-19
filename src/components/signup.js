@@ -10,6 +10,7 @@ const signUpComponent = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const validatePassword = (password) => {
     if (password === '') {
@@ -61,6 +62,7 @@ const signUpComponent = () => {
         });
         if (response.ok) {
           const results = await response.json();
+          setSignupSuccess(true);
           console.log('Signup Successful:', results);
         } else {
           console.error('Signup Failed:', response.status, response.statusText);
@@ -74,47 +76,48 @@ const signUpComponent = () => {
   return (
     <div>
       <h1>SignupPage</h1>
-      <form onSubmit={submitHandler}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            id="username"
-            maxLength="30"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            aria-invalid={usernameError}
-          ></input>
-          {isSubmitted && usernameError && <span>{usernameError}</span>}
-        </div>
+      {signupSuccess ? (<div>Welcome to the Family</div>) : (
+        <form onSubmit={submitHandler}>
+          <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              id="username"
+              maxLength="30"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              aria-invalid={usernameError}
+            ></input>
+            {isSubmitted && usernameError && <span>{usernameError}</span>}
+          </div>
 
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            aria-invalid={!!passwordError}
-          ></input>
-          {isSubmitted && passwordError && <span>{passwordError}</span>}
-        </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-invalid={!!passwordError}
+            ></input>
+            {isSubmitted && passwordError && <span>{passwordError}</span>}
+          </div>
 
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            aria-invalid={!!emailError}
-          ></input>
-          {isSubmitted && emailError && <span>{emailError}</span>}
-        </div>
+          <div>
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={!!emailError}
+            ></input>
+            {isSubmitted && emailError && <span>{emailError}</span>}
+          </div>
 
-        <button type="submit">Assimilate</button>
-      </form>
+          <button type="submit">Assimilate</button>
+        </form>)}
       <Link to="/" className="signup">
         Come Back Home
       </Link>
