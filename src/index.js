@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './app';
 import Header from './components/header';
+import SideBarComponent from './components/chatSidebar';
 import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './context/userContext';
 import { WebSocketProvider } from './context/websocketContext';
@@ -17,7 +18,10 @@ root.render(
       <UserChats>
         <BrowserRouter>
           <Header />
-          <App />
+          <div className='main'>
+            <SideBarComponent />
+            <App />
+          </div>
         </BrowserRouter>
       </UserChats>
     </WebSocketProvider>

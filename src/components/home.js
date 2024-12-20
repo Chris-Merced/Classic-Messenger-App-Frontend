@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context/userContext';
 import { WebsocketContext } from '../context/websocketContext';
-
+import { UserChatsContext } from '../context/chatListContext';
 //Clean up user profile search functionality
 
 const HomeChatComponent = () => {
@@ -13,17 +12,20 @@ const HomeChatComponent = () => {
   const [user, setUser] = useState('');
   const [conversationName, setConversationName] = useState('');
   const [chatName, setChatName] = useState('main');
-  const [chatList, setChatList] = useState(['main'])
 
-
-  
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
   const userData = context.user;
+  const chatContext = useContext(UserChatsContext);
+  const {currentChat} = chatContext;
 
   useEffect(() => {
     setUser(userData);
   }, [userData]);
+
+  useEffect(() => {
+    setChatName(currentChat);
+  }, [currentChat]);
 
   useEffect(() => {
     socketRef.current.onopen = () => {
@@ -31,8 +33,6 @@ const HomeChatComponent = () => {
     };
 
     socketRef.current.onmessage = (message) => {
-      
-      
       message = JSON.parse(message.data);
       console.log(message);
       message = {
@@ -44,7 +44,7 @@ const HomeChatComponent = () => {
         }),
       };
       console.log(message);
-      if (message.conversationName === 'main') {
+      if (message.conversationName === chatName) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
       console.log(messages);
@@ -73,19 +73,22 @@ const HomeChatComponent = () => {
         }
       );
       const data = await response.json();
-      const timeFormattedArray = data.messages.map((message) => {
-        return {
-          ...message,
-          time: new Date(message.time).toLocaleString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-          }),
-        };
-      });
+      if (data.messages) {
+        const timeFormattedArray = data.messages.map((message) => {
+          return {
+            ...message,
+            time: new Date(message.time).toLocaleString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true,
+            }),
+          };
+        });
 
-      setMessages(timeFormattedArray);
+        setMessages(timeFormattedArray);
+      }
     };
+    console.log(chatName);
     getMessages();
   }, [chatName]);
 
@@ -108,7 +111,7 @@ const HomeChatComponent = () => {
   };
 
   return (
-    <>
+    <div className="mainChat">
       <ul className="MessageList">
         {messages.map((message, index) => (
           <li className="message" key={index}>
@@ -125,7 +128,7 @@ const HomeChatComponent = () => {
               type="text"
               onChange={(e) => {
                 setMessage(e.target.value);
-                setConversationName('main');
+                setConversationName(chatName);
               }}
               value={message}
             ></input>
@@ -133,7 +136,7 @@ const HomeChatComponent = () => {
           </form>
         </>
       )}
-    </>
+    </div>
   );
 };
 export default HomeChatComponent;

@@ -2,11 +2,12 @@ import React from 'react';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { UserContext } from './userContext';
 
-export const UserChatsContext = createContext({ chatList: null });
+export const UserChatsContext = createContext({ chatList: null, currentChat: "main"});
 
 export const UserChats = ({ children }) => {
   const userContext = useContext(UserContext);
   const [chatList, setChatList] = useState(null);
+  const [currentChat, setCurrentChat] = useState("main");
 
   useEffect(() => {
     const getChats = async () => {
@@ -36,8 +37,12 @@ export const UserChats = ({ children }) => {
     }
   }, [userContext]);
 
+  const changeChat = (chat) => {
+    setCurrentChat(chat);
+  }
+
   return (
-    <UserChatsContext.Provider value={{ chatList }}>
+    <UserChatsContext.Provider value={{ chatList, currentChat, changeChat}}>
       {children}
     </UserChatsContext.Provider>
   );
