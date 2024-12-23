@@ -9,14 +9,18 @@ const SideBarComponent = () => {
     
     useEffect(() => {
         if (chatContext?.chatList?.userChats) {
-            console.log(chatContext.chatList.userChats);
             setListOfChats(chatContext.chatList.userChats);
         }
     }, [chatContext]);
 
     const changeChat = (chat) => {
+
         //IF NAME THEN CHANGE CHANGE TO CHAT NAME FOR HOME.JS
-        chatContext.changeChat(chat.name)
+        if (chat.name || chat.conversation_id) {
+            chatContext.changeChat({ name: chat.name, conversationID: chat.conversation_id })
+        } else if (chat.conversation_id) {
+
+        }
         //IF NO NAME THEN CHANGE CHAT NAME TO CONVERSATION_ID
         //CHANGE HOME.JS TO
         //IF INT FETCH BY CONVERSATION ID INSTEAD OF NAME;

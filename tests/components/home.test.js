@@ -11,12 +11,18 @@ import { MemoryRouter } from 'react-router-dom';
 import WebSocketComponent from '../../src/components/home';
 import { UserContext } from '../../src/context/userContext';
 import { WebsocketContext } from '../../src/context/websocketContext';
+import { UserChatsContext } from '../../src/context/chatListContext';
 
 describe('WebSocketComponent', () => {
   let mockSocket;
   const mockUser = {
     id: '123',
     username: 'testuser',
+  };
+
+  const mockChat = {
+    name: 'main',
+    conversationID: 'test-convo-id',
   };
 
   beforeEach(() => {
@@ -32,7 +38,6 @@ describe('WebSocketComponent', () => {
       },
     };
 
-    
     global.fetch = jest.fn().mockResolvedValue({
       json: async () => ({
         messages: [
@@ -53,9 +58,13 @@ describe('WebSocketComponent', () => {
     jest.clearAllMocks();
   });
 
-  const renderComponent = async (userOverrides = {}) => {
+  const renderComponent = async (userOverrides = {}, chatOverrides = {}) => {
     const userContext = {
       user: userOverrides === null ? null : { ...mockUser, ...userOverrides },
+    };
+
+    const chatContext = {
+      currentChat: { ...mockChat, ...chatOverrides },
     };
 
     let result;
@@ -63,9 +72,11 @@ describe('WebSocketComponent', () => {
       result = render(
         <UserContext.Provider value={userContext}>
           <WebsocketContext.Provider value={mockSocket}>
-            <MemoryRouter>
-              <WebSocketComponent />
-            </MemoryRouter>
+            <UserChatsContext.Provider value={chatContext}>
+              <MemoryRouter>
+                <WebSocketComponent />
+              </MemoryRouter>
+            </UserChatsContext.Provider>
           </WebsocketContext.Provider>
         </UserContext.Provider>
       );
@@ -78,8 +89,12 @@ describe('WebSocketComponent', () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://test-api/messages/byChatName?chatName=main',
-        expect.any(Object)
+        `http://test-api/messages/byChatName?chatName=${mockChat.name}&conversationID=${mockChat.conversationID}`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        }
       );
     });
 
@@ -160,7 +175,6 @@ describe('WebSocketComponent', () => {
     await renderComponent();
 
     await act(async () => {
-      
       mockSocket.current.onmessage({
         data: JSON.stringify({
           message: 'Main conversation',
@@ -170,7 +184,6 @@ describe('WebSocketComponent', () => {
         }),
       });
 
-      
       mockSocket.current.onmessage({
         data: JSON.stringify({
           message: 'Other conversation',

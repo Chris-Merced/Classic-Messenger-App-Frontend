@@ -5,12 +5,11 @@ import SideBarComponent from '../../src/components/chatSidebar';
 import { UserChatsContext } from '../../src/context/chatListContext';
 
 const mockChangeChat = jest.fn();
-
 const mockUserChatsContext = {
   chatList: {
     userChats: [
-      { name: 'Chat 1', id: 1 },
-      { name: 'Chat 2', id: 2 },
+      { name: 'Chat 1', id: 1, conversation_id: 'conv1' },
+      { name: 'Chat 2', id: 2, conversation_id: 'conv2' },
     ],
   },
   changeChat: mockChangeChat,
@@ -44,11 +43,14 @@ describe('SideBarComponent', () => {
     expect(screen.getByText('Chat 2')).toBeInTheDocument();
   });
 
-  it('should call changeChat with correct chat name when clicked', () => {
+  it('should call changeChat with correct chat data when clicked', () => {
     renderWithContext(<SideBarComponent />);
     const chatButton = screen.getByText('Chat 1');
     chatButton.click();
-    expect(mockChangeChat).toHaveBeenCalledWith('Chat 1');
+    expect(mockChangeChat).toHaveBeenCalledWith({
+      name: 'Chat 1',
+      conversationID: 'conv1',
+    });
   });
 
   it('should render correct number of chat buttons', () => {
@@ -64,23 +66,19 @@ describe('SideBarComponent', () => {
       },
       changeChat: mockChangeChat,
     };
-
     const { container } = renderWithContext(<SideBarComponent />, emptyContext);
-
     expect(container.querySelector('.sideBar')).toBeInTheDocument();
-
     const buttons = screen.queryAllByRole('button');
     expect(buttons).toHaveLength(0);
   });
 
   it('should update when context changes', () => {
     const { rerender } = renderWithContext(<SideBarComponent />);
-
     expect(screen.getByText('Chat 1')).toBeInTheDocument();
 
     const updatedContext = {
       chatList: {
-        userChats: [{ name: 'New Chat', id: 3 }],
+        userChats: [{ name: 'New Chat', id: 3, conversation_id: 'conv3' }],
       },
       changeChat: mockChangeChat,
     };

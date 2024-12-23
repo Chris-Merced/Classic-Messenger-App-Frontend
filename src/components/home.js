@@ -11,20 +11,20 @@ const HomeChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState('');
   const [conversationName, setConversationName] = useState('');
-  const [chatName, setChatName] = useState('main');
+  const [chat, setChat] = useState({ name: 'main', conversationID: '' });
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
   const userData = context.user;
   const chatContext = useContext(UserChatsContext);
-  const {currentChat} = chatContext;
+  const { currentChat } = chatContext;
 
   useEffect(() => {
     setUser(userData);
   }, [userData]);
 
   useEffect(() => {
-    setChatName(currentChat);
+    setChat(currentChat);
   }, [currentChat]);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const HomeChatComponent = () => {
         }),
       };
       console.log(message);
-      if (message.conversationName === chatName) {
+      if (message.conversationName === chat.name) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
       console.log(messages);
@@ -66,10 +66,11 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const getMessages = async () => {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${chatName}`,
+        `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${chat.name}&conversationID=${chat.conversationID}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
         }
       );
       const data = await response.json();
@@ -88,16 +89,15 @@ const HomeChatComponent = () => {
         setMessages(timeFormattedArray);
       }
     };
-    console.log(chatName);
     getMessages();
-  }, [chatName]);
+  }, [chat]);
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(user);
     const data = {
       message: message,
       conversationName: conversationName,
+      conversationID: chat.conversationID,
       user: user.username,
       userID: user.id,
       time: new Date().toISOString(),
@@ -128,7 +128,7 @@ const HomeChatComponent = () => {
               type="text"
               onChange={(e) => {
                 setMessage(e.target.value);
-                setConversationName(chatName);
+                setConversationName(chat);
               }}
               value={message}
             ></input>
