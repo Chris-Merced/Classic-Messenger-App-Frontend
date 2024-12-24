@@ -35,15 +35,20 @@ const UserProfile = () => {
     GetUserProfile();
   }, [userIdentifier]);
 
-  const sendDirectMessage = (userID) =>{
+  const sendDirectMessage = async (userID) => {
     //CREATE FETCH FOR THE BACKEND
-    //THE BACKEND ROUTE WILL BE TO CHECK IF THERE IS A CONVERSATION BETWEEN
-    //THE USER AND THE PROFILEUSER
-    //IF THERE IS, RETURN YES AND CHANGE CHAT TO THAT USER AND THEN REDIRECT TO MAIN
-    //OTHERWISE CREATE CHAT IN DB, SET CHAT, AND REDIRECT
+    const user = userContext.user;
+    console.log(user);
+    console.log(profile);
+    console.log(user.name, profile.name)
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
+    );
+    //CHANGE CHAT TO THAT USER WITH NAME AS NULL AND THEN REDIRECT TO MAIN
     
-    console.log("it works" + userID);
-  }
+
+    console.log('it works' + userID);
+  };
 
   return (
     <>
@@ -52,7 +57,9 @@ const UserProfile = () => {
           <div>Hello {userIdentifier} ...</div>
           <div>Welcome to the page of {profile.username}</div>
           <div>Created at {profile.created_at}</div>
-          <button onClick={() => sendDirectMessage(userContext.user.id)}>Direct Message</button>
+          <button onClick={() => sendDirectMessage(userContext.user.id)}>
+            Direct Message
+          </button>
         </>
       ) : (
         <div>{error}</div>

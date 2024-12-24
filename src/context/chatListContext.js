@@ -39,6 +39,7 @@ export const UserChats = ({ children }) => {
 
   const changeChat = (chat) => {
     setCurrentChat(chat);
+    console.log(chat);
   }
 
   return (

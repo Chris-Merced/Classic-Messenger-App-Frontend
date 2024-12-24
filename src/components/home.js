@@ -128,7 +128,7 @@ const HomeChatComponent = () => {
               type="text"
               onChange={(e) => {
                 setMessage(e.target.value);
-                setConversationName(chat);
+                setConversationName(chat.name);
               }}
               value={message}
             ></input>

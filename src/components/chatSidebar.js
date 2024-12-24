@@ -30,7 +30,7 @@ const SideBarComponent = () => {
         <div className="sideBar">
             <ul>
             {listOfChats.map((chat, index) => (
-                <li key={index}><button onClick={()=>changeChat(chat)}>{chat.name}</button></li>
+                <li key={index}><button onClick={()=>changeChat(chat)}>{chat.name ? chat.name : chat.participants}</button></li>
             ))}
             </ul>
         </div>
