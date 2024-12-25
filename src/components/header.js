@@ -82,7 +82,7 @@ const HeaderComponent = () => {
 
   return (
     <div className="websiteHeader">
-      <h1>Welcome Home</h1>
+      <Link to="/" className='homepageLink'><h1>Welcome Home</h1></Link>
       {user ? (
         <>
           <div className="searchBar">

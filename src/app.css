@@ -10,6 +10,11 @@ body {
   color: var(--primary-color);
 }
 
+.homepageLink{
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
 .MessageList {
   list-style-type: none;
   width: 30vw;
