@@ -2,7 +2,7 @@ import React from 'react';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { UserContext } from './userContext';
 
-export const UserChatsContext = createContext({ chatList: null, currentChat: { name: "main" } });
+export const UserChatsContext = createContext({ chatList: null, currentChat: { name: "" } });
 
 export const UserChats = ({ children }) => {
   const userContext = useContext(UserContext);
@@ -38,8 +38,8 @@ export const UserChats = ({ children }) => {
   }, [userContext]);
 
   const changeChat = (chat) => {
+    console.log(chat);
     setCurrentChat(chat);
-    
   }
 
   const resetChatList = () => {

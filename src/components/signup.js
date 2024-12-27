@@ -11,6 +11,7 @@ const signUpComponent = () => {
   const [emailError, setEmailError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   const validatePassword = (password) => {
     if (password === '') {
@@ -20,8 +21,12 @@ const signUpComponent = () => {
   };
 
   const validateUsername = (username) => {
+    const regex = /^[a-zA-Z0-9]+$/;
     if (username === '') {
       return 'Please enter in a username';
+    }
+    if (!regex.test(username)) {
+      return 'Please enter in a valid username (One word, can contain numbers)'
     }
     return '';
   };
@@ -65,7 +70,9 @@ const signUpComponent = () => {
           setSignupSuccess(true);
           console.log('Signup Successful:', results);
         } else {
+          const results = await response.json();
           console.error('Signup Failed:', response.status, response.statusText);
+          setServerError(results.message);
         }
       } catch (error) {
         console.error('Error during fetch:', error);
@@ -79,6 +86,7 @@ const signUpComponent = () => {
       {signupSuccess ? (<div>Welcome to the Family</div>) : (
         <form onSubmit={submitHandler}>
           <div>
+            {serverError && <div>{serverError}</div>}
             <label htmlFor="username">Username:</label>
             <input
               id="username"
@@ -96,6 +104,7 @@ const signUpComponent = () => {
             <input
               id="password"
               name="password"
+              type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               aria-invalid={!!passwordError}

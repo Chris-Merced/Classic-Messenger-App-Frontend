@@ -10,8 +10,7 @@ const HomeChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState('');
   const [conversationName, setConversationName] = useState('');
-  const [chat, setChat] = useState({ name: 'main', conversationID: 22 });
-  const [isConnected, setIsConnected] = useState(false);
+  const [chat, setChat] = useState({ name:'main', conversationID: 22 });
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -24,9 +23,8 @@ const HomeChatComponent = () => {
   }, [userData]);
 
   useEffect(() => {
-    console.log(conversationName);
-    console.log(chat.name);
     setChat(currentChat);
+    console.log(chat.name);
   }, [currentChat]);
 
   useEffect(() => {
@@ -70,7 +68,7 @@ const HomeChatComponent = () => {
         }
       };
     }
-  }, [chat.name]);
+  }, [chat.name, socketRef.current]);
 
   useEffect(() => {
     const getMessages = async () => {

@@ -27,7 +27,7 @@ export const WebSocketProvider = ({ children }) => {
       };
       socketRef.current.send(JSON.stringify(registration));
       setIsReady(true);
-      //SET REGISTRATION HERE
+     
     };
     
     socketRef.current.onmessage = (message) => {

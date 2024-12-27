@@ -3,12 +3,15 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/userContext';
 import { UserChatsContext } from '../context/chatListContext';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const [profile, setProfile] = useState('');
   const [error, setError] = useState('');
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
+  const chatContext = useContext(UserChatsContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const GetUserProfile = async () => {
@@ -38,16 +41,19 @@ const UserProfile = () => {
   const sendDirectMessage = async (userID) => {
     //CREATE FETCH FOR THE BACKEND
     const user = userContext.user;
-    
-    
-    
+
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
     );
-    //CHANGE CHAT TO THAT USER WITH NAME AS NULL AND THEN REDIRECT TO MAIN
-    
+    const data = await response.json();
 
-    
+    if (data.conversation_id) {
+      navigate('/');
+      chatContext.changeChat({
+        name: null,
+        conversationID: data.conversation_id,
+      });
+    }
   };
 
   return (
@@ -60,8 +66,9 @@ const UserProfile = () => {
           <button onClick={() => sendDirectMessage(userContext.user.id)}>
             Direct Message
           </button>
-        </>
+        </> //MAKE GET FETCH TO CHECK IF PUBLIC OR PRIVATE AND HAVE DM APPEAR ONLY
       ) : (
+        ////IF PUBLIC, OR PRIVATE AND FRIENDS
         <div>{error}</div>
       )}
     </>
