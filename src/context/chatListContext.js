@@ -2,17 +2,17 @@ import React from 'react';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { UserContext } from './userContext';
 
-export const UserChatsContext = createContext({ chatList: null, currentChat: "main"});
+export const UserChatsContext = createContext({ chatList: null, currentChat: { name: "main" } });
 
 export const UserChats = ({ children }) => {
   const userContext = useContext(UserContext);
   const [chatList, setChatList] = useState(null);
-  const [currentChat, setCurrentChat] = useState("main");
+  const [currentChat, setCurrentChat] = useState({name: "main", conversationID: 22});
 
   useEffect(() => {
     const getChats = async () => {
        if (!userContext?.user?.id) {
-        console.log('User context is not available or user ID is missing.');
+        
         return;
       }
       try {
@@ -26,7 +26,7 @@ export const UserChats = ({ children }) => {
 
         const data = await response.json();
         setChatList(data);
-        console.log(data);
+        
       } catch (err) {
         console.error('Error getting user chats: ' + err);
       }
@@ -39,11 +39,16 @@ export const UserChats = ({ children }) => {
 
   const changeChat = (chat) => {
     setCurrentChat(chat);
-    console.log(chat);
+    
+  }
+
+  const resetChatList = () => {
+    
+    setChatList('');
   }
 
   return (
-    <UserChatsContext.Provider value={{ chatList, currentChat, changeChat}}>
+    <UserChatsContext.Provider value={{ chatList, currentChat, changeChat, resetChatList}}>
       {children}
     </UserChatsContext.Provider>
   );

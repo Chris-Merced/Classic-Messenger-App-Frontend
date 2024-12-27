@@ -35,15 +35,12 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const login = async (data) => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/login`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-        credentials: 'include',
-      }
-    );
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      credentials: 'include',
+    });
 
     const newData = await response.json();
     console.log(newData);

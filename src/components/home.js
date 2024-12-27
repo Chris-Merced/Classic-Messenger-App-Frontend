@@ -4,14 +4,14 @@ import { useContext } from 'react';
 import { UserContext } from '../context/userContext';
 import { WebsocketContext } from '../context/websocketContext';
 import { UserChatsContext } from '../context/chatListContext';
-//Clean up user profile search functionality
 
 const HomeChatComponent = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState('');
   const [conversationName, setConversationName] = useState('');
-  const [chat, setChat] = useState({ name: 'main', conversationID: '' });
+  const [chat, setChat] = useState({ name: 'main', conversationID: 22 });
+  const [isConnected, setIsConnected] = useState(false);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -24,53 +24,64 @@ const HomeChatComponent = () => {
   }, [userData]);
 
   useEffect(() => {
+    console.log(conversationName);
+    console.log(chat.name);
     setChat(currentChat);
   }, [currentChat]);
 
   useEffect(() => {
-    socketRef.current.onopen = () => {
-      console.log('Connection Open');
-    };
+    const setupMessageHandler = () => {
+      console.log('Setting up message handler');
+      socketRef.current.onmessage = (message) => {
+        console.log('Message received in handler (before any processing)');
+        message = JSON.parse(message.data);
+        console.log('Message parsed:', message);
+        message = {
+          ...message,
+          time: new Date(message.time).toLocaleString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          }),
+        };
 
-    socketRef.current.onmessage = (message) => {
-      message = JSON.parse(message.data);
-      console.log(message);
-      message = {
-        ...message,
-        time: new Date(message.time).toLocaleString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-        }),
+        //CHANGE TO IF CONVERSATIONNAME AND CHAT NAME THEN CHECK EACH OTHER
+        if (message.conversationName === chat.name) {
+          setMessages((prevMessages) => [...prevMessages, message]);
+        }
+        //OTHERWISE MAKE SURE THAT CONVERSATION NAME AND CHAT NAME ARE THE SAME PERSON VIA CONVERSATION ID
       };
-      console.log(message);
-      if (message.conversationName === chat.name) {
-        setMessages((prevMessages) => [...prevMessages, message]);
+    };
+
+    if (socketRef.current) {
+      if (socketRef.current.readyState === WebSocket.OPEN) {
+        setupMessageHandler();
       }
-      console.log(messages);
-    };
 
-    socketRef.current.onclose = () => {
-      console.log('connection closed');
-    };
+      const originalOnOpen = socketRef.current.onopen;
+      socketRef.current.onopen = () => {
+        if (originalOnOpen) originalOnOpen();
+        setupMessageHandler();
+      };
 
-    socketRef.current.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    };
-
-    return () => {
-      socketRef.current.close();
-    };
-  }, []);
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.onmessage = null;
+        }
+      };
+    }
+  }, [chat.name]);
 
   useEffect(() => {
     const getMessages = async () => {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${chat.name}&conversationID=${chat.conversationID}`,
+        `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
+          chat.name
+        }&conversationID=${chat.conversationID}&userID=${user ? user.id : ''}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include'
+          credentials: 'include',
         }
       );
       const data = await response.json();
@@ -94,8 +105,10 @@ const HomeChatComponent = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
+
     const data = {
       message: message,
+      registration: false,
       conversationName: conversationName,
       conversationID: chat.conversationID,
       user: user.username,

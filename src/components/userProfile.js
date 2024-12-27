@@ -38,16 +38,16 @@ const UserProfile = () => {
   const sendDirectMessage = async (userID) => {
     //CREATE FETCH FOR THE BACKEND
     const user = userContext.user;
-    console.log(user);
-    console.log(profile);
-    console.log(user.name, profile.name)
+    
+    
+    
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
     );
     //CHANGE CHAT TO THAT USER WITH NAME AS NULL AND THEN REDIRECT TO MAIN
     
 
-    console.log('it works' + userID);
+    
   };
 
   return (

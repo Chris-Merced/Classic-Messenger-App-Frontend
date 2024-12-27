@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/userContext';
+import { UserChatsContext } from '../context/chatListContext';
 import { Link, useLocation } from 'react-router-dom';
 
 const HeaderComponent = () => {
@@ -11,6 +12,7 @@ const HeaderComponent = () => {
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const context = useContext(UserContext);
+  const chatContext = useContext(UserChatsContext);
   const userData = context.user;
   const location = useLocation();
 
@@ -37,10 +39,11 @@ const HeaderComponent = () => {
       );
 
       const data = await response.json();
-      console.log(data);
 
       context.logout();
+      chatContext.resetChatList();
       setUser('');
+      window.location.reload();
     } catch (err) {
       console.log('Error with fetch: ', err);
     }
@@ -58,6 +61,7 @@ const HeaderComponent = () => {
 
     setPassword('');
     setUsername('');
+    window.location.reload();
   };
 
   const searchDB = async (e, username) => {
@@ -82,7 +86,9 @@ const HeaderComponent = () => {
 
   return (
     <div className="websiteHeader">
-      <Link to="/" className='homepageLink'><h1>Welcome Home</h1></Link>
+      <Link to="/" className="homepageLink">
+        <h1>Welcome Home</h1>
+      </Link>
       {user ? (
         <>
           <div className="searchBar">
@@ -124,31 +130,31 @@ const HeaderComponent = () => {
           </div>
         </>
       ) : (
-        location.pathname !== '/signup' &&(
+        location.pathname !== '/signup' && (
           <>
-          <form onSubmit={loginHandler}>
-            <label htmlFor="username">Username: </label>
-            <input
-              name="username"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            ></input>
-            <label htmlFor="password">Password: </label>
-            <input
-              name="password"
-              id="password"
-              type="password"
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
-            <button type="submit">Log In</button>
-          </form>
+            <form onSubmit={loginHandler}>
+              <label htmlFor="username">Username: </label>
+              <input
+                name="username"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              ></input>
+              <label htmlFor="password">Password: </label>
+              <input
+                name="password"
+                id="password"
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+              ></input>
+              <button type="submit">Log In</button>
+            </form>
 
-          <Link to="/signup" className="signup">
-            Go To Signup
-          </Link>
-          
-        </>)
+            <Link to="/signup" className="signup">
+              Go To Signup
+            </Link>
+          </>
+        )
       )}
     </div>
   );
