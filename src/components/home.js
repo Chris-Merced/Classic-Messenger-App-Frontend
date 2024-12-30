@@ -34,6 +34,7 @@ const HomeChatComponent = () => {
         console.log('Message received in handler (before any processing)');
         message = JSON.parse(message.data);
         console.log('Message parsed:', message);
+        console.log(chat);
         message = {
           ...message,
           time: new Date(message.time).toLocaleString('en-US', {
@@ -111,6 +112,7 @@ const HomeChatComponent = () => {
       conversationID: chat.conversationID,
       user: user.username,
       userID: user.id,
+      reciever: chat.reciever,
       time: new Date().toISOString(),
     };
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {

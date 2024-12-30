@@ -25,6 +25,7 @@ const SideBarComponent = () => {
         chatContext.changeChat({
             name: null,
             conversationID: chat.conversation_id,
+            reciever: chat.participants,
         })
     }
     //IF NO NAME THEN CHANGE CHAT NAME TO CONVERSATION_ID
