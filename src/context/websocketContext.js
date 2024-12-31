@@ -18,6 +18,14 @@ export const WebSocketProvider = ({ children }) => {
 
   
   useEffect(() => {
+    
+    console.log('WS URL:', process.env.REACT_APP_WS_URL); // Debug log
+    
+    if (!process.env.REACT_APP_WS_URL) {
+      console.error('WebSocket URL is not defined');
+      return;
+    }
+    try{
     socketRef.current = new WebSocket(process.env.REACT_APP_WS_URL);
 
     socketRef.current.onopen = () => {
@@ -40,7 +48,9 @@ export const WebSocketProvider = ({ children }) => {
     socketRef.current.onerror = (error) => {
       console.error('WebSocket Error:', error);
     };
-
+  }catch(err){
+    console.error("error creating websocket: ", error);
+  }
     return () => {
       socketRef.current.close();
     };

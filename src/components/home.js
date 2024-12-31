@@ -10,7 +10,7 @@ const HomeChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState('');
   const [conversationName, setConversationName] = useState('');
-  const [chat, setChat] = useState({ name:'main', conversationID: 22 });
+  const [chat, setChat] = useState({ name:'main', conversationID: 1 });
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);

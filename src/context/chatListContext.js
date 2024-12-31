@@ -7,7 +7,7 @@ export const UserChatsContext = createContext({ chatList: null, currentChat: { n
 export const UserChats = ({ children }) => {
   const userContext = useContext(UserContext);
   const [chatList, setChatList] = useState(null);
-  const [currentChat, setCurrentChat] = useState({name: "main", conversationID: 22});
+  const [currentChat, setCurrentChat] = useState({name: "main", conversationID: 1});
 
   useEffect(() => {
     const getChats = async () => {
