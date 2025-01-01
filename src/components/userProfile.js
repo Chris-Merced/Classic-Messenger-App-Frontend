@@ -41,7 +41,7 @@ const UserProfile = () => {
   const sendDirectMessage = async (userID) => {
     //CREATE FETCH FOR THE BACKEND
     const user = userContext.user;
-
+    
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
     );

@@ -45,11 +45,11 @@ export const WebSocketProvider = ({ children }) => {
       console.log('WebSocket connection closed');
     };
 
-    socketRef.current.onerror = (error) => {
-      console.error('WebSocket Error:', error);
+    socketRef.current.onerror = (err) => {
+      console.error('WebSocket Error:', err);
     };
   }catch(err){
-    console.error("error creating websocket: ", error);
+    console.error("error creating websocket: ", err);
   }
     return () => {
       socketRef.current.close();
