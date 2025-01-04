@@ -102,7 +102,7 @@ const HomeChatComponent = () => {
     getMessages();
   }, [chat]);
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
 
     const data = {
@@ -115,12 +115,23 @@ const HomeChatComponent = () => {
       reciever: chat.reciever,
       time: new Date().toISOString(),
     };
+    console.log("Made it inside send message");
+   
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      console.log("made it inside to send message");
       socketRef.current.send(JSON.stringify(data));
       setMessage('');
     } else {
       console.log('console is not open');
     }
+
+     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`, {
+      method: "POST",
+      headers: {'Content-Type':'application/json'},
+      credentials: "include",
+      body: JSON.stringify(data),
+    })
+    
   };
 
   return (
