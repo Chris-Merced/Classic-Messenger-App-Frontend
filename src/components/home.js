@@ -104,7 +104,6 @@ const HomeChatComponent = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-
     const data = {
       message: message,
       registration: false,
@@ -112,7 +111,7 @@ const HomeChatComponent = () => {
       conversationID: chat.conversationID,
       user: user.username,
       userID: user.id,
-      reciever: chat.reciever,
+      reciever: chat.reciever ? [...chat.reciever, user.username] : undefined,
       time: new Date().toISOString(),
     };
     console.log("Made it inside send message");

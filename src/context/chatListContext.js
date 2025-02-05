@@ -12,7 +12,6 @@ export const UserChats = ({ children }) => {
   useEffect(() => {
     const getChats = async () => {
        if (!userContext?.user?.id) {
-        
         return;
       }
       try {
@@ -43,7 +42,6 @@ export const UserChats = ({ children }) => {
   }
 
   const resetChatList = () => {
-    
     setChatList('');
   }
 
