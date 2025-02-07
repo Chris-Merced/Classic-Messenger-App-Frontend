@@ -1,11 +1,11 @@
-import React from 'react';
-import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/userContext';
-import { UserChatsContext } from '../context/chatListContext';
+import React from "react";
+import { useContext, useState, useEffect } from "react";
+import { UserContext } from "../context/userContext";
+import { UserChatsContext } from "../context/chatListContext";
 
 const SideBarComponent = () => {
-    const chatContext = useContext(UserChatsContext);
-    const userContext = useContext(UserContext);
+  const chatContext = useContext(UserChatsContext);
+  const userContext = useContext(UserContext);
   const [listOfChats, setListOfChats] = useState(null);
 
   useEffect(() => {
@@ -22,11 +22,11 @@ const SideBarComponent = () => {
         conversationID: chat.conversation_id,
       });
     } else {
-        chatContext.changeChat({
-            name: null,
-            conversationID: chat.conversation_id,
-            reciever: chat.participants,
-        })
+      chatContext.changeChat({
+        name: null,
+        conversationID: chat.conversation_id,
+        reciever: chat.participants,
+      });
     }
     //IF NO NAME THEN CHANGE CHAT NAME TO CONVERSATION_ID
     //CHANGE HOME.JS TO
@@ -34,7 +34,7 @@ const SideBarComponent = () => {
   };
 
   return listOfChats && userContext.user ? (
-      <div className="sideBar">
+    <div className="sideBar">
       <ul>
         {listOfChats.map((chat, index) => (
           <li key={index}>

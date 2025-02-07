@@ -1,47 +1,51 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const signUpComponent = () => {
-  const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const [serverError, setServerError] = useState('');
+  const [serverError, setServerError] = useState("");
 
   const validatePassword = (password) => {
-    if (password === '') {
-      return 'Please enter in a password';
+    if (password === "") {
+      return "Please enter in a password";
     }
-    return '';
+    if(password !== passwordConfirm){
+      return "Passwords do not match"
+    }
+    return "";
   };
 
   const validateUsername = (username) => {
     const regex = /^[a-zA-Z0-9]+$/;
-    if (username === '') {
-      return 'Please enter in a username';
+    if (username === "") {
+      return "Please enter in a username";
     }
     if (!regex.test(username)) {
-      return 'Please enter in a valid username (One word, can contain numbers)'
+      return "Please enter in a valid username (One word, can contain numbers)";
     }
-    return '';
+    return "";
   };
 
   const validateEmail = (email) => {
-    if (email === '') {
-      return 'Please enter in an email';
+    if (email === "") {
+      return "Please enter in an email";
     }
-    return '';
+    return "";
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log('Signup form submitted');
-    console.log('handler initiated');
+    console.log("Signup form submitted");
+    console.log("handler initiated");
     setIsSubmitted(true);
 
     const passwordErrorMessage = validatePassword(password);
@@ -53,29 +57,32 @@ const signUpComponent = () => {
     setEmailError(emailErrorMessage);
 
     if (!passwordErrorMessage && !usernameErrorMessage) {
-      console.log('signup conditionals met');
+      console.log("signup conditionals met");
       const data = {
         username: username,
         email: email,
         password: password,
       };
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/signup`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/signup`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }
+        );
         if (response.ok) {
           const results = await response.json();
           setSignupSuccess(true);
-          console.log('Signup Successful:', results);
+          console.log("Signup Successful:", results);
         } else {
           const results = await response.json();
-          console.error('Signup Failed:', response.status, response.statusText);
+          console.error("Signup Failed:", response.status, response.statusText);
           setServerError(results.message);
         }
       } catch (error) {
-        console.error('Error during fetch:', error);
+        console.error("Error during fetch:", error);
       }
     }
   };
@@ -83,7 +90,9 @@ const signUpComponent = () => {
   return (
     <div>
       <h1>SignupPage</h1>
-      {signupSuccess ? (<div>Welcome to the Family</div>) : (
+      {signupSuccess ? (
+        <div>Welcome to the Family</div>
+      ) : (
         <form onSubmit={submitHandler}>
           <div>
             {serverError && <div>{serverError}</div>}
@@ -104,12 +113,25 @@ const signUpComponent = () => {
             <input
               id="password"
               name="password"
-              type='password'
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               aria-invalid={!!passwordError}
             ></input>
             {isSubmitted && passwordError && <span>{passwordError}</span>}
+          </div>
+
+          <div>
+            <label htmlFor="passwordConfirm">Confirm Password:</label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              value={passwordConfirm}
+              onChange={(e) => {
+                setPasswordConfirm(e.target.value);
+              }}
+            ></input>
           </div>
 
           <div>
@@ -126,7 +148,8 @@ const signUpComponent = () => {
           </div>
 
           <button type="submit">Assimilate</button>
-        </form>)}
+        </form>
+      )}
       <Link to="/" className="signup">
         Come Back Home
       </Link>

@@ -1,16 +1,16 @@
-import React from 'react';
-import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../context/userContext';
-import { UserChatsContext } from '../context/chatListContext';
-import { Link, useLocation } from 'react-router-dom';
+import React from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../context/userContext";
+import { UserChatsContext } from "../context/chatListContext";
+import { Link, useLocation } from "react-router-dom";
 
 const HeaderComponent = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [dropDown, setDropDown] = useState(false);
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("");
   const [users, setUsers] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const userData = context.user;
@@ -33,8 +33,8 @@ const HeaderComponent = () => {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/logout`,
         {
-          method: 'DELETE',
-          credentials: 'include',
+          method: "DELETE",
+          credentials: "include",
         }
       );
 
@@ -42,10 +42,10 @@ const HeaderComponent = () => {
 
       context.logout();
       chatContext.resetChatList();
-      setUser('');
+      setUser("");
       window.location.reload();
     } catch (err) {
-      console.log('Error with fetch: ', err);
+      console.log("Error with fetch: ", err);
     }
   };
 
@@ -59,19 +59,19 @@ const HeaderComponent = () => {
 
     const response = await context.login(data);
 
-    setPassword('');
-    setUsername('');
+    setPassword("");
+    setUsername("");
     window.location.reload();
   };
 
   const searchDB = async (e, username) => {
     e.preventDefault();
-    if (username !== '') {
+    if (username !== "") {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${username}`,
         {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
         }
       );
       const data = await response.json();
@@ -79,7 +79,7 @@ const HeaderComponent = () => {
 
       setUsers(users);
     }
-    if (username === '') {
+    if (username === "") {
       setUsers([]);
     }
   };
@@ -130,7 +130,7 @@ const HeaderComponent = () => {
           </div>
         </>
       ) : (
-        location.pathname !== '/signup' && (
+        location.pathname !== "/signup" && (
           <>
             <form onSubmit={loginHandler}>
               <label htmlFor="username">Username: </label>

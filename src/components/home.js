@@ -1,16 +1,16 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { useContext } from 'react';
-import { UserContext } from '../context/userContext';
-import { WebsocketContext } from '../context/websocketContext';
-import { UserChatsContext } from '../context/chatListContext';
+import React from "react";
+import { useState, useEffect, useRef } from "react";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
+import { WebsocketContext } from "../context/websocketContext";
+import { UserChatsContext } from "../context/chatListContext";
 
 const HomeChatComponent = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [user, setUser] = useState('');
-  const [conversationName, setConversationName] = useState('');
-  const [chat, setChat] = useState({ name:'main', conversationID: 1 });
+  const [user, setUser] = useState("");
+  const [conversationName, setConversationName] = useState("");
+  const [chat, setChat] = useState({ name: "main", conversationID: 1 });
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -29,17 +29,17 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     const setupMessageHandler = () => {
-      console.log('Setting up message handler');
+      console.log("Setting up message handler");
       socketRef.current.onmessage = (message) => {
-        console.log('Message received in handler (before any processing)');
+        console.log("Message received in handler (before any processing)");
         message = JSON.parse(message.data);
-        console.log('Message parsed:', message);
+        console.log("Message parsed:", message);
         console.log(chat);
         message = {
           ...message,
-          time: new Date(message.time).toLocaleString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
+          time: new Date(message.time).toLocaleString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
             hour12: true,
           }),
         };
@@ -76,11 +76,11 @@ const HomeChatComponent = () => {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
-        }&conversationID=${chat.conversationID}&userID=${user ? user.id : ''}`,
+        }&conversationID=${chat.conversationID}&userID=${user ? user.id : ""}`,
         {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         }
       );
       const data = await response.json();
@@ -88,9 +88,9 @@ const HomeChatComponent = () => {
         const timeFormattedArray = data.messages.map((message) => {
           return {
             ...message,
-            time: new Date(message.time).toLocaleString('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
+            time: new Date(message.time).toLocaleString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
               hour12: true,
             }),
           };
@@ -115,22 +115,24 @@ const HomeChatComponent = () => {
       time: new Date().toISOString(),
     };
     console.log("Made it inside send message");
-   
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       console.log("made it inside to send message");
       socketRef.current.send(JSON.stringify(data));
-      setMessage('');
+      setMessage("");
     } else {
-      console.log('console is not open');
+      console.log("console is not open");
     }
 
-     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`, {
-      method: "POST",
-      headers: {'Content-Type':'application/json'},
-      credentials: "include",
-      body: JSON.stringify(data),
-    })
-    
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    );
   };
 
   return (

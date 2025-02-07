@@ -1,13 +1,13 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../context/userContext';
-import { UserChatsContext } from '../context/chatListContext';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../context/userContext";
+import { UserChatsContext } from "../context/chatListContext";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  const [profile, setProfile] = useState('');
-  const [error, setError] = useState('');
+  const [profile, setProfile] = useState("");
+  const [error, setError] = useState("");
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -19,8 +19,8 @@ const UserProfile = () => {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/publicProfile?ID=${userIdentifier}`,
           {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
           }
         );
         const data = await response.json();
@@ -31,7 +31,7 @@ const UserProfile = () => {
 
         setProfile(data.user);
       } catch (err) {
-        setError('Error occured on profile retrieval', err);
+        setError("Error occured on profile retrieval", err);
       }
     };
 
@@ -41,14 +41,14 @@ const UserProfile = () => {
   const sendDirectMessage = async (userID) => {
     //CREATE FETCH FOR THE BACKEND
     const user = userContext.user;
-    
+
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
     );
     const data = await response.json();
 
     if (data.conversation_id) {
-      navigate('/');
+      navigate("/");
       chatContext.changeChat({
         name: null,
         conversationID: data.conversation_id,
