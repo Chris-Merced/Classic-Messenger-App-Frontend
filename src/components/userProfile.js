@@ -56,6 +56,34 @@ const UserProfile = () => {
     }
   };
 
+  const sendFriendRequest = async () => {
+    console.log("TESTING THE SEND FRIEND REQUEST BUTTON: \n" + userIdentifier);
+    console.log(
+      "TESTING THE SEND FRIEND REQUEST BUTTON: \n" + JSON.stringify(userContext)
+    );
+
+    const data = {
+      userID: userContext.user.id,
+      profileID: userIdentifier
+    }
+
+    const response = await fetch(
+      
+      `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest`,
+      {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    );
+
+    
+    const newData = await response.json()
+    console.log(newData);
+  };
+  
+
   return (
     <>
       {profile ? (
@@ -66,6 +94,7 @@ const UserProfile = () => {
           <button onClick={() => sendDirectMessage(userContext.user.id)}>
             Direct Message
           </button>
+          <button onClick={sendFriendRequest}>Send Friend Request</button>
         </> //MAKE GET FETCH TO CHECK IF PUBLIC OR PRIVATE AND HAVE DM APPEAR ONLY
       ) : (
         ////IF PUBLIC, OR PRIVATE AND FRIENDS

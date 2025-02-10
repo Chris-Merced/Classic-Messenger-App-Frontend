@@ -11,6 +11,7 @@ const HeaderComponent = () => {
   const [user, setUser] = useState("");
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [friendRequests, setFriendRequests] = useState("");
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const userData = context.user;
@@ -18,6 +19,26 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     setUser(userData);
+
+    console.log("CHECKING FOR ID CONFIRMATION" + context.user.id);
+    const getUserFriendRequests = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${context.user.id}`
+      );
+
+      const friendRequestData = await response.json();
+      const friendRequestsJSON = JSON.stringify(
+        friendRequestData.friendRequests
+      );
+      console.log(
+        "CHECKING THE GET REQUEST FOR FRIEND REQUESTS: \n" + friendRequestsJSON
+      );
+
+      setFriendRequests(friendRequestData.friendRequests);
+      
+    };
+
+    getUserFriendRequests();
   }, [userData]);
 
   const isDropDown = () => {
@@ -83,6 +104,7 @@ const HeaderComponent = () => {
       setUsers([]);
     }
   };
+console.log(friendRequests[0])
 
   return (
     <div className="websiteHeader">
@@ -115,12 +137,18 @@ const HeaderComponent = () => {
             </form>
           </div>
           <div className="userProfile">
-            <div> Hello {user.username}</div>
+            <div className="profileName">
+              {" "}
+              Hello {user.username}{" "}
+              {friendRequests ? (
+                <div className="notifications">{friendRequests?.length}</div>
+              ): <span></span>}
+            </div>
             <div className="DropDown">
               <button onClick={isDropDown}>Drop-Down</button>
               {dropDown && (
                 <div className="Menu">
-                  <div>User Menu: </div>
+                  <div className="friendRequests"><div><a>Friend Requests</a></div> <div className="friendRequestNotifications">{friendRequests?.length}</div></div>
                   <button className="logout" onClick={logoutHandler}>
                     Log Out
                   </button>

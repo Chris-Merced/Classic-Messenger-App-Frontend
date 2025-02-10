@@ -4,6 +4,10 @@ import UserProfile from "./components/userProfile";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
+//CREATE A FRIEND REQUEST PAGE TO SHOW FRIEND REQUEST INFORMATION
+//MAKE SURE TO LINK FROM SIDE DROP DOWN MENU
+
+
 const App = () => {
   return (
     <Routes>
