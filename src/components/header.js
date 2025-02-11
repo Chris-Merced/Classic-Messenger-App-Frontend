@@ -20,7 +20,6 @@ const HeaderComponent = () => {
   useEffect(() => {
     setUser(userData);
 
-    console.log("CHECKING FOR ID CONFIRMATION" + context.user.id);
     const getUserFriendRequests = async () => {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${context.user.id}`
@@ -30,16 +29,17 @@ const HeaderComponent = () => {
       const friendRequestsJSON = JSON.stringify(
         friendRequestData.friendRequests
       );
-      console.log(
-        "CHECKING THE GET REQUEST FOR FRIEND REQUESTS: \n" + friendRequestsJSON
-      );
 
       setFriendRequests(friendRequestData.friendRequests);
       
     };
-
+    if(userData){
     getUserFriendRequests();
+    }
   }, [userData]);
+
+  
+
 
   const isDropDown = () => {
     if (dropDown === false) {
@@ -104,7 +104,10 @@ const HeaderComponent = () => {
       setUsers([]);
     }
   };
-console.log(friendRequests[0])
+
+  
+  //MAKE SURE TO SET UP SSE FOR SERVER SIDE UPDATES FOR THE NOTIFICAITON
+  //  NUMBER IN HEADER
 
   return (
     <div className="websiteHeader">
@@ -140,7 +143,7 @@ console.log(friendRequests[0])
             <div className="profileName">
               {" "}
               Hello {user.username}{" "}
-              {friendRequests ? (
+              {friendRequests.length !== 0 ? (
                 <div className="notifications">{friendRequests?.length}</div>
               ): <span></span>}
             </div>
@@ -148,7 +151,7 @@ console.log(friendRequests[0])
               <button onClick={isDropDown}>Drop-Down</button>
               {dropDown && (
                 <div className="Menu">
-                  <div className="friendRequests"><div><a>Friend Requests</a></div> <div className="friendRequestNotifications">{friendRequests?.length}</div></div>
+                  <div className="friendRequests"><Link to={`/userProfile/friendRequests`}>Friend Requests</Link> {friendRequests.length !== 0 ? <div className="friendRequestNotifications">{friendRequests?.length}</div> : <span></span>}</div>
                   <button className="logout" onClick={logoutHandler}>
                     Log Out
                   </button>

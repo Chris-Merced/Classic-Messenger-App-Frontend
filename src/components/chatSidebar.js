@@ -2,10 +2,15 @@ import React from "react";
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userContext = useContext(UserContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [listOfChats, setListOfChats] = useState(null);
 
   useEffect(() => {
@@ -20,17 +25,23 @@ const SideBarComponent = () => {
       chatContext.changeChat({
         name: chat.name,
         conversationID: chat.conversation_id,
-      });
+        
+      }
+    )
+    if (location.pathname !== '/'){
+          navigate('/');
+        }
+    ;
     } else {
       chatContext.changeChat({
         name: null,
         conversationID: chat.conversation_id,
         reciever: chat.participants,
       });
+      if (location.pathname !== '/'){
+          navigate('/');
+        }
     }
-    //IF NO NAME THEN CHANGE CHAT NAME TO CONVERSATION_ID
-    //CHANGE HOME.JS TO
-    //IF INT FETCH BY CONVERSATION ID INSTEAD OF NAME;
   };
 
   return listOfChats && userContext.user ? (

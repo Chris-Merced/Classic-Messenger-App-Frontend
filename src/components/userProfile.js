@@ -39,7 +39,6 @@ const UserProfile = () => {
   }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
-    //CREATE FETCH FOR THE BACKEND
     const user = userContext.user;
 
     const response = await fetch(
@@ -57,10 +56,6 @@ const UserProfile = () => {
   };
 
   const sendFriendRequest = async () => {
-    console.log("TESTING THE SEND FRIEND REQUEST BUTTON: \n" + userIdentifier);
-    console.log(
-      "TESTING THE SEND FRIEND REQUEST BUTTON: \n" + JSON.stringify(userContext)
-    );
 
     const data = {
       userID: userContext.user.id,
