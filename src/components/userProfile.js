@@ -8,13 +8,14 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   const [profile, setProfile] = useState("");
   const [error, setError] = useState("");
+  const [friendStatus, setFriendStatus] = useState("");
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const GetUserProfile = async () => {
+    const getUserProfile = async () => {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/publicProfile?ID=${userIdentifier}`,
@@ -35,7 +36,20 @@ const UserProfile = () => {
       }
     };
 
-    GetUserProfile();
+    const checkIfFriends = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
+      );
+      const friendStatus = await response.json();
+      console.log("CHECKING FRIEND STATUS");
+      console.log(friendStatus);
+      setFriendStatus(friendStatus);
+    };
+
+    getUserProfile();
+    if (userContext?.user?.id) {
+      checkIfFriends();
+    }
   }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
@@ -56,28 +70,24 @@ const UserProfile = () => {
   };
 
   const sendFriendRequest = async () => {
-
     const data = {
       userID: userContext.user.id,
-      profileID: userIdentifier
-    }
+      profileID: userIdentifier,
+    };
 
     const response = await fetch(
-      
       `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest`,
       {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(data),
       }
     );
 
-    
-    const newData = await response.json()
+    const newData = await response.json();
     console.log(newData);
   };
-  
 
   return (
     <>
@@ -89,7 +99,11 @@ const UserProfile = () => {
           <button onClick={() => sendDirectMessage(userContext.user.id)}>
             Direct Message
           </button>
-          <button onClick={sendFriendRequest}>Send Friend Request</button>
+          {!friendStatus ? (
+            <button onClick={sendFriendRequest}>Send Friend Request</button>
+          ) : (
+            <></>
+          )}
         </> //MAKE GET FETCH TO CHECK IF PUBLIC OR PRIVATE AND HAVE DM APPEAR ONLY
       ) : (
         ////IF PUBLIC, OR PRIVATE AND FRIENDS

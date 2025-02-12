@@ -11,6 +11,8 @@ const HomeChatComponent = () => {
   const [user, setUser] = useState("");
   const [conversationName, setConversationName] = useState("");
   const [chat, setChat] = useState({ name: "main", conversationID: 1 });
+  const [duplicateNamesArray, setDuplicateNamesArray] = useState([]);
+  const messageListRef = useRef([]);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -134,15 +136,39 @@ const HomeChatComponent = () => {
       }
     );
   };
+  useEffect(() => {
+    if (messageListRef.current[0]) {
+      console.log("CHECKING REFERENCE LIST");
+      console.log(messageListRef.current[0].innerHTML);
+      const array = messageListRef.current.map((reference) => {
+        return reference.innerHTML;
+      });
+      console.log(array);
+      setDuplicateNamesArray(array);
+    }
+  }, [messages]);
+
+  //TRY USING THE MESSAGES ARRAY ALREADY INSTANTIATED AND FILLED WITH MESSAGE/USER/TIME
+  //STILL NEED TO SET UP DEFRIEND BUTTON
+
 
   return (
     <div className="mainChat">
       <ul className="MessageList">
         {messages.map((message, index) => (
           <li className="message" key={index}>
-            <div className="time">{message.time}</div>
-            <div className="username">{message.user}: </div>
-            <div>{message.message}</div>
+            <div className="messageHeader">
+              <div className="time">{message.time}</div> 
+                  <div
+                    className="username"
+                    ref={(el) => {
+                      messageListRef.current[index] = el;
+                    }}
+                  >
+                    {message.user}
+                  </div>
+            </div>
+            <div className="messageText">{message.message}</div>
           </li>
         ))}
       </ul>
