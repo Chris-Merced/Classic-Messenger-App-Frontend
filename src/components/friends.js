@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../context/userContext";
 
@@ -7,6 +8,7 @@ const FriendRequests = () => {
   const user = userContext.user;
   const [friendRequestsLength, setFriendRequestsLength] = useState(0);
   const [friendRequests, setFriendRequests] = useState("");
+  const [friends, setFriends] = useState([]);
   const itemRef = useRef([]);
 
   useEffect(() => {
@@ -20,7 +22,20 @@ const FriendRequests = () => {
     if (user) {
       getFriendRequests();
     }
-  }, []);
+
+    const getFriends = async() => {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`)
+      const data = await response.json();
+      console.log("accessing data");
+      console.log("acessing data");
+      if(data){
+        setFriends(data.friendsList);
+      }
+    }
+    if(user){
+      getFriends();
+    }
+  }, [user]);
 
 
   useEffect(()=>{
@@ -80,9 +95,10 @@ const FriendRequests = () => {
 
   };
 
-  
+  //WORK ON ADDING BLOCK FUNCTIONALITY 
 
   return friendRequests && userContext ? (
+    <div className="friendsContent">
     <div>
       {friendRequests.length !== 0 ? (
         <ul>
@@ -115,8 +131,15 @@ const FriendRequests = () => {
         </>
       )}
     </div>
+    <div>
+      <h1>Frienderinos</h1>
+      {friends && <ul className="friendsList">{friends.map((friend, index)=>{
+        return <li className="friend" key={index}>{friend.username} <Link to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}>Profile Page</Link></li>
+      })}</ul>}
+    </div>
+    </div>
   ) : (
-    <div>You need to log in to view friend requests</div>
+    <div>You need to log in to view friends</div>
   );
 };
 

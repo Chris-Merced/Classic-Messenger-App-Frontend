@@ -140,13 +140,6 @@ const HomeChatComponent = () => {
     );
   };
 
-  if (messages) {
-    messages.forEach((message) => {
-      console.log(message);
-    });
-  }
-  //STILL NEED TO SET UP FRIENDS LIST SIDEBAR
-  //BRAINSTORM HOW TO SET UP FRIENDS LIST SIDEBAR OR WHAT THE OPTIMAL IMPLEMENTATION WOULD BE 
 
   return (
     <div className="mainChat">

@@ -89,10 +89,6 @@ body {
   padding-bottom: .1vw;
 }
 
-.friendRequests{
-  display:flex;
-  align-items: center;
-}
 
 .friendRequestNotifications{
   display: flex;
@@ -107,6 +103,19 @@ body {
   padding-right: .5vw;
   padding-top: .1vw;
   padding-bottom: .1vw;
+}
+
+.friendRequests{
+  display:flex;
+  align-items: center;
+}
+
+.friendsContent{
+
+}
+
+.friend{
+  list-style: none;
 }
 
 .message{

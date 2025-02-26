@@ -43,7 +43,7 @@ const UserProfile = () => {
       const friendStatus = await response.json();
       console.log("CHECKING FRIEND STATUS");
       console.log(friendStatus);
-      setFriendStatus(friendStatus);
+      setFriendStatus(friendStatus.friendStatus);
     };
 
     getUserProfile();
@@ -51,6 +51,8 @@ const UserProfile = () => {
       checkIfFriends();
     }
   }, [userIdentifier]);
+
+  console.log(friendStatus);
 
   const sendDirectMessage = async (userID) => {
     const user = userContext.user;
@@ -99,7 +101,7 @@ const UserProfile = () => {
           <button onClick={() => sendDirectMessage(userContext.user.id)}>
             Direct Message
           </button>
-          {!friendStatus ? (
+          {friendStatus === false ? (
             <button onClick={sendFriendRequest}>Send Friend Request</button>
           ) : (
             <></>
