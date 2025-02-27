@@ -23,8 +23,8 @@ const HomeChatComponent = () => {
   }, [userData]);
 
   useEffect(() => {
-    setChat(currentChat);
-    console.log(chat.name);
+    setChat({ ...currentChat });
+    console.log(chat);
   }, [currentChat]);
 
   useEffect(() => {
@@ -43,15 +43,20 @@ const HomeChatComponent = () => {
             minute: "2-digit",
             hour12: true,
           }),
-          dateObj
-
+          dateObj,
         };
 
+
         //CHANGE TO IF CONVERSATIONNAME AND CHAT NAME THEN CHECK EACH OTHER
-        if (message.conversationName === chat.name) {
+        if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
         }
         //OTHERWISE MAKE SURE THAT CONVERSATION NAME AND CHAT NAME ARE THE SAME PERSON VIA CONVERSATION ID
+
+        //CONTINUE FINDING OTHER AREAS WHERE BASE DIRECT MESSAGING FUNCTIONALITY MAY NOT BE WORKING PROPERLY
+        //STARTING A DM DOES NOT PROPERLY IMMEDIATELY UPDATE THE LEFT SIDEBAR LIST
+        //REMEMBER WE ARE STILL TRYING TO FIGURE OUT THE FUNCTIONALITY TO UPDATE THE SIDEBAR TO SHOW
+        //WHETHER PEOPLE ARE ONLINE OR NOT
       };
     };
 
@@ -72,7 +77,7 @@ const HomeChatComponent = () => {
         }
       };
     }
-  }, [chat.name, socketRef.current]);
+  }, [chat, socketRef.current]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -139,7 +144,6 @@ const HomeChatComponent = () => {
       }
     );
   };
-
 
   return (
     <div className="mainChat">
