@@ -12,11 +12,15 @@ const SideBarComponent = () => {
 
   const [listOfChats, setListOfChats] = useState(null);
 
+
+
+  //WE CHANGED USEEFFECT ARRAY TO INCLUDE LOCATION SO CHAT LIST IS REFRESHED ON NAVIGATION
+  //THIS IS UNTESTED NEED TO TEST BY CREATING NEW ACCOUNT AND CREATING NEW DM
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
     }
-  }, [chatContext.chatList]);
+  }, [chatContext.chatList, location]);
 
   /*useEffect(() => {
     var usersList = [];
