@@ -10,6 +10,7 @@ export const UserChatsContext = createContext({
 export const UserChats = ({ children }) => {
   const userContext = useContext(UserContext);
   const [chatList, setChatList] = useState(null);
+  const [location, setLocation] = useState("");
   const [currentChat, setCurrentChat] = useState({
     name: "main",
     conversationID: 1,
@@ -39,7 +40,7 @@ export const UserChats = ({ children }) => {
     if (userContext && userContext.user && userContext.user.id) {
       getChats();
     }
-  }, [userContext]);
+  }, [userContext, location]);
 
   const changeChat = (chat) => {
     console.log(chat);
@@ -50,9 +51,15 @@ export const UserChats = ({ children }) => {
     setChatList("");
   };
 
+  const changeLocation = (location) => {
+    console.log("CHECKING IF WE MADE IT TO CHANGE LOCATION WITHIN USER CHATS CONTEXT")
+    setLocation(location);
+
+  };
+
   return (
     <UserChatsContext.Provider
-      value={{ chatList, currentChat, changeChat, resetChatList }}
+      value={{ chatList, currentChat, changeChat, resetChatList, changeLocation }}
     >
       {children}
     </UserChatsContext.Provider>

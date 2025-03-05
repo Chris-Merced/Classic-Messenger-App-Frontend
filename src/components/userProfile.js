@@ -63,11 +63,12 @@ const UserProfile = () => {
     const data = await response.json();
 
     if (data.conversation_id) {
-      navigate("/");
+      
       chatContext.changeChat({
         name: null,
         conversationID: data.conversation_id,
       });
+      navigate("/");
     }
   };
 

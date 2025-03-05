@@ -11,16 +11,29 @@ const SideBarComponent = () => {
   const location = useLocation();
 
   const [listOfChats, setListOfChats] = useState(null);
+  const [url, setUrl] = useState('');
 
-
-
-  //WE CHANGED USEEFFECT ARRAY TO INCLUDE LOCATION SO CHAT LIST IS REFRESHED ON NAVIGATION
-  //THIS IS UNTESTED NEED TO TEST BY CREATING NEW ACCOUNT AND CREATING NEW DM
+  
   useEffect(() => {
+    console.log("TESTING IF USEEFFECT FOR CHAT SIDEBAR IS TRIGGERED");
+    console.log(location.pathname);
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
     }
-  }, [chatContext.chatList, location]);
+  }, [chatContext.chatList, url]);
+
+  useEffect(()=>{
+
+    console.log("CHECKING IF WE MAKE IT TO CHANGE LOCATION IN SIDEBAR COMPONENT");
+    chatContext.changeLocation(location);
+
+  },[location])
+
+
+  //WE HAVE FIGURED OUT HOW TO HAVE SIDEBAR CONSTANTLY UPDATE ON WEBSITE NAVIGATION
+  //YAY
+  //NOW NEED TO FIGRE OUT HOW TO HAVE THE USER ONLINE STATUS SHOW UP!
+  //MOST OF THE IMPLEMENTATION HAS BEEN SET UP BELOW 
 
   /*useEffect(() => {
     var usersList = [];
