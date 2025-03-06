@@ -11,31 +11,25 @@ const SideBarComponent = () => {
   const location = useLocation();
 
   const [listOfChats, setListOfChats] = useState(null);
-  const [url, setUrl] = useState('');
+  const [activeUsers, setActiveUsers] = useState({});
 
-  
   useEffect(() => {
     console.log("TESTING IF USEEFFECT FOR CHAT SIDEBAR IS TRIGGERED");
     console.log(location.pathname);
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
     }
-  }, [chatContext.chatList, url]);
+  }, [chatContext.chatList]);
 
-  useEffect(()=>{
-
-    console.log("CHECKING IF WE MAKE IT TO CHANGE LOCATION IN SIDEBAR COMPONENT");
+  useEffect(() => {
+    console.log(
+      "CHECKING IF WE MAKE IT TO CHANGE LOCATION IN SIDEBAR COMPONENT"
+    );
     chatContext.changeLocation(location);
+  }, [location]);
 
-  },[location])
 
-
-  //WE HAVE FIGURED OUT HOW TO HAVE SIDEBAR CONSTANTLY UPDATE ON WEBSITE NAVIGATION
-  //YAY
-  //NOW NEED TO FIGRE OUT HOW TO HAVE THE USER ONLINE STATUS SHOW UP!
-  //MOST OF THE IMPLEMENTATION HAS BEEN SET UP BELOW 
-
-  /*useEffect(() => {
+  useEffect(() => {
     var usersList = [];
 
     const getOnlineUsers = async () => {
@@ -51,14 +45,18 @@ const SideBarComponent = () => {
       );
       const data = await response.json();
       console.log(data);
+      setActiveUsers(data.activeUsers);
     };
     if (listOfChats) {
       getOnlineUsers();
+      setInterval(()=>{
+        getOnlineUsers()
+      }, 3000)
     }
-  }, [listOfChats]);*/
+  }, [listOfChats]);
 
   const changeChat = (chat) => {
-    //IF NAME THEN CHANGE CHANGE TO CHAT NAME FOR HOME.JS
+    //IF NAME THEN CHANGE TO CHAT NAME FOR HOME.JS
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,
@@ -87,6 +85,13 @@ const SideBarComponent = () => {
             <button onClick={() => changeChat(chat)}>
               {chat.name ? chat.name : chat.participants}
             </button>
+            {chat.participants &&
+            chat.participants.length === 1 &&
+            activeUsers[chat.participants] ? (
+              <div className="online">online</div>
+            ) : (
+              <div className="offline"></div>
+            )}
           </li>
         ))}
       </ul>

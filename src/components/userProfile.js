@@ -14,6 +14,11 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
+
+  //ADD IN BLOCK FUNCTIONALITY
+  //SHOULD BE VERY SIMPLE JUST FORM A PATH ON THE BACKEND AND CREATE A NEW ROUTE FOR BLOCK LIST
+  //ADD BLOCK BUTTON THAT TRIGGERS FUNCTION FOR BLOCK FETCH 
+
   useEffect(() => {
     const getUserProfile = async () => {
       try {

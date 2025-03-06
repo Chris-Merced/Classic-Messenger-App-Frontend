@@ -138,6 +138,11 @@ body {
   margin-left: 10px;
 }
 
+.online{
+  color:green;
+}
+
+
 .date{
   display: flex;
   justify-content: center;
