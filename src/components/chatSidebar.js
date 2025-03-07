@@ -35,16 +35,15 @@ const SideBarComponent = () => {
     const getOnlineUsers = async () => {
       if (listOfChats) {
         listOfChats.map((chat) => {
-          chat.participants !== null && chat.participants.length === 1
-            ? usersList.push(chat.participants[0])
-            : console.log("chat is more than one person");
+          if (chat.participants !== null && chat.participants.length === 1){
+             usersList.push(chat.participants[0])
+          }
         });
       }
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/conversations/getOnlineUsers?userList=${usersList}`
       );
       const data = await response.json();
-      console.log(data);
       setActiveUsers(data.activeUsers);
     };
     if (listOfChats) {

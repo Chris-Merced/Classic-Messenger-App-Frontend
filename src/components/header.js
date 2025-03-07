@@ -151,7 +151,7 @@ const HeaderComponent = () => {
               <button onClick={isDropDown}>Drop-Down</button>
               {dropDown && (
                 <div className="Menu">
-                  <div className="friends"><Link to={`/userProfile/friends`}>Friend Requests</Link> {friendRequests.length !== 0 ? <div className="friendRequestNotifications">{friendRequests?.length}</div> : <span></span>}</div>
+                  <div className="friends"><Link to={`/userProfile/friends`}>Friends</Link> {friendRequests.length !== 0 ? <div className="friendRequestNotifications">{friendRequests?.length}</div> : <span></span>}</div>
                   <button className="logout" onClick={logoutHandler}>
                     Log Out
                   </button>
