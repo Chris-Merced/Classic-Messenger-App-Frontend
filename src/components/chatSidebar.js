@@ -14,17 +14,12 @@ const SideBarComponent = () => {
   const [activeUsers, setActiveUsers] = useState({});
 
   useEffect(() => {
-    console.log("TESTING IF USEEFFECT FOR CHAT SIDEBAR IS TRIGGERED");
-    console.log(location.pathname);
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
     }
   }, [chatContext.chatList]);
 
   useEffect(() => {
-    console.log(
-      "CHECKING IF WE MAKE IT TO CHANGE LOCATION IN SIDEBAR COMPONENT"
-    );
     chatContext.changeLocation(location);
   }, [location]);
 

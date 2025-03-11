@@ -10,14 +10,13 @@ export const WebSocketProvider = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
 
   const user = useContext(UserContext);
-  console.log(user);
 
   useEffect(() => {
     setCurrentUser(user);
   }, [user]);
 
   useEffect(() => {
-    console.log("WS URL:", process.env.REACT_APP_WS_URL); // Debug log
+    console.log("WS URL:", process.env.REACT_APP_WS_URL);
 
     if (!process.env.REACT_APP_WS_URL) {
       console.error("WebSocket URL is not defined");

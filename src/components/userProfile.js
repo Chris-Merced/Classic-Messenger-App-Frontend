@@ -9,6 +9,7 @@ const UserProfile = () => {
   const [profile, setProfile] = useState("");
   const [error, setError] = useState("");
   const [isBlocked, setIsBlocked] = useState("");
+  const [blockedByProfile, setBlockedByProfile] = useState("");
   const [friendStatus, setFriendStatus] = useState("");
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
@@ -45,19 +46,14 @@ const UserProfile = () => {
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
       );
       const friendStatus = await response.json();
-      console.log("CHECKING FRIEND STATUS");
-      console.log(friendStatus);
       setFriendStatus(friendStatus.friendStatus);
     };
 
     const checkIfBlocked = async () => {
-      console.log("made it to checkifblocked");
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
       );
       const data = await response.json();
-      console.log("CHECKING BLOCKED DATA ");
-      console.log(data);
       setIsBlocked(data.isBlocked);
     };
 
@@ -67,6 +63,19 @@ const UserProfile = () => {
       checkIfBlocked();
     }
   }, [userIdentifier, isBlocked]);
+
+  useEffect(() => {
+    const checkIfBlockedByProfile = async () => {
+      if (userContext?.user?.id) {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
+        );
+        const data = await response.json();
+        setBlockedByProfile(data);
+      }
+    };
+    checkIfBlockedByProfile();
+  }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
     const user = userContext.user;
@@ -102,7 +111,6 @@ const UserProfile = () => {
     );
 
     const newData = await response.json();
-    console.log(newData);
   };
 
   const blockUser = async () => {
@@ -118,7 +126,6 @@ const UserProfile = () => {
       }
     );
     const data = await response.json();
-    console.log(data);
     setIsBlocked(true);
   };
 
@@ -134,8 +141,7 @@ const UserProfile = () => {
       }
     );
     const data = await response.json();
-    console.log(data)
-    setIsBlocked(false)
+    setIsBlocked(false);
   };
 
   return (
@@ -145,9 +151,13 @@ const UserProfile = () => {
           <div>Hello {userIdentifier} ...</div>
           <div>Welcome to the page of {profile.username}</div>
           <div>Created at {profile.created_at}</div>
-          <button onClick={() => sendDirectMessage(userContext.user.id)}>
-            Direct Message
-          </button>
+          {blockedByProfile ? (
+            <div>You Are Currently Blocked by This User</div>
+          ) : (
+            <button onClick={() => sendDirectMessage(userContext.user.id)}>
+              Direct Message
+            </button>
+          )}
           {isBlocked === false ? (
             <button onClick={blockUser}>Block</button>
           ) : (

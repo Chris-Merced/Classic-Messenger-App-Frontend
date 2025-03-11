@@ -52,7 +52,6 @@ export const UserChats = ({ children }) => {
   };
 
   const changeLocation = (location) => {
-    console.log("CHECKING IF WE MADE IT TO CHANGE LOCATION WITHIN USER CHATS CONTEXT")
     setLocation(location);
 
   };
