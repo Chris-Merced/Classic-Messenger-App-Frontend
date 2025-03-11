@@ -15,9 +15,12 @@ const UserProfile = () => {
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
-  //ADD IN BLOCK FUNCTIONALITY
-  //SHOULD BE VERY SIMPLE JUST FORM A PATH ON THE BACKEND AND CREATE A NEW ROUTE FOR BLOCK LIST
-  //ADD BLOCK BUTTON THAT TRIGGERS FUNCTION FOR BLOCK FETCH
+
+
+  //NEED TO CONTINUE TO IMPLEMENT BLOCK FUNCTIONALITY
+  //THE BLOCK FUNCTIONALITY SHOULD DISALLOW USERS FROM SENDING MESSAGES AT ALL VIA WEBSOCKET
+  //IF THEY HAVE BEEN BLOCKED
+
 
   useEffect(() => {
     const getUserProfile = async () => {
