@@ -4,6 +4,13 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// CAN ADD PRIVATE AND PUBLIC FUNCTIONALITY BY ADDING USER ATTRIBUTE TO TABLE
+// CHECK AND SEE IF WE CAN FIGURE OUT WHY THE ONLINEUSERS LIST GETS INCREDIBLY LONG
+// SHOULD BE UPDATING THE LIST NOT ADDING TO THE LIST, IS PROBABLY WHY FUNCTIONALITY IS NOT 100 PERCENT
+
+
+
+
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userContext = useContext(UserContext);
@@ -44,7 +51,7 @@ const SideBarComponent = () => {
       getOnlineUsers();
       setInterval(() => {
         getOnlineUsers();
-      }, 3000);
+      }, 15000);
     }
   }, [listOfChats]);
 
