@@ -23,15 +23,14 @@ const SideBarComponent = () => {
     chatContext.changeLocation(location);
   }, [location]);
 
-
   useEffect(() => {
     var usersList = [];
 
     const getOnlineUsers = async () => {
       if (listOfChats) {
         listOfChats.map((chat) => {
-          if (chat.participants !== null && chat.participants.length === 1){
-             usersList.push(chat.participants[0])
+          if (chat.participants !== null && chat.participants.length === 1) {
+            usersList.push(chat.participants[0]);
           }
         });
       }
@@ -43,14 +42,14 @@ const SideBarComponent = () => {
     };
     if (listOfChats) {
       getOnlineUsers();
-      setInterval(()=>{
-        getOnlineUsers()
-      }, 3000)
+      setInterval(() => {
+        getOnlineUsers();
+      }, 3000);
     }
   }, [listOfChats]);
 
   const changeChat = (chat) => {
-    //IF NAME THEN CHANGE TO CHAT NAME FOR HOME.JS
+
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,

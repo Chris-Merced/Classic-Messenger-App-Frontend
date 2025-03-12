@@ -43,7 +43,6 @@ export const UserChats = ({ children }) => {
   }, [userContext, location]);
 
   const changeChat = (chat) => {
-    console.log(chat);
     setCurrentChat(chat);
   };
 

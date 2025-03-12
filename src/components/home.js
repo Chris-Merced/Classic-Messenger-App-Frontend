@@ -11,6 +11,7 @@ const HomeChatComponent = () => {
   const [user, setUser] = useState("");
   const [conversationName, setConversationName] = useState("");
   const [chat, setChat] = useState({ name: "main", conversationID: 1 });
+  const [isBlocked, setIsBlocked] = useState("");
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -24,7 +25,6 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     setChat({ ...currentChat });
-    console.log(chat);
   }, [currentChat]);
 
   useEffect(() => {
@@ -46,17 +46,10 @@ const HomeChatComponent = () => {
           dateObj,
         };
 
-
-        //CHANGE TO IF CONVERSATIONNAME AND CHAT NAME THEN CHECK EACH OTHER
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
         }
-        //OTHERWISE MAKE SURE THAT CONVERSATION NAME AND CHAT NAME ARE THE SAME PERSON VIA CONVERSATION ID
 
-        //CONTINUE FINDING OTHER AREAS WHERE BASE DIRECT MESSAGING FUNCTIONALITY MAY NOT BE WORKING PROPERLY
-        //STARTING A DM DOES NOT PROPERLY IMMEDIATELY UPDATE THE LEFT SIDEBAR LIST
-        //REMEMBER WE ARE STILL TRYING TO FIGURE OUT THE FUNCTIONALITY TO UPDATE THE SIDEBAR TO SHOW
-        //WHETHER PEOPLE ARE ONLINE OR NOT
       };
     };
 
@@ -78,6 +71,8 @@ const HomeChatComponent = () => {
       };
     }
   }, [chat, socketRef.current]);
+
+
 
   useEffect(() => {
     const getMessages = async () => {
@@ -109,7 +104,19 @@ const HomeChatComponent = () => {
         setMessages(timeFormattedArray);
       }
     };
+
+
+    const checkIfBlocked = async () =>{
+      if(!chat.name){
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`) 
+        const data = await response.json();
+        setIsBlocked(data);
+      }
+    }
+
     getMessages();
+    checkIfBlocked();
+
   }, [chat]);
 
   const sendMessage = async (e) => {
@@ -193,7 +200,10 @@ const HomeChatComponent = () => {
       </ul>
       {user && (
         <>
+          
+          {isBlocked ? <div>You've been Blocked by this user</div> :
           <form>
+            
             <input
               type="text"
               onChange={(e) => {
@@ -203,7 +213,7 @@ const HomeChatComponent = () => {
               value={message}
             ></input>
             <button onClick={sendMessage}>Send Message</button>
-          </form>
+          </form>}
         </>
       )}
     </div>
