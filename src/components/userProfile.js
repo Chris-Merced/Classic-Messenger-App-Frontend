@@ -11,15 +11,17 @@ const UserProfile = () => {
   const [isBlocked, setIsBlocked] = useState("");
   const [blockedByProfile, setBlockedByProfile] = useState("");
   const [friendStatus, setFriendStatus] = useState("");
+  const [isPublic, setIsPublic] = useState("");
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
+  //NEED TO IMPLEMENT BUTTON FUNCTIONALITY WITHIN USER PROFILE
+  //TO CHANGE PROFILE FROM PUBLIC TO PRIVATE
+  //IF THE USERIDENTIFIER===USERCONTEXT.USER.ID THEN BUTTON APPEARS
+  //THEN FETCH TO POST AND CHANGE IS_PUBLIC STATUS TO FALSE 
 
-  //NEED TO CONTINUE TO IMPLEMENT BLOCK FUNCTIONALITY
-  //THE BLOCK FUNCTIONALITY SHOULD DISALLOW USERS FROM SENDING MESSAGES AT ALL VIA WEBSOCKET
-  //IF THEY HAVE BEEN BLOCKED
 
 
   useEffect(() => {
@@ -59,11 +61,19 @@ const UserProfile = () => {
       const data = await response.json();
       setIsBlocked(data.isBlocked);
     };
+    
+    const checkIfPublic = async () => {
+      console.log("Made it to checkifPublic");
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`)
+      const data = await response.json()
+      setIsPublic(data);
+    }
 
     getUserProfile();
     if (userContext?.user?.id) {
       checkIfFriends();
       checkIfBlocked();
+      checkIfPublic();
     }
   }, [userIdentifier, isBlocked]);
 
@@ -149,7 +159,7 @@ const UserProfile = () => {
 
   return (
     <>
-      {profile ? (
+      {profile && (isPublic || friendStatus) ? (
         <>
           <div>Hello {userIdentifier} ...</div>
           <div>Welcome to the page of {profile.username}</div>
@@ -174,7 +184,21 @@ const UserProfile = () => {
         </> //MAKE GET FETCH TO CHECK IF PUBLIC OR PRIVATE AND HAVE DM APPEAR ONLY
       ) : (
         ////IF PUBLIC, OR PRIVATE AND FRIENDS
-        <div>{error}</div>
+        <>
+          <div>Hello {userIdentifier} ...</div>
+          <div>Welcome to the page of {profile.username}</div>
+          <div>Created at {profile.created_at}</div>
+          {isBlocked === false ? (
+            <button onClick={blockUser}>Block</button>
+          ) : (
+            <button onClick={unblockUser}>Unblock</button>
+          )}
+          {friendStatus === false ? (
+            <button onClick={sendFriendRequest}>Send Friend Request</button>
+          ) : (
+            <></>
+          )}
+        </> 
       )}
     </>
   );
