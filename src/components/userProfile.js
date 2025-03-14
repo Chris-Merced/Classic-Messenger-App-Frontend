@@ -20,9 +20,7 @@ const UserProfile = () => {
   //NEED TO IMPLEMENT BUTTON FUNCTIONALITY WITHIN USER PROFILE
   //TO CHANGE PROFILE FROM PUBLIC TO PRIVATE
   //IF THE USERIDENTIFIER===USERCONTEXT.USER.ID THEN BUTTON APPEARS
-  //THEN FETCH TO POST AND CHANGE IS_PUBLIC STATUS TO FALSE 
-
-
+  //THEN FETCH TO POST AND CHANGE IS_PUBLIC STATUS TO FALSE
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -61,21 +59,27 @@ const UserProfile = () => {
       const data = await response.json();
       setIsBlocked(data.isBlocked);
     };
-    
-    const checkIfPublic = async () => {
-      console.log("Made it to checkifPublic");
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`)
-      const data = await response.json()
-      setIsPublic(data);
-    }
 
     getUserProfile();
     if (userContext?.user?.id) {
       checkIfFriends();
       checkIfBlocked();
-      checkIfPublic();
     }
   }, [userIdentifier, isBlocked]);
+
+  useEffect(() => {
+    const checkIfPublic = async () => {
+      console.log("Made it to checkifPublic");
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`
+      );
+      const data = await response.json();
+      setIsPublic(data);
+    };
+    if(userContext?.user?.id){
+      checkIfPublic();
+    }
+  }, [isPublic]);
 
   useEffect(() => {
     const checkIfBlockedByProfile = async () => {
@@ -157,6 +161,34 @@ const UserProfile = () => {
     setIsBlocked(false);
   };
 
+  const changeProfileStatus = async () => {
+    console.log("hello world");
+
+    const body = { userID: userContext.user.id, status: isPublic };
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/userProfile/changeProfileStatus?userID=${userContext.user.id}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    const data = await response.json();
+    if(data.changed){
+      if(isPublic){
+        setIsPublic(false)
+      }else{
+        setIsPublic(true)
+      }
+    }
+  };
+
+  console.log("User Identifier: " + userIdentifier);
+  console.log("User Context: " + userContext.user.id);
+
   return (
     <>
       {profile && (isPublic || friendStatus) ? (
@@ -181,9 +213,8 @@ const UserProfile = () => {
           ) : (
             <></>
           )}
-        </> //MAKE GET FETCH TO CHECK IF PUBLIC OR PRIVATE AND HAVE DM APPEAR ONLY
+        </> 
       ) : (
-        ////IF PUBLIC, OR PRIVATE AND FRIENDS
         <>
           <div>Hello {userIdentifier} ...</div>
           <div>Welcome to the page of {profile.username}</div>
@@ -198,7 +229,20 @@ const UserProfile = () => {
           ) : (
             <></>
           )}
-        </> 
+        </>
+      )}
+      {userContext?.user?.id == userIdentifier && (
+        <>
+          {isPublic ? (
+            <button onClick={changeProfileStatus}>
+              Change Profile to Private
+            </button>
+          ) : (
+            <button onClick={changeProfileStatus}>
+              Change Profile to Public
+            </button>
+          )}
+        </>
       )}
     </>
   );
