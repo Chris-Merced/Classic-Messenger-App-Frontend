@@ -51,8 +51,7 @@ const SideBarComponent = () => {
     };
   
     getOnlineUsers(); 
-    intervalRef.current = setInterval(getOnlineUsers, 2000); 
-    console.log("got online users")
+    intervalRef.current = setInterval(getOnlineUsers, 15000); 
   
     return () => {
       clearInterval(intervalRef.current);
