@@ -17,10 +17,6 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
-  //NEED TO IMPLEMENT BUTTON FUNCTIONALITY WITHIN USER PROFILE
-  //TO CHANGE PROFILE FROM PUBLIC TO PRIVATE
-  //IF THE USERIDENTIFIER===USERCONTEXT.USER.ID THEN BUTTON APPEARS
-  //THEN FETCH TO POST AND CHANGE IS_PUBLIC STATUS TO FALSE
 
   useEffect(() => {
     const getUserProfile = async () => {

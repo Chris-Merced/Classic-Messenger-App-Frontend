@@ -1,21 +1,17 @@
 import React from "react";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
-
-// CAN ADD PRIVATE AND PUBLIC FUNCTIONALITY BY ADDING USER ATTRIBUTE TO TABLE
-// CHECK AND SEE IF WE CAN FIGURE OUT WHY THE ONLINEUSERS LIST GETS INCREDIBLY LONG
-// SHOULD BE UPDATING THE LIST NOT ADDING TO THE LIST, IS PROBABLY WHY FUNCTIONALITY IS NOT 100 PERCENT
-
-
-
 
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const intervalRef = useRef(null);
+
+
 
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
@@ -31,29 +27,37 @@ const SideBarComponent = () => {
   }, [location]);
 
   useEffect(() => {
-    var usersList = [];
-
-    const getOnlineUsers = async () => {
-      if (listOfChats) {
-        listOfChats.map((chat) => {
-          if (chat.participants !== null && chat.participants.length === 1) {
-            usersList.push(chat.participants[0]);
-          }
-        });
-      }
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/conversations/getOnlineUsers?userList=${usersList}`
-      );
-      const data = await response.json();
-      setActiveUsers(data.activeUsers);
-    };
-    if (listOfChats) {
-      getOnlineUsers();
-      setInterval(() => {
-        getOnlineUsers();
-      }, 15000);
+    if (!listOfChats) return;
+  
+    
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
-  }, [listOfChats]);
+  
+    const getOnlineUsers = async () => {
+      const usersList = listOfChats
+        .filter(chat => chat.participants && chat.participants.length === 1) 
+        .map(chat => chat.participants[0]); 
+  
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/conversations/getOnlineUsers?userList=${usersList}`
+        );
+        const data = await response.json();
+        setActiveUsers(data.activeUsers);
+      } catch (error) {
+        console.error("Error fetching online users:", error);
+      }
+    };
+  
+    getOnlineUsers(); 
+    intervalRef.current = setInterval(getOnlineUsers, 2000); 
+    console.log("got online users")
+  
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [listOfChats]); 
 
   const changeChat = (chat) => {
 
@@ -76,6 +80,8 @@ const SideBarComponent = () => {
       }
     }
   };
+
+
 
   return listOfChats && userContext.user ? (
     <div className="sideBar">
