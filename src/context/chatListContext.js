@@ -31,6 +31,8 @@ export const UserChats = ({ children }) => {
         );
 
         const data = await response.json();
+        console.log("SHOWING CHATS DATA: ")
+        console.log(data);
         setChatList(data);
       } catch (err) {
         console.error("Error getting user chats: " + err);

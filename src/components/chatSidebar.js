@@ -51,12 +51,25 @@ const SideBarComponent = () => {
     };
   
     getOnlineUsers(); 
-    //intervalRef.current = setInterval(getOnlineUsers, 15000); 
+    intervalRef.current = setInterval(getOnlineUsers, 15000); 
   
     return () => {
       clearInterval(intervalRef.current);
     };
   }, [listOfChats]); 
+
+  useEffect(()=>{
+    if(listOfChats){const chat = listOfChats[0];
+    console.log("CHECKING FIRST INDEX OF ARRAY LIST OF CHATS")
+    console.log(listOfChats[0])
+    
+      chatContext.changeChat({
+        name: chat.name,
+        conversationID: chat.conversation_id,
+        reciever: chat.participants
+      });
+    }
+  },[listOfChats])
 
   const changeChat = (chat) => {
 
@@ -64,6 +77,7 @@ const SideBarComponent = () => {
       chatContext.changeChat({
         name: chat.name,
         conversationID: chat.conversation_id,
+        reciever: chat.participants
       });
       if (location.pathname !== "/") {
         navigate("/");
