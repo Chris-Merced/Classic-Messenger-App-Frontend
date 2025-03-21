@@ -5,6 +5,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")))
+
+
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'favicon.ico'));
 });
