@@ -22,7 +22,10 @@ const HeaderComponent = () => {
 
     const getUserFriendRequests = async () => {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${context.user.id}`
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${context.user.id}`,{
+          method: "GET",
+          credentials: "include",
+        }
       );
 
       const friendRequestData = await response.json();

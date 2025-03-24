@@ -14,7 +14,10 @@ const FriendRequests = () => {
   useEffect(() => {
     const getFriendRequests = async () => {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${user.id}`
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${user.id}`, {
+          method:"GET",
+          credentials:"include"
+        }
       );
       const data = await response.json();
       setFriendRequests(data.friendRequests);
