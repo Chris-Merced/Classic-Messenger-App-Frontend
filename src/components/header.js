@@ -140,11 +140,14 @@ const HeaderComponent = () => {
                   setSearchInput(e.target.value);
                   const username = e.target.value;
                   searchDB(e, username);
+                }
+                }onBlur={(e)=>{setSearchInput('');
+                  searchDB(e, username);
                 }}
               ></input>
               <ul className="searchResults">
                 {users.map((user, index) => (
-                  <li key={index}>
+                  <li className="searchOption" key={index}>
                     <Link to={`/userProfile/${user.id}`}>{user.username}</Link>
                   </li>
                 ))}

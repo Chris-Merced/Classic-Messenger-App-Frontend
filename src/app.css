@@ -214,6 +214,7 @@ body.light-theme {
 
 .searchBar input {
   width: 7vw;
+  text-align: center;
   padding: 10px;
   border: none;
   border-radius: 20px;
@@ -254,7 +255,18 @@ body.light-theme .searchBar input::placeholder {
 
 .searchResults {
   position: absolute;
+  display:flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all ease 1s;
+  border-radius: 10px;
+  z-index: 100;
+  list-style: none;
+  gap:10px;
+  transform: translateX(100px)
 }
+
 
 .themeToggle {
   background: rgba(255, 255, 255, 0.2);
