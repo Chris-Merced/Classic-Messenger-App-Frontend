@@ -12,6 +12,7 @@ const HomeChatComponent = () => {
   const [conversationName, setConversationName] = useState("");
   const [chat, setChat] = useState({ name: "main", conversationID: 1 });
   const [isBlocked, setIsBlocked] = useState("");
+  const mainChatRef = useRef(null);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -26,6 +27,12 @@ const HomeChatComponent = () => {
   useEffect(() => {
     setChat({ ...currentChat });
   }, [currentChat]);
+
+  useEffect(()=>{
+    if(mainChatRef.current){
+      mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight;
+    }
+  },[messages])
 
   useEffect(() => {
     const setupMessageHandler = () => {
@@ -153,7 +160,8 @@ const HomeChatComponent = () => {
   };
 
   return (
-    <div className="mainChat">
+    <div className="mainContent">
+    <div className="mainChat scroll-container" ref={mainChatRef}>
       <ul className="MessageList">
         {messages.map((message, index) => (
           <li className="message" key={index}>
@@ -198,8 +206,10 @@ const HomeChatComponent = () => {
           </li>
         ))}
       </ul>
-      {user && (
-        <>
+      
+    </div>
+    {user && (
+        <div className="sendMessage">
           
           {isBlocked ? <div>You've been Blocked by this user</div> :
           <form>
@@ -214,9 +224,9 @@ const HomeChatComponent = () => {
             ></input>
             <button onClick={sendMessage}>Send Message</button>
           </form>}
-        </>
+        </div>
       )}
-    </div>
+      </div>
   );
 };
 export default HomeChatComponent;

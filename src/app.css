@@ -4,6 +4,9 @@
   --bg-light: linear-gradient(135deg, #f1f1f1, #949393fd);
   --bg-dark: linear-gradient(135deg, #363636, #282529);
   --menu-bg: rgba(255, 255, 255, 0.2);
+  --border-color-dark: rgba(226, 226, 226, 0.5);
+  --border-color-light: rgba(117, 117, 117);
+  --button-background-color-light: rgba(146, 146, 146, 0.5);
 }
 
 body {
@@ -13,9 +16,8 @@ body {
   background-attachment: fixed;
   background-size: cover;
   color: var(--primary-light);
-  transition: color .75s ease;
+  transition: color 0.75s ease;
 }
-
 
 body::before {
   content: "";
@@ -26,7 +28,7 @@ body::before {
   height: 100%;
   background: var(--bg-light);
   opacity: 0;
-  transition: opacity .75s ease;
+  transition: opacity 0.75s ease;
   z-index: -1;
 }
 
@@ -71,15 +73,14 @@ body.light-theme {
   position: relative;
   display: flex;
   margin-left: auto;
-  margin-right: 10vw;
-  width: 10vw;
+  margin-right: -2vw;
   align-items: center;
   gap: 10px;
 }
 
-.interactionComponents{
+.interactionComponents {
   display: flex;
-  width:100vw;
+  width: 100vw;
 }
 
 .profileName {
@@ -87,7 +88,25 @@ body.light-theme {
 }
 
 .DropDown {
+  border: 2px solid;
+  border-color: var(--border-color-dark);
+  border-radius: 22px;
   position: relative;
+}
+
+.profileButton {
+  display: flex;
+  gap: 6px;
+}
+
+body.light-theme .DropDown {
+  border: 2px solid;
+  border-color: var(--border-color-light);
+  border-radius: 22px;
+  background-color: var(--button-background-color-light);
+}
+body.light-theme .DropDown button {
+  color: rgb(75, 75, 75);
 }
 
 .DropDown button {
@@ -107,7 +126,8 @@ body.light-theme {
 }
 
 .Menu {
-  display: none;
+  border: 2px solid red;
+  border-color: var(--border-color-dark);
   position: absolute;
   top: 100%;
   right: 200;
@@ -118,11 +138,32 @@ body.light-theme {
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
   min-width: 150px;
   opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateX(-20px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease;
   z-index: 100;
+  pointer-events: none;
+  left: -110px;
+  top: 50px;
 }
 
+h1{
+}
+
+body.light-theme .Menu {
+  border-color: var(--border-color-light);
+}
+
+.Menu.show {
+  opacity: 1;
+  transform: translateY(20px), translateX(-60px);
+  pointer-events: auto;
+}
+
+.Menu.hide {
+  opacity: 0;
+  transform: translateY(-5px);
+  pointer-events: none;
+}
 
 .Menu .menu-item {
   display: block;
@@ -130,16 +171,16 @@ body.light-theme {
   text-align: center;
   color: white;
   background: var(--menu-bg);
-  background-color: rgba(255, 255, 255, 0.0);
+  background-color: rgba(255, 255, 255, 0);
   transition: background-color 0.3s ease;
   cursor: pointer;
   text-decoration: none;
-  border: none;       
-  outline: none;     
-  appearance: none;  
+  border: none;
+  outline: none;
+  appearance: none;
   font-family: inherit;
   font-size: inherit;
-  margin: 0;         
+  margin: 0;
 }
 
 .Menu .friends a {
@@ -152,7 +193,7 @@ body.light-theme {
   all: unset;
   display: block;
   padding: 10px;
-  width:130px;
+  width: 130px;
   text-align: center;
   background-color: rgba(250, 250, 250, 0);
   color: rgb(255, 255, 255);
@@ -181,13 +222,12 @@ body.light-theme {
   animation: appear 0.3s ease-in-out;
 }
 
-body.light-theme .Menu .menu-item{
-  color: rgba(0, 0, 0, 1.0);
+body.light-theme .Menu .menu-item {
+  color: rgba(0, 0, 0, 1);
 }
 
-body.light-theme .Menu .menu-item:hover{
+body.light-theme .Menu .menu-item:hover {
   background-color: rgba(139, 139, 139, 0.5);
-
 }
 
 .DropDown.active .Menu {
@@ -202,24 +242,55 @@ body.light-theme .Menu .menu-item:hover{
 }
 
 .chatList {
+  padding: 15px;
+  border: 2px solid;
+  border-color: var(--border-color-dark);
   background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(15px);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-left: 4vw;
 }
 
-.chatButton{
+body.light-theme .chatList {
+  background-color: rgba(179, 177, 177, 0.5);
+  backdrop-filter: blur(20px);
+  border: 2px solid;
+  border-color: var(--border-color-light);
+}
+
+.chat {
   display: flex;
+  align-items: center;
   gap: 5px;
+  width: 100%;
 }
 
-.chatButton button{
+.chat button {
+  all: unset;
+  width: 100%;
   background: none;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.chat button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transition: all ease 1s;
+}
+
+body.light-theme .chat button:hover {
+  background-color: rgba(139, 139, 139, 0.5);
 }
 
 .searchBar {
   margin-left: auto;
   position: relative;
+  border: 2px solid;
+  border-color: var(--border-color-dark);
+  border-radius: 20px;
 }
 
 .searchBar input {
@@ -240,11 +311,11 @@ body.light-theme .Menu .menu-item:hover{
   transition: 2s;
 }
 
-.searchBar:hover{
-  background: rgba(255, 255, 255, 0.3);
-  transition: background-color ease .7s;
+.searchBar:hover {
+  background: rgba(255, 255, 255, 0.452);
+  transition: background-color ease 0.7s;
   border-radius: 30px;
-
+  height: 35px;
 }
 
 .searchBar input:focus {
@@ -254,9 +325,14 @@ body.light-theme .Menu .menu-item:hover{
   outline: none;
 }
 
+body.light-theme .searchBar {
+  border: 2px solid;
+  border-color: var(--border-color-light);
+}
+
 body.light-theme .searchBar input {
-  background: rgba(0, 0, 0, 0.1); 
-  color: var(--primary-dark);    
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--primary-dark);
 }
 
 body.light-theme .searchBar input::placeholder {
@@ -266,7 +342,7 @@ body.light-theme .searchBar input::placeholder {
 .searchResults {
   position: absolute;
   width: 18vw;
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.2);
@@ -275,54 +351,55 @@ body.light-theme .searchBar input::placeholder {
   z-index: 100;
   list-style: none;
   padding: 20px;
-  gap:10px;
+  gap: 10px;
   transform: translateX(10px);
   transition: all ease 0.7s;
 }
 
 body.light-theme .searchResults {
-  background-color: rgba(114, 114, 114, 0.2)
+  background-color: rgba(114, 114, 114, 0.2);
 }
 
-.searchOption{
+.searchOption {
   width: 100%;
   text-align: center;
 }
 
-.searchOption a{
-  width:100%;
-  padding:3px;
+.searchOption a {
+  width: 100%;
+  padding: 3px;
   text-decoration: none;
   color: rgba(243, 237, 237, 0.8);
-  
 }
 
-.searchOption a:hover{
+.searchOption a:hover {
   background-color: rgba(139, 139, 139, 0.5);
-  transition: all .4s ease;
+  transition: all 0.4s ease;
   border-radius: 5px;
 }
 
-body.light-theme .searchOption{
-  transition: all .4s ease;
+body.light-theme .searchOption {
+  transition: all 0.4s ease;
   border-radius: 5px;
 }
 
-body.light-theme .searchOption:hover{
+body.light-theme .searchOption:hover {
 }
 
-body.light-theme .searchOption a{
+body.light-theme .searchOption a {
   padding-left: 30%;
   padding-right: 30%;
-  color: rgba(0, 0, 0, 1.0)
+  color: rgba(0, 0, 0, 1);
 }
 
-body.light-theme .searchOption a:hover{
-  
+body.light-theme .searchOption a:hover {
 }
 
 .themeToggle {
+  border: 2px solid red;
+  border-color: var(--border-color-dark);
   background: rgba(255, 255, 255, 0.2);
+
   margin-right: 10vw;
   backdrop-filter: blur(10px);
   border: none;
@@ -332,6 +409,21 @@ body.light-theme .searchOption a:hover{
   color: white;
   font-weight: bold;
   transition: all 0.7s ease;
+}
+
+button.themeToggle {
+  border: 2px solid;
+  border-color: var(--border-color-dark);
+}
+
+body.light-theme button.themeToggle {
+  border: 2px solid;
+  border-color: var(--border-color-light);
+  background-color: var(--button-background-color-light);
+}
+
+body.light-theme button.themeToggle:hover {
+  background: rgba(184, 183, 183, 0.5);
 }
 
 .themeToggle:hover {
@@ -400,7 +492,19 @@ body.light-theme .searchOption a:hover{
 }
 
 .online {
-  color: green;
+  border: 2px solid;
+  border-color: rgba(75, 74, 74, 0.5);
+  width: 20px;
+  height: 10px;
+  background-color: rgb(51, 184, 51);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 20px, 20px, 20px, rgba(114, 114, 114, 0.2);
+}
+
+body.light-theme .online{
+  background-color:rgba(69, 202, 87, 0.5);
+  border-color:rgb(155, 155, 155)
 }
 
 .date {
@@ -427,12 +531,44 @@ body.light-theme .searchOption a:hover{
 }
 
 .mainChat {
-  margin-left: auto;
+  width: 80%;
+  margin: 0 auto; 
+  max-height: 1000px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
+.mainContent{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 12vw;
+}
+
+.sendMessage{
+  
+}
 .sideBar {
   transform: translateY(20px);
-  margin-right: auto;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #a7a7a7;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 @keyframes slideIn {

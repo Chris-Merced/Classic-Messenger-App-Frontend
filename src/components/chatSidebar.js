@@ -100,14 +100,14 @@ const SideBarComponent = () => {
     <div className="sideBar">
       <ul className="chatList">
         {listOfChats.map((chat, index) => (
-          <li className="chatButton" key={index}>
-            <button onClick={() => changeChat(chat)}>
+          <li className="chat" key={index}>
+            <button className="chatButton" onClick={() => changeChat(chat)}>
               {chat.name ? chat.name : chat.participants}
             </button>
             {chat.participants &&
             chat.participants.length === 1 &&
             activeUsers[chat.participants] ? (
-              <div className="online">online</div>
+              <div className="online"></div>
             ) : (
               <div className="offline"></div>
             )}

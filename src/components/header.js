@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
@@ -43,10 +44,7 @@ const HeaderComponent = () => {
     }
   }, [userData]);
 
-
-
   useEffect(() => {
-    
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
       document.body.classList.add("light-theme");
@@ -142,27 +140,28 @@ const HeaderComponent = () => {
                   setSearchInput(e.target.value);
                   const username = e.target.value;
                   searchDB(e, username);
-                }
-                }onBlur={(e)=>{setSearchInput('');
+                }}
+                onBlur={(e) => {
+                  setSearchInput("");
                   searchDB(e, username);
                 }}
               ></input>
               {searchInput && (
-              <ul className="searchResults">
-                {users.map((user, index) => (
-                  <li className="searchOption" key={index}>
-                    <Link to={`/userProfile/${user.id}`}>{user.username}</Link>
-                  </li>
-                ))}
-              </ul>
+                <ul className="searchResults">
+                  {users.map((user, index) => (
+                    <li className="searchOption" key={index}>
+                      <Link to={`/userProfile/${user.id}`}>
+                        {user.username}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               )}
             </form>
           </div>
 
           <div className="userProfile">
             <div className="profileName">
-              {" "}
-              Hello {user.username}{" "}
               {friendRequests.length !== 0 ? (
                 <div className="notifications">{friendRequests?.length}</div>
               ) : (
@@ -171,32 +170,30 @@ const HeaderComponent = () => {
             </div>
 
             <div className="DropDown">
-              <button onClick={isDropDown}>⚙️</button>
-              <div className={`Menu ${dropDown ? "active" : ""}`}>
-                {dropDown && (
-                  <>
-                    <div className="friends menu-item">
-                      <Link to={`/userProfile/friends`}>Friends</Link>
-                      {friendRequests.length !== 0 ? (
-                        <div className="friendRequestNotifications">
-                          {friendRequests?.length}
-                        </div>
-                      ) : (
-                        <span></span>
-                      )}
+              <button className="profileButton" onClick={isDropDown}>
+                <div>{user.username}</div>
+                {dropDown ? <div>▲</div> : <div>▼</div>}
+              </button>
+              <div className={`Menu ${dropDown ? "show" : "hide"}`}>
+                <div className="friends menu-item">
+                  <Link to={`/userProfile/friends`}><button className="friendsButton" onClick={isDropDown}>Friends</button></Link>
+                  {friendRequests.length !== 0 ? (
+                    <div className="friendRequestNotifications">
+                      {friendRequests?.length}
                     </div>
-                    <button className="logout menu-item" onClick={logoutHandler}>
-                      Log Out
-                    </button>
-                  </>
-                )}
+                  ) : (
+                    <span></span>
+                  )}
+                </div>
+                <button className="logout menu-item" onClick={logoutHandler}>
+                  Log Out
+                </button>
               </div>
             </div>
             <button onClick={toggleTheme} className="themeToggle">
-            {isLightTheme ? "🌙" : "☀️"}
-          </button>
+              {isLightTheme ? "🌙" : "☀️"}
+            </button>
           </div>
-          
         </div>
       ) : (
         location.pathname !== "/signup" && (
