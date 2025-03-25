@@ -9,6 +9,9 @@
 body {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   background: var(--bg-dark);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--primary-light);
   transition: color .75s ease;
 }
@@ -178,7 +181,14 @@ body.light-theme {
   animation: appear 0.3s ease-in-out;
 }
 
+body.light-theme .Menu .menu-item{
+  color: rgba(0, 0, 0, 1.0);
+}
 
+body.light-theme .Menu .menu-item:hover{
+  background-color: rgba(139, 139, 139, 0.5);
+
+}
 
 .DropDown.active .Menu {
   opacity: 1;
