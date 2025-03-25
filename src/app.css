@@ -1,8 +1,8 @@
 :root {
   --primary-light: rgba(243, 237, 237, 0.8);
   --primary-dark: rgba(40, 44, 52, 1);
-  --bg-light: linear-gradient(135deg, #f1f1f1, #b5b5b6fd);
-  --bg-dark: linear-gradient(135deg, #1c324b, #11112e);
+  --bg-light: linear-gradient(135deg, #f1f1f1, #949393fd);
+  --bg-dark: linear-gradient(135deg, #363636, #282529);
   --menu-bg: rgba(255, 255, 255, 0.2);
 }
 
@@ -255,18 +255,61 @@ body.light-theme .searchBar input::placeholder {
 
 .searchResults {
   position: absolute;
+  width: 18vw;
   display:flex;
   flex-direction: column;
+  align-items: center;
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  transition: all ease 1s;
   border-radius: 10px;
   z-index: 100;
   list-style: none;
+  padding: 20px;
   gap:10px;
-  transform: translateX(100px)
+  transform: translateX(10px);
+  transition: all ease 0.7s;
 }
 
+body.light-theme .searchResults {
+  background-color: rgba(114, 114, 114, 0.2)
+}
+
+.searchOption{
+  width: 100%;
+  text-align: center;
+}
+
+.searchOption a{
+  width:100%;
+  padding:3px;
+  text-decoration: none;
+  color: rgba(243, 237, 237, 0.8);
+  
+}
+
+.searchOption a:hover{
+  background-color: rgba(139, 139, 139, 0.5);
+  transition: all .4s ease;
+  border-radius: 5px;
+}
+
+body.light-theme .searchOption{
+  transition: all .4s ease;
+  border-radius: 5px;
+}
+
+body.light-theme .searchOption:hover{
+}
+
+body.light-theme .searchOption a{
+  padding-left: 30%;
+  padding-right: 30%;
+  color: rgba(0, 0, 0, 1.0)
+}
+
+body.light-theme .searchOption a:hover{
+  
+}
 
 .themeToggle {
   background: rgba(255, 255, 255, 0.2);

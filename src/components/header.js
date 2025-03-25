@@ -43,6 +43,8 @@ const HeaderComponent = () => {
     }
   }, [userData]);
 
+
+
   useEffect(() => {
     
     const savedTheme = localStorage.getItem("theme");
@@ -145,6 +147,7 @@ const HeaderComponent = () => {
                   searchDB(e, username);
                 }}
               ></input>
+              {searchInput && (
               <ul className="searchResults">
                 {users.map((user, index) => (
                   <li className="searchOption" key={index}>
@@ -152,6 +155,7 @@ const HeaderComponent = () => {
                   </li>
                 ))}
               </ul>
+              )}
             </form>
           </div>
 
