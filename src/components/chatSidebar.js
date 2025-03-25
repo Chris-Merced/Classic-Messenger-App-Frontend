@@ -98,9 +98,9 @@ const SideBarComponent = () => {
 
   return listOfChats && userContext.user ? (
     <div className="sideBar">
-      <ul>
+      <ul className="chatList">
         {listOfChats.map((chat, index) => (
-          <li key={index}>
+          <li className="chatButton" key={index}>
             <button onClick={() => changeChat(chat)}>
               {chat.name ? chat.name : chat.participants}
             </button>

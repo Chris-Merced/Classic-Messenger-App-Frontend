@@ -1,8 +1,9 @@
 :root {
   --primary-light: rgba(243, 237, 237, 0.8);
   --primary-dark: rgba(40, 44, 52, 1);
-  --bg-light: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  --bg-dark: linear-gradient(135deg, #1e1e2f, #151522);
+  --bg-light: linear-gradient(135deg, #f1f1f1, #b5b5b6fd);
+  --bg-dark: linear-gradient(135deg, #1c324b, #11112e);
+  --menu-bg: rgba(255, 255, 255, 0.2);
 }
 
 body {
@@ -60,16 +61,22 @@ body.light-theme {
 .websiteHeader {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 0px;
 }
 
 .userProfile {
   position: relative;
   display: flex;
   margin-left: auto;
-  width: 20vw;
+  margin-right: 10vw;
+  width: 10vw;
   align-items: center;
   gap: 10px;
+}
+
+.interactionComponents{
+  display: flex;
+  width:100vw;
 }
 
 .profileName {
@@ -89,11 +96,11 @@ body.light-theme {
   cursor: pointer;
   color: white;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: all 0.75s ease;
 }
 
 .DropDown button:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .Menu {
@@ -101,42 +108,77 @@ body.light-theme {
   position: absolute;
   top: 100%;
   right: 200;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--menu-bg);
   backdrop-filter: blur(15px);
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
   min-width: 150px;
   opacity: 0;
   transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.7s ease, transform 0.7s ease;
   z-index: 100;
-  transform: translateX(-200px) translateY(0px);
 }
 
-.Menu .friends,
-.Menu .logout {
+
+.Menu .menu-item {
   display: block;
   padding: 10px;
   text-align: center;
   color: white;
+  background: var(--menu-bg);
+  background-color: rgba(255, 255, 255, 0.0);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
   text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s;
+  border: none;       
+  outline: none;     
+  appearance: none;  
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;         
+}
+
+.Menu .friends a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.Menu button.logout.menu-item {
+  all: unset;
+  display: block;
+  padding: 10px;
+  width:130px;
+  text-align: center;
+  background-color: rgba(250, 250, 250, 0);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background-color 0.3s ease;
+}
+
+.Menu .menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+}
+
+.Menu button.logout.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
 }
 
 .DropDown .Menu.active {
   display: block;
+  text-align: center;
+  width: 30px;
   opacity: 1;
-  transform: translateX(-100px) translateY(0);
+  transform: translateX(-100px) translateY(5px);
   animation: appear 0.3s ease-in-out;
 }
 
-.Menu .friends:hover,
-.Menu .logout:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
-}
+
 
 .DropDown.active .Menu {
   opacity: 1;
@@ -149,37 +191,65 @@ body.light-theme {
   font-weight: bolder;
 }
 
+.chatList {
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chatButton{
+  display: flex;
+  gap: 5px;
+}
+
+.chatButton button{
+  background: none;
+}
+
 .searchBar {
+  margin-left: auto;
   position: relative;
 }
 
 .searchBar input {
-  width: 250px;
+  width: 7vw;
   padding: 10px;
   border: none;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   color: white;
-  transition: all 0.3s ease;
+  transition: all 0.7s ease;
 }
 
 .searchBar input::placeholder {
+  text-align: center;
   color: rgba(255, 255, 255, 0.7);
+  transition: 2s;
+}
+
+.searchBar:hover{
+  background: rgba(255, 255, 255, 0.3);
+  transition: background-color ease .7s;
+  border-radius: 30px;
+
 }
 
 .searchBar input:focus {
+  text-align: center;
   background: rgba(255, 255, 255, 0.3);
+  width: 20vw;
   outline: none;
 }
 
 body.light-theme .searchBar input {
-  background: rgba(0, 0, 0, 0.1); /* A darker background for contrast */
-  color: var(--primary-dark);     /* Dark text for better readability */
+  background: rgba(0, 0, 0, 0.1); 
+  color: var(--primary-dark);    
 }
 
 body.light-theme .searchBar input::placeholder {
-  color: rgba(0, 0, 0, 0.5); /* Darker placeholder text */
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .searchResults {
@@ -188,6 +258,7 @@ body.light-theme .searchBar input::placeholder {
 
 .themeToggle {
   background: rgba(255, 255, 255, 0.2);
+  margin-right: 10vw;
   backdrop-filter: blur(10px);
   border: none;
   padding: 10px 15px;
@@ -195,7 +266,7 @@ body.light-theme .searchBar input::placeholder {
   cursor: pointer;
   color: white;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: all 0.7s ease;
 }
 
 .themeToggle:hover {

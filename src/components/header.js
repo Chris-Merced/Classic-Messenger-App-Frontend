@@ -44,7 +44,7 @@ const HeaderComponent = () => {
   }, [userData]);
 
   useEffect(() => {
-    // Check local storage for theme preference
+    
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
       document.body.classList.add("light-theme");
@@ -55,12 +55,8 @@ const HeaderComponent = () => {
   const toggleTheme = () => {
     const newTheme = isLightTheme ? "dark" : "light";
 
-    // Toggle theme class
     document.body.classList.toggle("light-theme", !isLightTheme);
-
-    // Save preference
     localStorage.setItem("theme", newTheme);
-
     setIsLightTheme(!isLightTheme);
   };
 
@@ -131,7 +127,7 @@ const HeaderComponent = () => {
         <h1>Welcome Home</h1>
       </Link>
       {user ? (
-        <>
+        <div className="interactionComponents">
           <div className="searchBar">
             <form onSubmit={searchDB}>
               <input
@@ -172,7 +168,7 @@ const HeaderComponent = () => {
               <div className={`Menu ${dropDown ? "active" : ""}`}>
                 {dropDown && (
                   <>
-                    <div className="friends">
+                    <div className="friends menu-item">
                       <Link to={`/userProfile/friends`}>Friends</Link>
                       {friendRequests.length !== 0 ? (
                         <div className="friendRequestNotifications">
@@ -182,18 +178,19 @@ const HeaderComponent = () => {
                         <span></span>
                       )}
                     </div>
-                    <button className="logout" onClick={logoutHandler}>
+                    <button className="logout menu-item" onClick={logoutHandler}>
                       Log Out
                     </button>
                   </>
                 )}
               </div>
             </div>
-          </div>
-          <button onClick={toggleTheme} className="themeToggle">
+            <button onClick={toggleTheme} className="themeToggle">
             {isLightTheme ? "🌙" : "☀️"}
           </button>
-        </>
+          </div>
+          
+        </div>
       ) : (
         location.pathname !== "/signup" && (
           <>
