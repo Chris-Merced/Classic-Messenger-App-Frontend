@@ -1,12 +1,37 @@
 :root {
-  --primary-color: rgba(243, 237, 237, 0.8);
+  --primary-light: rgba(243, 237, 237, 0.8);
+  --primary-dark: rgba(40, 44, 52, 1);
+  --bg-light: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  --bg-dark: linear-gradient(135deg, #1e1e2f, #151522);
 }
 
 body {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  background: rgba(8, 11, 24, 0.76);
-  list-style-type: none;
-  color: var(--primary-color);
+  background: var(--bg-dark);
+  color: var(--primary-light);
+  transition: color .75s ease;
+}
+
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-light);
+  opacity: 0;
+  transition: opacity .75s ease;
+  z-index: -1;
+}
+
+body.light-theme::before {
+  opacity: 1;
+}
+body.light-theme {
+  background: var(--bg-light);
+  color: var(--primary-dark);
 }
 
 .homepageLink {
@@ -39,14 +64,15 @@ body {
 }
 
 .userProfile {
-  display:flex;
-  flex-direction: column;
+  position: relative;
+  display: flex;
   margin-left: auto;
   width: 20vw;
-
+  align-items: center;
+  gap: 10px;
 }
 
-.profileName{
+.profileName {
   display: flex;
 }
 
@@ -54,9 +80,67 @@ body {
   position: relative;
 }
 
+.DropDown button {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.DropDown button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .Menu {
+  display: none;
   position: absolute;
-  animation: appear 1s;
+  top: 100%;
+  right: 200;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 100;
+  transform: translateX(-200px) translateY(0px);
+}
+
+.Menu .friends,
+.Menu .logout {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.DropDown .Menu.active {
+  display: block;
+  opacity: 1;
+  transform: translateX(-100px) translateY(0);
+  animation: appear 0.3s ease-in-out;
+}
+
+.Menu .friends:hover,
+.Menu .logout:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+}
+
+.DropDown.active .Menu {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .signup {
@@ -69,12 +153,56 @@ body {
   position: relative;
 }
 
+.searchBar input {
+  width: 250px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.searchBar input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.searchBar input:focus {
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+body.light-theme .searchBar input {
+  background: rgba(0, 0, 0, 0.1); /* A darker background for contrast */
+  color: var(--primary-dark);     /* Dark text for better readability */
+}
+
+body.light-theme .searchBar input::placeholder {
+  color: rgba(0, 0, 0, 0.5); /* Darker placeholder text */
+}
+
 .searchResults {
   position: absolute;
 }
 
+.themeToggle {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
 
-.notifications{
+.themeToggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.notifications {
   display: flex;
   background-color: rgba(187, 0, 0, 0.822);
   border-radius: 40px;
@@ -83,14 +211,13 @@ body {
   justify-content: center;
   font-size: 1.3em;
   margin-left: 10px;
-  padding-left: .5vw;
-  padding-right: .5vw;
-  padding-top: .1vw;
-  padding-bottom: .1vw;
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  padding-top: 0.1vw;
+  padding-bottom: 0.1vw;
 }
 
-
-.friendRequestNotifications{
+.friendRequestNotifications {
   display: flex;
   background-color: rgba(187, 0, 0, 0.822);
   border-radius: 40px;
@@ -99,26 +226,25 @@ body {
   justify-content: center;
   font-size: 1.3em;
   margin-left: 10px;
-  padding-left: .5vw;
-  padding-right: .5vw;
-  padding-top: .1vw;
-  padding-bottom: .1vw;
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  padding-top: 0.1vw;
+  padding-bottom: 0.1vw;
 }
 
-.friendRequests{
-  display:flex;
+.friendRequests {
+  display: flex;
   align-items: center;
 }
 
-.friendsContent{
-
+.friendsContent {
 }
 
-.friend{
+.friend {
   list-style: none;
 }
 
-.message{
+.message {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -126,28 +252,26 @@ body {
   margin-bottom: 2px;
 }
 
-.messageHeader{
-  display:flex;
+.messageHeader {
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  
 }
 
-.messageText{
+.messageText {
   margin-left: 10px;
 }
 
-.online{
-  color:green;
+.online {
+  color: green;
 }
 
-
-.date{
+.date {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding:7px;
+  padding: 7px;
   margin-bottom: 10px;
   border-bottom: solid grey;
 }
@@ -158,13 +282,12 @@ body {
   margin-right: 25vw;
 }
 
-.timeElapsed{
+.timeElapsed {
   display: flex;
   margin-left: 10px;
   margin-top: 10px;
   position: relative;
-  top:-5px
-  
+  top: -5px;
 }
 
 .mainChat {

@@ -12,6 +12,8 @@ const HeaderComponent = () => {
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [friendRequests, setFriendRequests] = useState("");
+  const [isLightTheme, setIsLightTheme] = useState(false);
+
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const userData = context.user;
@@ -41,12 +43,30 @@ const HeaderComponent = () => {
     }
   }, [userData]);
 
-  const isDropDown = () => {
-    if (dropDown === false) {
-      setDropDown(true);
-    } else {
-      setDropDown(false);
+  useEffect(() => {
+    // Check local storage for theme preference
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light-theme");
+      setIsLightTheme(true);
     }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = isLightTheme ? "dark" : "light";
+
+    // Toggle theme class
+    document.body.classList.toggle("light-theme", !isLightTheme);
+
+    // Save preference
+    localStorage.setItem("theme", newTheme);
+
+    setIsLightTheme(!isLightTheme);
+  };
+
+  const isDropDown = () => {
+    setDropDown((prev) => !prev);
+    console.log("Dropdown state: " + !dropDown);
   };
 
   const logoutHandler = async () => {
@@ -105,7 +125,6 @@ const HeaderComponent = () => {
     }
   };
 
-
   return (
     <div className="websiteHeader">
       <Link to="/" className="homepageLink">
@@ -136,6 +155,7 @@ const HeaderComponent = () => {
               </ul>
             </form>
           </div>
+
           <div className="userProfile">
             <div className="profileName">
               {" "}
@@ -146,27 +166,33 @@ const HeaderComponent = () => {
                 <span></span>
               )}
             </div>
+
             <div className="DropDown">
-              <button onClick={isDropDown}>Drop-Down</button>
-              {dropDown && (
-                <div className="Menu">
-                  <div className="friends">
-                    <Link to={`/userProfile/friends`}>Friends</Link>{" "}
-                    {friendRequests.length !== 0 ? (
-                      <div className="friendRequestNotifications">
-                        {friendRequests?.length}
-                      </div>
-                    ) : (
-                      <span></span>
-                    )}
-                  </div>
-                  <button className="logout" onClick={logoutHandler}>
-                    Log Out
-                  </button>
-                </div>
-              )}
+              <button onClick={isDropDown}>⚙️</button>
+              <div className={`Menu ${dropDown ? "active" : ""}`}>
+                {dropDown && (
+                  <>
+                    <div className="friends">
+                      <Link to={`/userProfile/friends`}>Friends</Link>
+                      {friendRequests.length !== 0 ? (
+                        <div className="friendRequestNotifications">
+                          {friendRequests?.length}
+                        </div>
+                      ) : (
+                        <span></span>
+                      )}
+                    </div>
+                    <button className="logout" onClick={logoutHandler}>
+                      Log Out
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
+          <button onClick={toggleTheme} className="themeToggle">
+            {isLightTheme ? "🌙" : "☀️"}
+          </button>
         </>
       ) : (
         location.pathname !== "/signup" && (
