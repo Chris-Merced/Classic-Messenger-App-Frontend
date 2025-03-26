@@ -132,7 +132,7 @@ const HeaderComponent = () => {
   return (
     <div className="websiteHeader">
       <Link to="/" className="homepageLink">
-        <h1>Welcome Home</h1>
+        <h1 className="welcomeHeader"><span>Welcome</span> <strong>Home</strong></h1>
       </Link>
       {user ? (
         <div className="interactionComponents">

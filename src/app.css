@@ -3,14 +3,14 @@
   --primary-dark: rgba(40, 44, 52, 1);
   --bg-light: linear-gradient(135deg, #f1f1f1, #949393fd);
   --bg-dark: linear-gradient(135deg, #363636, #282529);
-  --menu-bg: rgba(255, 255, 255, 0.2);
+  --menu-bg: rgba(163, 163, 163, 0.9);
   --border-color-dark: rgba(226, 226, 226, 0.5);
   --border-color-light: rgba(117, 117, 117);
   --button-background-color-light: rgba(146, 146, 146, 0.5);
 }
 
 body {
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background: var(--bg-dark);
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -58,9 +58,13 @@ body.light-theme {
   animation: slideIn 0.2s ease-in-out forwards;
 }
 
+.div{
+  border-bottom: 1px solid;
+}
+
 .username {
-  font-weight: bolder;
-  font-size: 1.1em;
+  font-weight: 600;
+  border-bottom: 1px solid;
 }
 
 .sendMessageInput {
@@ -107,6 +111,40 @@ button.sendMessageButton {
   display: flex;
   align-items: center;
   gap: 0px;
+  position: relative;
+  z-index: 100;
+}
+
+.welcomeHeader{
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  background: linear-gradient(to right, #ffffff, #292929);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+  margin-left: 30px;
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+body.light-theme .welcomeHeader {
+  background: linear-gradient(to right, #444, #222);font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  background: linear-gradient(to right, #4e4e4e, #bebebe);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+  margin-left: 30px;
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
 }
 
 .userProfile {
@@ -116,6 +154,10 @@ button.sendMessageButton {
   margin-right: -2vw;
   align-items: center;
   gap: 10px;
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+
 }
 
 .interactionComponents {
@@ -132,6 +174,7 @@ button.sendMessageButton {
   border-color: var(--border-color-dark);
   border-radius: 22px;
   position: relative;
+  z-index: 100;
 }
 
 .profileButton {
@@ -175,28 +218,21 @@ body.light-theme .DropDown button {
 }
 
 .Menu {
-  border: 2px solid red;
-  border-color: var(--border-color-dark);
   position: absolute;
-  top: 100%;
-  right: 200;
+  top: 110%;
+  left: 0;
   background: var(--menu-bg);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(400px);
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
   min-width: 150px;
   opacity: 0;
-  transform: translateX(-20px);
+  transform: translateY(10px) translateX(-120px);
   transition: opacity 0.2s ease-out, transform 0.2s ease;
-  z-index: 100;
   pointer-events: none;
-  left: -110px;
-  top: 50px;
 }
 
-h1 {
-}
 
 body.light-theme .Menu {
   border-color: var(--border-color-light);
@@ -204,7 +240,6 @@ body.light-theme .Menu {
 
 .Menu.show {
   opacity: 1;
-  transform: translateY(20px), translateX(-60px);
   pointer-events: auto;
 }
 
@@ -311,6 +346,7 @@ button.friendsButton:hover {
   flex-direction: column;
   gap: 2px;
   margin-left: 4vw;
+  box-shadow: 4px 4px 4px rgb(68, 68, 68);
 }
 
 body.light-theme .chatList {
@@ -350,7 +386,10 @@ body.light-theme .chat button:hover {
   position: relative;
   border: 2px solid;
   border-color: var(--border-color-dark);
-  border-radius: 20px;
+  border-radius: 20px; 
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
 }
 
 .searchBar input {
@@ -372,7 +411,7 @@ body.light-theme .chat button:hover {
 }
 
 .searchBar:hover {
-  background: rgba(255, 255, 255, 0.452);
+  background: rgba(99, 99, 99, 0.452);
   transition: background-color ease 0.7s;
   border-radius: 30px;
   height: 35px;
@@ -397,6 +436,10 @@ body.light-theme .searchBar input {
 
 body.light-theme .searchBar input::placeholder {
   color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .searchBar:hover{
+  background-color: rgba(240, 240, 240, 0.5);
 }
 
 .searchResults {
@@ -568,7 +611,12 @@ body.light-theme .online {
   width: 100%;
   padding: 7px;
   margin-bottom: 10px;
-  border-bottom: solid grey;
+  border-bottom: solid 1px grey;
+}
+
+.initialTime{
+  font-weight: 200;
+  border-bottom: 1px solid;
 }
 
 .main {
@@ -579,6 +627,7 @@ body.light-theme .online {
 
 .timeElapsed {
   display: flex;
+  border-bottom: 1px solid;
   margin-left: 10px;
   margin-top: 10px;
   position: relative;
@@ -592,13 +641,14 @@ body.light-theme .online {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  position: relative;
+  z-index: 0;
 }
 
 .mainContent {
   display: flex;
   width: 100%;
   flex-direction: column;
-  align-items: center;
   margin-left: 12vw;
 }
 
@@ -610,10 +660,11 @@ body.light-theme .online {
 
 .scroll-container::-webkit-scrollbar {
   width: 8px;
+
 }
 
 .scroll-container::-webkit-scrollbar-track {
-  background: #a7a7a7;
+  background: rgba(139, 139, 139, 0.05)
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
@@ -623,6 +674,20 @@ body.light-theme .online {
 
 .scroll-container::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.fadeInStaggered {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+  animation-delay: 0.5s; 
+}
+
+.fadeInStaggered--1{
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+  animation-delay:0.9s
 }
 
 @keyframes slideIn {
@@ -645,3 +710,12 @@ body.light-theme .online {
     opacity: 100%;
   }
 }
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+

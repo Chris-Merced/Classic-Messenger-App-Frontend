@@ -39,7 +39,7 @@ const HomeChatComponent = () => {
   useEffect(() => {
     if (spanRef.current && inputRef.current) {
       const width = spanRef.current.offsetWidth;
-      inputRef.current.style.width = `${width + 20}px`; // padding buffer
+      inputRef.current.style.width = `${width + 20}px`;
     }
   }, [message]);
 
@@ -169,7 +169,7 @@ const HomeChatComponent = () => {
   };
 
   return (
-    <div className="mainContent">
+    <div className="mainContent fadeInStaggered--1">
       <div className="mainChat scroll-container" ref={mainChatRef}>
         <ul className="MessageList">
           {messages.map((message, index) => (
@@ -202,7 +202,7 @@ const HomeChatComponent = () => {
                       messages[index - 1].dateObj.toDateString()) && (
                     <div className="username">{message.user}</div>
                   )}
-                {index === 0 && <div>{messages[index].time}</div>}
+                {index === 0 && <div className="initialTime">{messages[index].time}</div>}
                 {index > 0 &&
                   (new Date(messages[index].dateObj).getTime() -
                     new Date(messages[index - 1].dateObj).getTime() >=
@@ -221,7 +221,7 @@ const HomeChatComponent = () => {
           {isBlocked ? (
             <div>You've been Blocked by this user</div>
           ) : (
-            <form className="sendMessageForm">
+            <form className="sendMessageForm fadeInStaggered">
               <div style={{ position: "relative", display: "inline-block" }}>
                 <textarea
                   className="sendMessageInput"

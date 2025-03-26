@@ -97,7 +97,7 @@ const SideBarComponent = () => {
 
 
   return listOfChats && userContext.user ? (
-    <div className="sideBar">
+    <div className="sideBar fadeInStaggered">
       <ul className="chatList">
         {listOfChats.map((chat, index) => (
           <li className="chat" key={index}>
