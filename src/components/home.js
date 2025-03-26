@@ -150,7 +150,7 @@ const HomeChatComponent = () => {
       console.log("made it inside to send message");
       socketRef.current.send(JSON.stringify(data));
       setMessage("");
-      if(inputRef.current){
+      if (inputRef.current) {
         inputRef.current.style.height = "auto";
       }
     } else {
@@ -229,13 +229,27 @@ const HomeChatComponent = () => {
                   onChange={(e) => {
                     setMessage(e.target.value);
                     setConversationName(chat.name);
-                    e.target.style.height = "auto"; 
-                    e.target.style.height = `${e.target.scrollHeight}px`; 
+                    const textarea = e.target;
+                    textarea.style.height = "auto";
+                    const computed = window.getComputedStyle(textarea);
+                    const paddingTop = parseFloat(computed.paddingTop);
+                    const paddingBottom = parseFloat(computed.paddingBottom);
+                    const borderTop = parseFloat(computed.borderTopWidth);
+                    const borderBottom = parseFloat(computed.borderBottomWidth);
+
+                    const totalExtra =
+                      paddingTop + paddingBottom + borderTop + borderBottom;
+
+                    const newHeight = Math.max(
+                      textarea.scrollHeight - totalExtra,
+                      44
+                    );
+                    textarea.style.height = `${newHeight}px`;
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();     
-                      sendMessage(e);        
+                      e.preventDefault();
+                      sendMessage(e);
                     }
                   }}
                   rows={1}

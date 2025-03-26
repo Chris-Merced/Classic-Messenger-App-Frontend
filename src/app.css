@@ -64,17 +64,20 @@ body.light-theme {
 }
 
 .sendMessageInput {
-  all: unset;
-  border: 2px solid;
-  border-color: var(--border-color-dark);
+  box-sizing: border-box;
+  border: 2px solid var(--border-color-dark);
   backdrop-filter: blur(15px);
   background-color: rgba(146, 146, 146, 0.5);
   border-radius: 15px;
-  transition: all 1s ease;
-  text-align: center;
-  resize: "none";
-  overflow: "hidden";
-  width: "100%";
+  transition: all 0.3s ease;
+  font-size: 16px;
+  line-height: 22px;
+  padding: 10px 12px;
+  resize: none;
+  overflow: hidden;
+  width: 30vw;
+  color: inherit;
+  font-family: inherit;
 }
 
 .sendMessageInput:hover {
@@ -583,7 +586,7 @@ body.light-theme .online {
 }
 
 .mainChat {
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
   max-height: 1000px;
   overflow-y: auto;
