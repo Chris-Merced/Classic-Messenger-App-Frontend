@@ -142,8 +142,7 @@ const HeaderComponent = () => {
                   searchDB(e, username);
                 }}
                 onBlur={(e) => {
-                  setSearchInput("");
-                  searchDB(e, username);
+                  setTimeout(() => {setSearchInput("");searchDB(e,username)}, 150);
                 }}
               ></input>
               {searchInput && (

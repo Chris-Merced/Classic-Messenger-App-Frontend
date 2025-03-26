@@ -370,6 +370,7 @@ body.light-theme .searchResults {
   padding: 3px;
   text-decoration: none;
   color: rgba(243, 237, 237, 0.8);
+  z-index: 100;
 }
 
 .searchOption a:hover {
@@ -506,6 +507,8 @@ body.light-theme .online{
   background-color:rgba(69, 202, 87, 0.5);
   border-color:rgb(155, 155, 155)
 }
+
+
 
 .date {
   display: flex;
