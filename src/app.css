@@ -63,34 +63,41 @@ body.light-theme {
   font-size: 1.1em;
 }
 
-.sendMessageInput{
-  all:unset;
-  border:2px solid;
+.sendMessageInput {
+  all: unset;
+  border: 2px solid;
   border-color: var(--border-color-dark);
   backdrop-filter: blur(15px);
   background-color: rgba(146, 146, 146, 0.5);
   border-radius: 15px;
   transition: all 1s ease;
   text-align: center;
-  height: 25px;
-
+  resize: "none";
+  overflow: "hidden";
+  width: "100%";
 }
 
-.sendMessageInput:hover{
+.sendMessageInput:hover {
   background-color: rgba(184, 183, 183, 0.5);
 }
 
-body.light-theme .sendMessageInput{
+body.light-theme .sendMessageInput {
   border-color: var(--border-color-light);
 }
 
-button.sendMessageButton{
+button.sendMessageButton {
   all: unset;
 }
 
-.sendMessageImage{
-  width:25px;
-  height: 25px;
+.sendMessageImage {
+  transform: translateY(2px);
+  width: 23px;
+  height: 23px;
+}
+
+.sendMessageForm {
+  display: flex;
+  gap: 10px;
 }
 
 .websiteHeader {
@@ -127,6 +134,15 @@ button.sendMessageButton{
 .profileButton {
   display: flex;
   gap: 6px;
+  color: #a7a7a7;
+}
+
+button.profileButton div {
+  color: rgb(190, 190, 190);
+}
+
+body.light-theme button.profileButton div {
+  color: rgb(121, 117, 117);
 }
 
 body.light-theme .DropDown {
@@ -176,7 +192,7 @@ body.light-theme .DropDown button {
   top: 50px;
 }
 
-h1{
+h1 {
 }
 
 body.light-theme .Menu {
@@ -265,13 +281,13 @@ body.light-theme .Menu .menu-item:hover {
   transform: translateY(0);
 }
 
-button.friendsButton{
-  all:unset;
-  color: rgba(255, 255, 255, 1.0);
+button.friendsButton {
+  all: unset;
+  color: rgba(255, 255, 255, 1);
   width: 100%;
 }
 
-button.friendsButton:hover{
+button.friendsButton:hover {
   background-color: rgba(185, 185, 185, 0);
 }
 
@@ -285,7 +301,7 @@ button.friendsButton:hover{
   padding: 15px;
   border: 2px solid;
   border-color: var(--border-color-dark);
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(155, 155, 155, 0.3);
   backdrop-filter: blur(15px);
   border-radius: 10px;
   display: flex;
@@ -425,16 +441,10 @@ body.light-theme .searchOption {
   border-radius: 5px;
 }
 
-body.light-theme .searchOption:hover {
-}
-
 body.light-theme .searchOption a {
   padding-left: 30%;
   padding-right: 30%;
   color: rgba(0, 0, 0, 1);
-}
-
-body.light-theme .searchOption a:hover {
 }
 
 .themeToggle {
@@ -461,7 +471,7 @@ button.themeToggle {
 body.light-theme button.themeToggle {
   border: 2px solid;
   border-color: var(--border-color-light);
-  background-color: var(--button-background-color-light);
+  background-color: rgba(179, 177, 177, 0.5);
 }
 
 body.light-theme button.themeToggle:hover {
@@ -538,18 +548,16 @@ body.light-theme button.themeToggle:hover {
   border-color: rgba(75, 74, 74, 0.5);
   width: 20px;
   height: 10px;
-  background-color: rgb(51, 184, 51);
+  background-color: rgb(116, 175, 116);
   border-radius: 50%;
   display: inline-block;
   box-shadow: 20px, 20px, 20px, rgba(114, 114, 114, 0.2);
 }
 
-body.light-theme .online{
-  background-color:rgba(69, 202, 87, 0.5);
-  border-color:rgb(155, 155, 155)
+body.light-theme .online {
+  background-color: rgba(99, 190, 111, 0.5);
+  border-color: rgb(155, 155, 155);
 }
-
-
 
 .date {
   display: flex;
@@ -576,14 +584,14 @@ body.light-theme .online{
 
 .mainChat {
   width: 80%;
-  margin: 0 auto; 
+  margin: 0 auto;
   max-height: 1000px;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
-.mainContent{
+.mainContent {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -591,8 +599,7 @@ body.light-theme .online{
   margin-left: 12vw;
 }
 
-.sendMessage{
-  
+.sendMessage {
 }
 .sideBar {
   transform: translateY(20px);

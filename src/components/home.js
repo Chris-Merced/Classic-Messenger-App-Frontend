@@ -13,6 +13,8 @@ const HomeChatComponent = () => {
   const [chat, setChat] = useState({ name: "main", conversationID: 1 });
   const [isBlocked, setIsBlocked] = useState("");
   const mainChatRef = useRef(null);
+  const inputRef = useRef(null);
+  const spanRef = useRef(null);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -28,11 +30,18 @@ const HomeChatComponent = () => {
     setChat({ ...currentChat });
   }, [currentChat]);
 
-  useEffect(()=>{
-    if(mainChatRef.current){
+  useEffect(() => {
+    if (mainChatRef.current) {
       mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight;
     }
-  },[messages])
+  }, [messages]);
+
+  useEffect(() => {
+    if (spanRef.current && inputRef.current) {
+      const width = spanRef.current.offsetWidth;
+      inputRef.current.style.width = `${width + 20}px`; // padding buffer
+    }
+  }, [message]);
 
   useEffect(() => {
     const setupMessageHandler = () => {
@@ -56,7 +65,6 @@ const HomeChatComponent = () => {
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
         }
-
       };
     };
 
@@ -78,8 +86,6 @@ const HomeChatComponent = () => {
       };
     }
   }, [chat, socketRef.current]);
-
-
 
   useEffect(() => {
     const getMessages = async () => {
@@ -112,18 +118,18 @@ const HomeChatComponent = () => {
       }
     };
 
-
-    const checkIfBlocked = async () =>{
-      if(!chat.name){
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`) 
+    const checkIfBlocked = async () => {
+      if (!chat.name) {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`
+        );
         const data = await response.json();
         setIsBlocked(data);
       }
-    }
+    };
 
     getMessages();
     checkIfBlocked();
-
   }, [chat]);
 
   const sendMessage = async (e) => {
@@ -144,6 +150,9 @@ const HomeChatComponent = () => {
       console.log("made it inside to send message");
       socketRef.current.send(JSON.stringify(data));
       setMessage("");
+      if(inputRef.current){
+        inputRef.current.style.height = "auto";
+      }
     } else {
       console.log("console is not open");
     }
@@ -161,22 +170,11 @@ const HomeChatComponent = () => {
 
   return (
     <div className="mainContent">
-    <div className="mainChat scroll-container" ref={mainChatRef}>
-      <ul className="MessageList">
-        {messages.map((message, index) => (
-          <li className="message" key={index}>
-            {index === 0 && (
-              <div className="date">
-                {messages[index].dateObj.toLocaleString("en-us", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </div>
-            )}
-            {index > 0 &&
-              messages[index].dateObj.toDateString() !==
-                messages[index - 1].dateObj.toDateString() && (
+      <div className="mainChat scroll-container" ref={mainChatRef}>
+        <ul className="MessageList">
+          {messages.map((message, index) => (
+            <li className="message" key={index}>
+              {index === 0 && (
                 <div className="date">
                   {messages[index].dateObj.toLocaleString("en-us", {
                     month: "short",
@@ -185,48 +183,77 @@ const HomeChatComponent = () => {
                   })}
                 </div>
               )}
-            <div className="messageHeader">
-              {index === 0 && <div className="username">{message.user}</div>}
               {index > 0 &&
-                (messages[index].user !== messages[index - 1].user ||
-                  messages[index].dateObj.toDateString() !==
-                    messages[index - 1].dateObj.toDateString()) && (
-                  <div className="username">{message.user}</div>
+                messages[index].dateObj.toDateString() !==
+                  messages[index - 1].dateObj.toDateString() && (
+                  <div className="date">
+                    {messages[index].dateObj.toLocaleString("en-us", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </div>
                 )}
-              {index === 0 && <div>{messages[index].time}</div>}
-              {index > 0 &&
-                (new Date(messages[index].dateObj).getTime() -
-                  new Date(messages[index - 1].dateObj).getTime() >=
-                  5 * 60 * 1000 ||
-                  messages[index].user !== messages[index - 1].user) && (
-                  <div className="timeElapsed">{messages[index].time}</div>
-                )}
-            </div>
-            <div className="messageText">{message.message}</div>
-          </li>
-        ))}
-      </ul>
-      
-    </div>
-    {user && (
+              <div className="messageHeader">
+                {index === 0 && <div className="username">{message.user}</div>}
+                {index > 0 &&
+                  (messages[index].user !== messages[index - 1].user ||
+                    messages[index].dateObj.toDateString() !==
+                      messages[index - 1].dateObj.toDateString()) && (
+                    <div className="username">{message.user}</div>
+                  )}
+                {index === 0 && <div>{messages[index].time}</div>}
+                {index > 0 &&
+                  (new Date(messages[index].dateObj).getTime() -
+                    new Date(messages[index - 1].dateObj).getTime() >=
+                    5 * 60 * 1000 ||
+                    messages[index].user !== messages[index - 1].user) && (
+                    <div className="timeElapsed">{messages[index].time}</div>
+                  )}
+              </div>
+              <div className="messageText">{message.message}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {user && (
         <div className="sendMessage">
-          
-          {isBlocked ? <div>You've been Blocked by this user</div> :
-          <form>
-            
-            <input className="sendMessageInput"
-              type="text"
-              onChange={(e) => {
-                setMessage(e.target.value);
-                setConversationName(chat.name);
-              }}
-              value={message}
-            ></input>
-            <button className="sendMessageButton" onClick={sendMessage}><img className="sendMessageImage" src="/sendMessageLight.svg" alt="Send User Message"></img></button>
-          </form>}
+          {isBlocked ? (
+            <div>You've been Blocked by this user</div>
+          ) : (
+            <form className="sendMessageForm">
+              <div style={{ position: "relative", display: "inline-block" }}>
+                <textarea
+                  className="sendMessageInput"
+                  value={message}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                    setConversationName(chat.name);
+                    e.target.style.height = "auto"; 
+                    e.target.style.height = `${e.target.scrollHeight}px`; 
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();     
+                      sendMessage(e);        
+                    }
+                  }}
+                  rows={1}
+                  ref={inputRef}
+                />
+              </div>
+              <button className="sendMessageButton" onClick={sendMessage}>
+                <img
+                  className="sendMessageImage"
+                  src="/sendMessageGrey.png"
+                  alt="Send User Message"
+                ></img>
+              </button>
+            </form>
+          )}
         </div>
       )}
-      </div>
+    </div>
   );
 };
 export default HomeChatComponent;
