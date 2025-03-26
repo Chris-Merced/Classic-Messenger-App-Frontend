@@ -63,6 +63,36 @@ body.light-theme {
   font-size: 1.1em;
 }
 
+.sendMessageInput{
+  all:unset;
+  border:2px solid;
+  border-color: var(--border-color-dark);
+  backdrop-filter: blur(15px);
+  background-color: rgba(146, 146, 146, 0.5);
+  border-radius: 15px;
+  transition: all 1s ease;
+  text-align: center;
+  height: 25px;
+
+}
+
+.sendMessageInput:hover{
+  background-color: rgba(184, 183, 183, 0.5);
+}
+
+body.light-theme .sendMessageInput{
+  border-color: var(--border-color-light);
+}
+
+button.sendMessageButton{
+  all: unset;
+}
+
+.sendMessageImage{
+  width:25px;
+  height: 25px;
+}
+
 .websiteHeader {
   display: flex;
   align-items: center;
@@ -235,6 +265,16 @@ body.light-theme .Menu .menu-item:hover {
   transform: translateY(0);
 }
 
+button.friendsButton{
+  all:unset;
+  color: rgba(255, 255, 255, 1.0);
+  width: 100%;
+}
+
+button.friendsButton:hover{
+  background-color: rgba(185, 185, 185, 0);
+}
+
 .signup {
   text-decoration: none;
   color: var(--primary-color);
@@ -274,6 +314,7 @@ body.light-theme .chatList {
   background: none;
   padding: 10px;
   border-radius: 15px;
+  cursor: pointer;
 }
 
 .chat button:hover {

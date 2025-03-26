@@ -214,7 +214,7 @@ const HomeChatComponent = () => {
           {isBlocked ? <div>You've been Blocked by this user</div> :
           <form>
             
-            <input
+            <input className="sendMessageInput"
               type="text"
               onChange={(e) => {
                 setMessage(e.target.value);
@@ -222,7 +222,7 @@ const HomeChatComponent = () => {
               }}
               value={message}
             ></input>
-            <button onClick={sendMessage}>Send Message</button>
+            <button className="sendMessageButton" onClick={sendMessage}><img className="sendMessageImage" src="/sendMessageLight.svg" alt="Send User Message"></img></button>
           </form>}
         </div>
       )}
