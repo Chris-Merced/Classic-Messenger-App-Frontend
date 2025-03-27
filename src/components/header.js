@@ -188,17 +188,15 @@ const HeaderComponent = () => {
                 </button>
                 <div className={`Menu ${dropDown ? "show" : "hide"}`}>
                   <div className="friends menu-item">
-                    <Link to={`/userProfile/friends`}>
+                    <Link to={`/userProfile/friends`} className="friendsLink">
                       <button className="friendsButton" onClick={isDropDown}>
                         Friends
                       </button>
                     </Link>
-                    {friendRequests.length !== 0 ? (
-                      <div className="friendRequestNotifications">
+                    {friendRequests.length !== 0 && (
+                      <div className="notifications friendRequestNotifications">
                         {friendRequests?.length}
                       </div>
-                    ) : (
-                      <span></span>
                     )}
                   </div>
                   <button className="logout menu-item" onClick={logoutHandler}>
@@ -246,7 +244,9 @@ const HeaderComponent = () => {
             </button>
           </form>
 
-          <Link to="/signup" className="signup">Signup</Link>
+          <Link to="/signup" className="signup">
+            Signup
+          </Link>
         </div>
       )}
     </>

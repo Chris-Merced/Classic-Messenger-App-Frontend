@@ -33,6 +33,9 @@ const UserProfile = () => {
         if (!response.ok) {
           throw new Error(data.message);
         }
+        console.log("CHECKING USER PROFILE RETRIEVED DATA: ")
+        
+        data.user = {...data.user, created_at: data.user.created_at.split("T")[0]}
 
         setProfile(data.user);
       } catch (err) {
@@ -185,11 +188,11 @@ const UserProfile = () => {
   console.log("User Identifier: " + userIdentifier);
   console.log("User Context: " + userContext.user.id);
 
+
   return (
-    <>
+    <div className="userProfilePage">
       {profile && (isPublic || friendStatus) ? (
-        <>
-          <div>Hello {userIdentifier} ...</div>
+        <div className="userProfilePermission">
           <div>Welcome to the page of {profile.username}</div>
           <div>Created at {profile.created_at}</div>
           {blockedByProfile ? (
@@ -200,35 +203,34 @@ const UserProfile = () => {
             </button>
           )}
           {isBlocked === false ? (
-            <button onClick={blockUser}>Block</button>
+            <button className="block" onClick={blockUser}>Block User</button>
           ) : (
-            <button onClick={unblockUser}>Unblock</button>
+            <button onClick={unblockUser}>Unblock User</button>
           )}
           {friendStatus === false ? (
             <button onClick={sendFriendRequest}>Send Friend Request</button>
           ) : (
             <></>
           )}
-        </> 
+        </div> 
       ) : (
-        <>
-          <div>Hello {userIdentifier} ...</div>
+        <div className="userProfileNoPermission">
           <div>Welcome to the page of {profile.username}</div>
           <div>Created at {profile.created_at}</div>
           {isBlocked === false ? (
-            <button onClick={blockUser}>Block</button>
+            <button className="block" onClick={blockUser}>Block User</button>
           ) : (
-            <button onClick={unblockUser}>Unblock</button>
+            <button onClick={unblockUser}>Unblock User</button>
           )}
           {friendStatus === false ? (
             <button onClick={sendFriendRequest}>Send Friend Request</button>
           ) : (
             <></>
           )}
-        </>
+        </div>
       )}
       {userContext?.user?.id == userIdentifier && (
-        <>
+        <div className="profileStatus">
           {isPublic ? (
             <button onClick={changeProfileStatus}>
               Change Profile to Private
@@ -238,9 +240,9 @@ const UserProfile = () => {
               Change Profile to Public
             </button>
           )}
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

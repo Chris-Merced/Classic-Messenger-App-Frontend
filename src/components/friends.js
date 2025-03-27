@@ -119,7 +119,30 @@ const FriendRequests = () => {
 
   return friendRequests && userContext ? (
     <div className="friendsContent">
-      <div>
+      <div className="friendsListComponent">
+        <h1>Frienderinos</h1>
+        {friends && (
+          <ul className="friendsList">
+            {friends.length === 0 ? <div>You have no friends, sad</div> : 
+            (friends.map((friend, index) => {
+              return (
+                <li className="friend" key={index}>
+                  
+                  <Link
+                    to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}
+                  >
+                    {friend.username}{" "}
+                  </Link>
+                  <button className="friendsListButton" onClick={() => removeFriend(friend.id)}>
+                    Remove Friend
+                  </button>
+                </li>
+              );
+            }))}
+          </ul>
+        )}
+      </div>
+      <div className="friendRequests">
         {friendRequests.length !== 0 ? (
           <ul>
             {friendRequests.map((request, index) => {
@@ -145,32 +168,8 @@ const FriendRequests = () => {
             })}
           </ul>
         ) : (
-          <>
-            <div>You have no friend Requests</div>
-            <div>Wow how sad</div>
-          </>
-        )}
-      </div>
-      <div>
-        <h1>Frienderinos</h1>
-        {friends && (
-          <ul className="friendsList">
-            {friends.map((friend, index) => {
-              return (
-                <li className="friend" key={index}>
-                  {friend.username}{" "}
-                  <Link
-                    to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}
-                  >
-                    Profile Page
-                  </Link>
-                  <button onClick={() => removeFriend(friend.id)}>
-                    Remove Friend
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="noFriendsDisplay">
+          </div>
         )}
       </div>
     </div>

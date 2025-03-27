@@ -290,6 +290,7 @@ body.light-theme .DropDown button {
 }
 
 .Menu {
+  
   position: absolute;
   top: 110%;
   left: 0;
@@ -322,7 +323,7 @@ body.light-theme .Menu {
 }
 
 .Menu .menu-item {
-  display: block;
+  display: flex;
   padding: 10px;
   text-align: center;
   color: white;
@@ -339,10 +340,19 @@ body.light-theme .Menu {
   margin: 0;
 }
 
+.Menu .friends.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Adjust spacing as needed */
+}
+
 .Menu .friends a {
   color: inherit;
   text-decoration: none;
-  display: block;
+}
+
+.friends .menu-item{
 }
 
 .Menu button.logout.menu-item {
@@ -370,7 +380,6 @@ body.light-theme .Menu {
 }
 
 .DropDown .Menu.active {
-  display: block;
   text-align: center;
   width: 30px;
   opacity: 1;
@@ -394,7 +403,6 @@ body.light-theme .Menu .menu-item:hover {
 button.friendsButton {
   all: unset;
   color: rgba(255, 255, 255, 1);
-  width: 100%;
 }
 
 button.friendsButton:hover {
@@ -612,12 +620,13 @@ body.light-theme button.themeToggle:hover {
 
 .notifications {
   display: flex;
-  background-color: rgba(187, 0, 0, 0.822);
+  background-color: rgba(134, 27, 27, 0.822);
   border-radius: 40px;
-  width: 20px;
+  width: 10px;
+  height: 24px;
   align-items: center;
   justify-content: center;
-  font-size: 1.3em;
+  font-size: 1em;
   margin-left: 10px;
   padding-left: 0.5vw;
   padding-right: 0.5vw;
@@ -627,12 +636,13 @@ body.light-theme button.themeToggle:hover {
 
 .friendRequestNotifications {
   display: flex;
-  background-color: rgba(187, 0, 0, 0.822);
+  background-color: rgba(134, 27, 27, 0.822);
   border-radius: 40px;
-  width: 20px;
+  width: 10px;
+  height: 24px;
   align-items: center;
   justify-content: center;
-  font-size: 1.3em;
+  font-size: 1em;
   margin-left: 10px;
   padding-left: 0.5vw;
   padding-right: 0.5vw;
@@ -742,6 +752,83 @@ body.light-theme .online {
 .sideBar {
   margin-left: -75px;
   transform: translateY(20px);
+}
+
+.friendsContent{
+  width: 100%;
+  margin-left: 6%;
+}
+
+.friendsListComponent{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.friendsList{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.friendsList a{
+  all: unset;
+  cursor: pointer;
+  text-align: center;
+  padding: 3px;
+  padding-left: 9px;
+  transition: all .7s ease;
+  border-radius: 15px;
+}
+
+body.light-theme .Menu button.logout.menu-item {
+  color: rgb(73, 73, 73)
+}
+
+.friendsList a:hover{
+  background-color: #1d1d1d;
+}
+
+.friendsListButton{
+  all: unset;
+  color:#bd45459d;
+  cursor: pointer;
+}
+
+.userProfilePage button{
+  all: unset;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-bottom: 1px solid;
+  cursor: pointer;
+}
+
+.userProfilePage .block{
+  color: rgba(250, 105, 105, 0.603)
+}
+
+body.light-theme .userProfilePage .block{
+  color: rgba(117, 11, 11, 0.877)
+}
+
+.userProfilePage{
+  width: 100%;
+  margin-left: 10vw;
+  display: flex;
+  
+}
+
+.profileStatus{
+
+}
+
+.userProfilePermission{
+
+}
+
+.userProfileNoPermission{
+
 }
 
 .scroll-container::-webkit-scrollbar {
