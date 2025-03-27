@@ -149,7 +149,7 @@ const FriendRequests = () => {
                       {friend.username}{" "}
                     </Link>
                     <button
-                      className="friendsListButton"
+                      className="friendsListItemButton"
                       onClick={() => removeFriend(friend.id)}
                     >
                       Remove Friend

@@ -222,7 +222,7 @@ const UserProfile = () => {
           ) : (
             <button onClick={unblockUser}>Unblock User</button>
           )}
-          {friendStatus === false ? (
+          {(friendStatus === false) ? (
             <button onClick={sendFriendRequest}>Send Friend Request</button>
           ) : (
             <></>

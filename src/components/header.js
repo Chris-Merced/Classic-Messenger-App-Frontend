@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
@@ -26,6 +26,7 @@ const HeaderComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userData = context.user;
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUser(userData);
@@ -74,6 +75,7 @@ const HeaderComponent = () => {
 
   const logoutHandler = async () => {
     try {
+      
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/logout`,
         {
@@ -86,7 +88,8 @@ const HeaderComponent = () => {
 
       context.logout();
       chatContext.resetChatList();
-      setUser("");
+      navigate('/');
+      setUser("");  
       window.location.reload();
     } catch (err) {
       console.log("Error with fetch: ", err);

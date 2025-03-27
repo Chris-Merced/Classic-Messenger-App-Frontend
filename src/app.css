@@ -402,7 +402,10 @@ body.light-theme .Menu .menu-item:hover {
 
 button.friendsButton {
   all: unset;
+  padding-left:100%;
+  padding-right:100%;
   color: rgba(255, 255, 255, 1);
+  transform: translateX(-55px)
 }
 
 button.friendsButton:hover {
@@ -669,8 +672,6 @@ body.light-theme button.themeToggle:hover {
 
 .friendRequestListItem{
   display: flex;
-
-
   gap: 20px;
   justify-content: center;
 }
@@ -811,11 +812,23 @@ body.light-theme .online {
 
 }
 
+.friendsListItemButton{
+  all:unset;
+  border-bottom: 1px solid rgba(114, 114, 114, 0.2);
+  cursor: pointer;
+  transition: all 1s ease;
+}
+
+.friendsListItemButton:hover{
+  border-color: rgb(114, 114, 114);
+}
+
 .friendsList{
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
+
 
 .friendsList a{
   all: unset;
@@ -832,19 +845,19 @@ body.light-theme .Menu button.logout.menu-item {
 }
 
 .friendsList a:hover{
-  background-color: #1d1d1d;
+  background-color: #3a3a3a;
 }
 
 .friendsListButton{
   all: unset;
   height: 75px;
-  border-bottom: 1px solid #494949;
+  border-bottom: 1px solid rgba(114, 114, 114, 0.2);
   cursor: pointer;
   transition: all 1s ease;
 }
 
 .friendsListButton:hover{
-  border-bottom: 2px solid #808080;
+  border-bottom: 1px solid rgb(114, 114, 114);
 }
 
 
@@ -852,6 +865,10 @@ body.light-theme .Menu button.logout.menu-item {
   display:none;
 }
 
+.friend{
+  display: flex;
+  gap: 30px;
+}
 
 .userProfilePage button{
   all: unset;
