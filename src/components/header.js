@@ -5,8 +5,7 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 
-//the site visuals needs to be changed when not logged in
-
+//NEED TO KEEP WORKING ON USERPROFILE 
 //Send friend request button does not change upon use
 
 //can add search for sidbar chat list

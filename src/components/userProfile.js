@@ -207,11 +207,9 @@ const UserProfile = () => {
           ) : (
             <button onClick={unblockUser}>Unblock User</button>
           )}
-          {friendStatus === false ? (
+          {friendStatus === false && (userContext?.user?.id != userIdentifier && (
             <button onClick={sendFriendRequest}>Send Friend Request</button>
-          ) : (
-            <></>
-          )}
+          ))}
         </div> 
       ) : (
         <div className="userProfileNoPermission">
@@ -222,11 +220,9 @@ const UserProfile = () => {
           ) : (
             <button onClick={unblockUser}>Unblock User</button>
           )}
-          {(friendStatus === false) ? (
+          {(friendStatus === false) && (userContext?.user?.id != userIdentifier && (
             <button onClick={sendFriendRequest}>Send Friend Request</button>
-          ) : (
-            <></>
-          )}
+          ))}
         </div>
       )}
       {userContext?.user?.id == userIdentifier && (
