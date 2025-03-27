@@ -169,8 +169,8 @@ const HomeChatComponent = () => {
   };
 
   return (
-    <div className="mainContent fadeInStaggered--1">
-      <div className="mainChat scroll-container" ref={mainChatRef}>
+    <div className="mainContent fadeInStaggered--1"> 
+      {user && <div className="mainChat scroll-container" ref={mainChatRef}>
         <ul className="MessageList">
           {messages.map((message, index) => (
             <li className="message" key={index}>
@@ -215,7 +215,7 @@ const HomeChatComponent = () => {
             </li>
           ))}
         </ul>
-      </div>
+      </div>}
       {user && (
         <div className="sendMessage">
           {isBlocked ? (

@@ -12,7 +12,6 @@ import { Link, useLocation } from "react-router-dom";
 //can add search for sidbar chat list
 //can add search for messages list
 
-
 const HeaderComponent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -130,106 +129,127 @@ const HeaderComponent = () => {
   };
 
   return (
-    <div className="websiteHeader">
-      <Link to="/" className="homepageLink">
-        <h1 className="welcomeHeader"><span>Welcome</span> <strong>Home</strong></h1>
-      </Link>
-      {user ? (
-        <div className="interactionComponents">
-          <div className="searchBar">
-            <form onSubmit={searchDB}>
-              <input
-                type="text"
-                name="search"
-                id="search"
-                placeholder="Search Users"
-                value={searchInput}
-                onChange={(e) => {
-                  setSearchInput(e.target.value);
-                  const username = e.target.value;
-                  searchDB(e, username);
-                }}
-                onBlur={(e) => {
-                  setTimeout(() => {setSearchInput("");searchDB(e,username)}, 150);
-                }}
-              ></input>
-              {searchInput && (
-                <ul className="searchResults">
-                  {users.map((user, index) => (
-                    <li className="searchOption" key={index}>
-                      <Link to={`/userProfile/${user.id}`}>
-                        {user.username}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </form>
-          </div>
-
-          <div className="userProfile">
-            <div className="profileName">
-              {friendRequests.length !== 0 ? (
-                <div className="notifications">{friendRequests?.length}</div>
-              ) : (
-                <span></span>
-              )}
+    <>
+      <div className="websiteHeader">
+        <Link to="/" className="homepageLink">
+          <h1 className="welcomeHeader">
+            <span>Welcome</span> <strong>Home</strong>
+          </h1>
+        </Link>
+        {user && (
+          <div className="interactionComponents">
+            <div className="searchBar">
+              <form onSubmit={searchDB}>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  placeholder="Search Users"
+                  value={searchInput}
+                  onChange={(e) => {
+                    setSearchInput(e.target.value);
+                    const username = e.target.value;
+                    searchDB(e, username);
+                  }}
+                  onBlur={(e) => {
+                    setTimeout(() => {
+                      setSearchInput("");
+                      searchDB(e, username);
+                    }, 150);
+                  }}
+                ></input>
+                {searchInput && (
+                  <ul className="searchResults">
+                    {users.map((user, index) => (
+                      <li className="searchOption" key={index}>
+                        <Link to={`/userProfile/${user.id}`}>
+                          {user.username}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </form>
             </div>
 
-            <div className="DropDown">
-              <button className="profileButton" onClick={isDropDown}>
-                <div>{user.username}</div>
-                {dropDown ? <div>▲</div> : <div>▼</div>}
-              </button>
-              <div className={`Menu ${dropDown ? "show" : "hide"}`}>
-                <div className="friends menu-item">
-                  <Link to={`/userProfile/friends`}><button className="friendsButton" onClick={isDropDown}>Friends</button></Link>
-                  {friendRequests.length !== 0 ? (
-                    <div className="friendRequestNotifications">
-                      {friendRequests?.length}
-                    </div>
-                  ) : (
-                    <span></span>
-                  )}
-                </div>
-                <button className="logout menu-item" onClick={logoutHandler}>
-                  Log Out
-                </button>
+            <div className="userProfile">
+              <div className="profileName">
+                {friendRequests.length !== 0 ? (
+                  <div className="notifications">{friendRequests?.length}</div>
+                ) : (
+                  <span></span>
+                )}
               </div>
+
+              <div className="DropDown">
+                <button className="profileButton" onClick={isDropDown}>
+                  <div>{user.username}</div>
+                  {dropDown ? <div>▲</div> : <div>▼</div>}
+                </button>
+                <div className={`Menu ${dropDown ? "show" : "hide"}`}>
+                  <div className="friends menu-item">
+                    <Link to={`/userProfile/friends`}>
+                      <button className="friendsButton" onClick={isDropDown}>
+                        Friends
+                      </button>
+                    </Link>
+                    {friendRequests.length !== 0 ? (
+                      <div className="friendRequestNotifications">
+                        {friendRequests?.length}
+                      </div>
+                    ) : (
+                      <span></span>
+                    )}
+                  </div>
+                  <button className="logout menu-item" onClick={logoutHandler}>
+                    Log Out
+                  </button>
+                </div>
+              </div>
+              <button onClick={toggleTheme} className="themeToggle">
+                {isLightTheme ? "🌙" : "☀️"}
+              </button>
             </div>
-            <button onClick={toggleTheme} className="themeToggle">
-              {isLightTheme ? "🌙" : "☀️"}
-            </button>
           </div>
-        </div>
-      ) : (
-        location.pathname !== "/signup" && (
-          <>
-            <form onSubmit={loginHandler}>
+        )}{" "}
+        {!user && (
+          <button onClick={toggleTheme} className="themeToggle noUser">
+            {isLightTheme ? "🌙" : "☀️"}
+          </button>
+        )}
+      </div>
+      {!user && location.pathname !== "/signup" && (
+        <div className="loginHeader">
+          <form className="loginForm" onSubmit={loginHandler}>
+            <div className="usernameForm">
               <label htmlFor="username">Username: </label>
               <input
+                className="usernameInput"
                 name="username"
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
+            </div>
+            <div className="passwordForm">
               <label htmlFor="password">Password: </label>
               <input
+                className="passwordInput"
                 name="password"
                 id="password"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
-              <button type="submit">Log In</button>
-            </form>
+            </div>
+            <button className="loginButton" type="submit">
+              Log In
+            </button>
+          </form>
 
-            <Link to="/signup" className="signup">
-              Go To Signup
-            </Link>
-          </>
-        )
+          <Link to="/signup" className="signup">Signup</Link>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
