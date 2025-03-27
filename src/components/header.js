@@ -175,7 +175,7 @@ const HeaderComponent = () => {
             <div className="userProfile">
               <div className="profileName">
                 {friendRequests.length !== 0 ? (
-                  <div className="notifications">{friendRequests?.length}</div>
+                  <div className="notifications">!</div>
                 ) : (
                   <span></span>
                 )}
