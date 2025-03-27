@@ -9,14 +9,17 @@ const FriendRequests = () => {
   const [friendRequestsLength, setFriendRequestsLength] = useState(0);
   const [friendRequests, setFriendRequests] = useState("");
   const [friends, setFriends] = useState([]);
+  const [isFriendRequests, setIsFriendRequests] = useState(true);
+  const [isFriendsList, setIsFriendsList] = useState(true);
   const itemRef = useRef([]);
 
   useEffect(() => {
     const getFriendRequests = async () => {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${user.id}`, {
-          method:"GET",
-          credentials:"include"
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${user.id}`,
+        {
+          method: "GET",
+          credentials: "include",
         }
       );
       const data = await response.json();
@@ -116,38 +119,71 @@ const FriendRequests = () => {
     console.log(data);
   };
 
+  const changeIsFriendsList = () =>{
+    setIsFriendsList((prev)=>(!prev))
+  }
+
+  const changeIsFriendRequest = () => {
+    setIsFriendRequests((prev) => !prev);
+    console.log("friend request state" + !isFriendRequests);
+  };
 
   return friendRequests && userContext ? (
     <div className="friendsContent">
       <div className="friendsListComponent">
-        <h1>Frienderinos</h1>
+        {isFriendsList ? 
+        <button className="friendsListButton" onClick={changeIsFriendsList}><h1>Friends <img className="chevron" src="/chevronDownGrey.svg"></img></h1></button>
+        : 
+        <button className="friendsListButton" onClick={changeIsFriendsList}><h1>Friends <img className="chevron" src="/chevronUpGrey.png"></img></h1></button>}
         {friends && (
-          <ul className="friendsList">
-            {friends.length === 0 ? <div>You have no friends, sad</div> : 
-            (friends.map((friend, index) => {
-              return (
-                <li className="friend" key={index}>
-                  
-                  <Link
-                    to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}
-                  >
-                    {friend.username}{" "}
-                  </Link>
-                  <button className="friendsListButton" onClick={() => removeFriend(friend.id)}>
-                    Remove Friend
-                  </button>
-                </li>
-              );
-            }))}
+          <ul className={`friendsList ${isFriendsList ? "show" : "hide"}`}>
+            {friends.length === 0 ? (
+              <div>You have no friends, sad</div>
+            ) : (
+              friends.map((friend, index) => {
+                return (
+                  <li className="friend" key={index}>
+                    <Link
+                      to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}
+                    >
+                      {friend.username}{" "}
+                    </Link>
+                    <button
+                      className="friendsListButton"
+                      onClick={() => removeFriend(friend.id)}
+                    >
+                      Remove Friend
+                    </button>
+                  </li>
+                );
+              })
+            )}
           </ul>
         )}
       </div>
       <div className="friendRequests">
+        {isFriendRequests ? (
+          <button className="friendRequestsListButton" onClick={changeIsFriendRequest}>
+            <h1>Friend Requests <img className="chevron" src="/chevronDownGrey.svg"></img></h1>
+          </button>
+        ) : (
+          <button className="friendRequestsListButton" onClick={changeIsFriendRequest}>
+          <h1>Friend Requests <img className="chevron" src="/chevronUpGrey.png"></img></h1>
+        </button>
+        )}
         {friendRequests.length !== 0 ? (
-          <ul>
+          <ul
+            className={`friendRequestList ${
+              isFriendRequests ? "show" : "hide"
+            }`}
+          >
             {friendRequests.map((request, index) => {
               return (
-                <li key={index} ref={(el) => (itemRef.current[index] = el)}>
+                <li
+                  className="friendRequestListItem"
+                  key={index}
+                  ref={(el) => (itemRef.current[index] = el)}
+                >
                   {request.username}
                   <button
                     onClick={() => {
@@ -161,15 +197,14 @@ const FriendRequests = () => {
                       denyFriend(request.id, index);
                     }}
                   >
-                    deny
+                    Deny
                   </button>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <div className="noFriendsDisplay">
-          </div>
+          <div className="noFriendsDisplay"></div>
         )}
       </div>
     </div>

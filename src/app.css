@@ -652,7 +652,52 @@ body.light-theme button.themeToggle:hover {
 
 .friendRequests {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+
+.friendRequestList{
+  list-style: none;
+
+}
+
+.friendRequestList.hide{
+  opacity: 0;
+  display: none;
+}
+
+.friendRequestListItem{
+  display: flex;
+
+
+  gap: 20px;
+  justify-content: center;
+}
+
+.friendRequestListItem button{
+  all: unset;
+  border-bottom: 1px solid;
+  cursor: pointer;
+}
+
+.friendRequestsListButton{
+  all: unset;
+  cursor: pointer;
+  height: 80px;
+  transition: all ease 1s;
+  border-bottom: 1px solid rgba(114, 114, 114, 0.2);
+}
+
+.friendRequestsListButton:hover{
+  border-bottom: 1px solid rgb(114, 114, 114);
+
+}
+
+.chevron{
+  width:25px;
+  transform: translateY(1px);
+  
 }
 
 .friendsContent {
@@ -792,9 +837,21 @@ body.light-theme .Menu button.logout.menu-item {
 
 .friendsListButton{
   all: unset;
-  color:#bd45459d;
+  height: 75px;
+  border-bottom: 1px solid #494949;
   cursor: pointer;
+  transition: all 1s ease;
 }
+
+.friendsListButton:hover{
+  border-bottom: 2px solid #808080;
+}
+
+
+.friendsList.hide{
+  display:none;
+}
+
 
 .userProfilePage button{
   all: unset;
