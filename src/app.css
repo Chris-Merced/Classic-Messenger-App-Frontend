@@ -3,7 +3,7 @@
   --primary-dark: rgba(40, 44, 52, 1);
   --bg-light: linear-gradient(135deg, #f1f1f1, #949393fd);
   --bg-dark: linear-gradient(135deg, #363636, #222222);
-  --menu-bg: rgba(163, 163, 163, 0.9);
+  --menu-bg: rgba(163, 163, 163, 0.6);
   --border-color-dark: rgba(226, 226, 226, 0.5);
   --border-color-light: rgba(117, 117, 117);
   --button-background-color-light: rgba(146, 146, 146, 0.5);
@@ -419,16 +419,17 @@ a.signup {
   padding: 15px;
   border: 2px solid;
   border-color: var(--border-color-dark);
-  background-color: rgba(155, 155, 155, 0.3);
+  background-color: rgba(129, 129, 129, 0.3);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   margin-left: 4vw;
-  box-shadow: 4px 4px 4px rgb(68, 68, 68);
+  box-shadow: 4px 4px 10px rgb(10, 10, 10);
 }
 
 body.light-theme .chatList {
-  background-color: rgba(179, 177, 177, 0.5);
+  background-color: rgba(122, 122, 122, 0.3);
+  box-shadow: 4px 4px 10px rgb(105, 105, 105);
   border: 2px solid;
   border-color: var(--border-color-light);
 }
@@ -541,24 +542,35 @@ body.light-theme .searchBar:hover {
   gap: 10px;
   transition: all ease 0.7s;
   z-index: 1;
-  transform: translateX(15px);
+  box-shadow: 4px 4px 4px rgba(10, 10, 10, 0.562);
+  transform: translateX(10px);
 }
 
 .userListItem{
   all:unset;
   padding-left: 30%;
   padding-right: 30%;
+  transition: all ease 1s;
+  border-radius: 10px;
+}
+
+body.light-theme .userListItem{
+  color: rgb(56, 56, 56);
 }
 
 .userListItem:hover{
-  background-color: #222;
+  background-color: #5a5a5a;
+}
+
+body.light-theme .userListItem:hover{
+  background-color: rgba(139, 139, 139, 0.5);
 }
 
 body.light-theme .searchResults {
   background-color: rgba(114, 114, 114, 0.2);
 }
 
-.searchOption {
+.searchOption{
   width: 100%;
   text-align: center;
 }
@@ -582,8 +594,6 @@ body.light-theme .searchOption {
 }
 
 body.light-theme .searchOption a {
-  padding-left: 30%;
-  padding-right: 30%;
   color: rgba(0, 0, 0, 1);
 }
 
@@ -975,8 +985,16 @@ body.light-theme .signupHeader {
   color: rgba(0, 0, 0, 0.5);
 }
 
+.scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #888 rgba(139, 139, 139, 0.05);
+}
 .scroll-container::-webkit-scrollbar {
   width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar:onClick{
+  color: blue;
 }
 
 .scroll-container::-webkit-scrollbar-track {
@@ -986,6 +1004,10 @@ body.light-theme .signupHeader {
 .scroll-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
+}
+
+.sendMessageInput:focus {
+  outline: none;
 }
 
 .scroll-container::-webkit-scrollbar-thumb:hover {
