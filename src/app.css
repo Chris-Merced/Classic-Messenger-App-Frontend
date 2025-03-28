@@ -10,7 +10,7 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background: var(--bg-dark);
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -46,13 +46,13 @@ body.light-theme {
   width: 200px;
 }
 
-.loginForm{
+.loginForm {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.loginHeader{
+.loginHeader {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,42 +61,39 @@ body.light-theme {
   padding-right: 25%;
 }
 
-.usernameInput{
-  all:unset;
+.usernameInput {
+  all: unset;
   border-radius: 15px;
-  backdrop-filter: blue(15px);
   background-color: rgba(179, 177, 177, 0.5);
   border: 2px solid;
   border-color: #9b9898;
   padding-left: 20px;
   height: 30px;
-  transition: background-color .6s ease;
+  transition: background-color 0.6s ease;
 }
 
-.usernameInput:hover{
+.usernameInput:hover {
   background-color: rgba(163, 163, 163, 0.9);
 }
 
-.passwordInput{
-  all:unset;
+.passwordInput {
+  all: unset;
   border-radius: 15px;
   border: 2px solid;
   border-color: #9b9898;
-  backdrop-filter: blue(15px);
   background-color: rgba(179, 177, 177, 0.5);
   padding-left: 20px;
   height: 30px;
   transform: translateX(6px);
-  transition: background-color .6s ease;
+  transition: background-color 0.6s ease;
 }
 
-.passwordInput:hover{
+.passwordInput:hover {
   background-color: rgba(163, 163, 163, 0.9);
 }
 
-
-button.loginButton{
-  all:unset;
+button.loginButton {
+  all: unset;
   cursor: pointer;
   text-align: center;
   border-radius: 15px;
@@ -110,9 +107,7 @@ button.loginButton{
   margin-bottom: 16px;
 }
 
-
-
-button.loginButton:hover{
+button.loginButton:hover {
   background-color: rgba(240, 240, 240, 0.527);
 }
 
@@ -129,7 +124,7 @@ button.loginButton:hover{
   animation: slideIn 0.2s ease-in-out forwards;
 }
 
-.div{
+.div {
   border-bottom: 1px solid;
 }
 
@@ -141,7 +136,6 @@ button.loginButton:hover{
 .sendMessageInput {
   box-sizing: border-box;
   border: 2px solid var(--border-color-dark);
-  backdrop-filter: blur(15px);
   background-color: rgba(146, 146, 146, 0.5);
   border-radius: 15px;
   transition: all 0.3s ease;
@@ -187,8 +181,8 @@ button.sendMessageButton {
   z-index: 100;
 }
 
-.welcomeHeader{
-  font-family: 'Poppins', sans-serif;
+.welcomeHeader {
+  font-family: "Poppins", sans-serif;
   font-size: 2.2rem;
   font-weight: 400;
   background: linear-gradient(to right, #ffffff, #3a3939);
@@ -204,7 +198,8 @@ button.sendMessageButton {
 }
 
 body.light-theme .welcomeHeader {
-  background: linear-gradient(to right, #444, #222);font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #444, #222);
+  font-family: "Poppins", sans-serif;
   font-size: 2.2rem;
   font-weight: 400;
   background: linear-gradient(to right, #4e4e4e, #bebebe);
@@ -229,12 +224,12 @@ body.light-theme .welcomeHeader {
   opacity: 0;
   transform: translateY(-3px);
   animation: fadeSlideIn 0.8s ease-out forwards;
-
 }
 
 .interactionComponents {
   display: flex;
   width: 100vw;
+  position: relative;
 }
 
 .profileName {
@@ -275,7 +270,6 @@ body.light-theme .DropDown button {
 
 .DropDown button {
   background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
   border: none;
   padding: 10px 15px;
   border-radius: 20px;
@@ -290,12 +284,12 @@ body.light-theme .DropDown button {
 }
 
 .Menu {
-  
   position: absolute;
   top: 110%;
   left: 0;
   background: var(--menu-bg);
-  backdrop-filter: blur(400px);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
@@ -305,7 +299,6 @@ body.light-theme .DropDown button {
   transition: opacity 0.2s ease-out, transform 0.2s ease;
   pointer-events: none;
 }
-
 
 body.light-theme .Menu {
   border-color: var(--border-color-light);
@@ -352,7 +345,7 @@ body.light-theme .Menu {
   text-decoration: none;
 }
 
-.friends .menu-item{
+.friends .menu-item {
 }
 
 .Menu button.logout.menu-item {
@@ -402,10 +395,10 @@ body.light-theme .Menu .menu-item:hover {
 
 button.friendsButton {
   all: unset;
-  padding-left:100%;
-  padding-right:100%;
+  padding-left: 100%;
+  padding-right: 100%;
   color: rgba(255, 255, 255, 1);
-  transform: translateX(-55px)
+  transform: translateX(-55px);
 }
 
 button.friendsButton:hover {
@@ -417,11 +410,9 @@ button.friendsButton:hover {
   color: var(--primary-color);
   border-bottom: 1px solid;
   margin-left: auto;
-  text-align: center;
 }
 
-a.signup{
-  margin-left: 320px;
+a.signup {
 }
 
 .chatList {
@@ -429,18 +420,15 @@ a.signup{
   border: 2px solid;
   border-color: var(--border-color-dark);
   background-color: rgba(155, 155, 155, 0.3);
-  backdrop-filter: blur(15px);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
   margin-left: 4vw;
   box-shadow: 4px 4px 4px rgb(68, 68, 68);
 }
 
 body.light-theme .chatList {
   background-color: rgba(179, 177, 177, 0.5);
-  backdrop-filter: blur(20px);
   border: 2px solid;
   border-color: var(--border-color-light);
 }
@@ -475,9 +463,8 @@ body.light-theme .chat button:hover {
   position: relative;
   border: 2px solid;
   border-color: var(--border-color-dark);
-  border-radius: 20px; 
+  border-radius: 20px;
   opacity: 0;
-  transform: translateY(-3px);
   animation: fadeSlideIn 0.8s ease-out forwards;
 }
 
@@ -485,10 +472,10 @@ body.light-theme .chat button:hover {
   width: 7vw;
   text-align: center;
   padding: 10px;
+  padding-bottom: 11px;
   border: none;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
   color: white;
   transition: all 0.7s ease;
 }
@@ -502,8 +489,7 @@ body.light-theme .chat button:hover {
 .searchBar:hover {
   background: rgba(99, 99, 99, 0.452);
   transition: background-color ease 0.7s;
-  border-radius: 30px;
-  height: 35px;
+  border-radius: 20px;
 }
 
 .searchBar input:focus {
@@ -527,8 +513,14 @@ body.light-theme .searchBar input::placeholder {
   color: rgba(0, 0, 0, 0.5);
 }
 
-body.light-theme .searchBar:hover{
+body.light-theme .searchBar:hover {
   background-color: rgba(240, 240, 240, 0.5);
+}
+
+
+.searchComponent{
+  position: relative;
+  margin-left: auto;
 }
 
 .searchResults {
@@ -537,15 +529,29 @@ body.light-theme .searchBar:hover{
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  background-clip: padding-box;
+  opacity: 1;
+  background-color: rgba(116, 116, 116, 0.2);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
   border-radius: 10px;
   z-index: 100;
   list-style: none;
   padding: 20px;
   gap: 10px;
-  transform: translateX(10px);
   transition: all ease 0.7s;
+  z-index: 1;
+  transform: translateX(15px);
+}
+
+.userListItem{
+  all:unset;
+  padding-left: 30%;
+  padding-right: 30%;
+}
+
+.userListItem:hover{
+  background-color: #222;
 }
 
 body.light-theme .searchResults {
@@ -566,7 +572,6 @@ body.light-theme .searchResults {
 }
 
 .searchOption a:hover {
-  background-color: rgba(139, 139, 139, 0.5);
   transition: all 0.4s ease;
   border-radius: 5px;
 }
@@ -588,7 +593,6 @@ body.light-theme .searchOption a {
   background: rgba(255, 255, 255, 0.2);
 
   margin-right: 10vw;
-  backdrop-filter: blur(10px);
   border: none;
   padding: 10px 15px;
   border-radius: 20px;
@@ -617,7 +621,7 @@ body.light-theme button.themeToggle:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.themeToggle.noUser{
+.themeToggle.noUser {
   margin-left: auto;
 }
 
@@ -660,29 +664,28 @@ body.light-theme button.themeToggle:hover {
   justify-content: center;
 }
 
-.friendRequestList{
+.friendRequestList {
   list-style: none;
-
 }
 
-.friendRequestList.hide{
+.friendRequestList.hide {
   opacity: 0;
   display: none;
 }
 
-.friendRequestListItem{
+.friendRequestListItem {
   display: flex;
   gap: 20px;
   justify-content: center;
 }
 
-.friendRequestListItem button{
+.friendRequestListItem button {
   all: unset;
   border-bottom: 1px solid;
   cursor: pointer;
 }
 
-.friendRequestsListButton{
+.friendRequestsListButton {
   all: unset;
   cursor: pointer;
   height: 80px;
@@ -690,15 +693,13 @@ body.light-theme button.themeToggle:hover {
   border-bottom: 1px solid rgba(114, 114, 114, 0.2);
 }
 
-.friendRequestsListButton:hover{
+.friendRequestsListButton:hover {
   border-bottom: 1px solid rgb(114, 114, 114);
-
 }
 
-.chevron{
-  width:25px;
+.chevron {
+  width: 25px;
   transform: translateY(1px);
-  
 }
 
 .friendsContent {
@@ -752,7 +753,7 @@ body.light-theme .online {
   border-bottom: solid 1px grey;
 }
 
-.initialTime{
+.initialTime {
   font-weight: 200;
   border-bottom: 1px solid;
 }
@@ -800,55 +801,53 @@ body.light-theme .online {
   transform: translateY(20px);
 }
 
-.friendsContent{
+.friendsContent {
   width: 100%;
   margin-left: 6%;
 }
 
-.friendsListComponent{
+.friendsListComponent {
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 
-.friendsListItemButton{
-  all:unset;
+.friendsListItemButton {
+  all: unset;
   border-bottom: 1px solid rgba(114, 114, 114, 0.2);
   cursor: pointer;
   transition: all 1s ease;
 }
 
-.friendsListItemButton:hover{
+.friendsListItemButton:hover {
   border-color: rgb(114, 114, 114);
 }
 
-.friendsList{
+.friendsList {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-
-.friendsList a{
+.friendsList a {
   all: unset;
   cursor: pointer;
   text-align: center;
   padding: 3px;
   padding-left: 9px;
-  transition: all .7s ease;
+  transition: all 0.7s ease;
   border-radius: 15px;
 }
 
 body.light-theme .Menu button.logout.menu-item {
-  color: rgb(73, 73, 73)
+  color: rgb(73, 73, 73);
 }
 
-.friendsList a:hover{
+.friendsList a:hover {
   background-color: #3a3a3a;
 }
 
-.friendsListButton{
+.friendsListButton {
   all: unset;
   height: 75px;
   border-bottom: 1px solid rgba(114, 114, 114, 0.2);
@@ -856,21 +855,20 @@ body.light-theme .Menu button.logout.menu-item {
   transition: all 1s ease;
 }
 
-.friendsListButton:hover{
+.friendsListButton:hover {
   border-bottom: 1px solid rgb(114, 114, 114);
 }
 
-
-.friendsList.hide{
-  display:none;
+.friendsList.hide {
+  display: none;
 }
 
-.friend{
+.friend {
   display: flex;
   gap: 30px;
 }
 
-.userProfilePage button{
+.userProfilePage button {
   all: unset;
   margin-left: 10px;
   margin-right: 10px;
@@ -878,40 +876,111 @@ body.light-theme .Menu button.logout.menu-item {
   cursor: pointer;
 }
 
-.userProfilePage .block{
-  color: rgba(250, 105, 105, 0.603)
+.userProfilePage .block {
+  color: rgba(250, 105, 105, 0.603);
 }
 
-body.light-theme .userProfilePage .block{
-  color: rgba(117, 11, 11, 0.877)
+body.light-theme .userProfilePage .block {
+  color: rgba(117, 11, 11, 0.877);
 }
 
-.userProfilePage{
+.userProfilePage {
   width: 100%;
   margin-left: 10vw;
   display: flex;
-  
 }
 
-.profileStatus{
-
+.profileStatus {
 }
 
-.userProfilePermission{
-
+.userProfilePermission {
 }
 
-.userProfileNoPermission{
+.userProfileNoPermission {
+}
 
+.signupComponent {
+  display: flex;
+  flex-direction: column;
+}
+
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.field {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.assimilateButton {
+  all: unset;
+  border-radius: 15px;
+  background-color: #6d6d6d;
+  text-align: center;
+  width: 30%;
+  border: 1px solid;
+  border-color: var(--border-color-dark);
+  transition: all 1s ease;
+  cursor: pointer;
+}
+
+body.light-theme .assimilateButton {
+  border-color: var(--border-color-light);
+  background-color: rgba(167, 167, 167, 0.5);
+}
+
+.assimilateButton:hover {
+  background-color: rgba(146, 146, 146, 0.5);
+}
+
+body.light-theme .assimilateButton:hover {
+  background-color: rgba(128, 128, 128, 0.692);
+}
+
+.signupInput {
+  all: unset;
+  border-radius: 10px;
+  border: 1px solid;
+  border-color: var(--border-color-dark);
+  background-color: rgba(194, 194, 194, 0.856);
+  padding-left: 20px;
+  height: 30px;
+  transition: all 0.5s ease;
+}
+
+.signupInput:focus {
+  background-color: #6d6c6c;
+}
+
+a.signup {
+  height: 20px;
+}
+
+body.light-theme .signupInput:focus {
+  background-color: rgba(139, 139, 139, 0.644);
+}
+
+body.light-theme .signupInput {
+  border-color: var(--border-color-light);
+}
+
+.signupHeader {
+  color: rgba(255, 255, 255, 0.623);
+}
+
+body.light-theme .signupHeader {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .scroll-container::-webkit-scrollbar {
   width: 8px;
-
 }
 
 .scroll-container::-webkit-scrollbar-track {
-  background: rgba(139, 139, 139, 0.05)
+  background: rgba(139, 139, 139, 0.05);
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
@@ -927,14 +996,14 @@ body.light-theme .userProfilePage .block{
   opacity: 0;
   transform: translateY(-10px);
   animation: fadeSlideIn 0.8s ease-out forwards;
-  animation-delay: 0.5s; 
+  animation-delay: 0.5s;
 }
 
-.fadeInStaggered--1{
+.fadeInStaggered--1 {
   opacity: 0;
   transform: translateY(-10px);
   animation: fadeSlideIn 0.8s ease-out forwards;
-  animation-delay:0.9s
+  animation-delay: 0.9s;
 }
 
 @keyframes slideIn {
@@ -964,5 +1033,3 @@ body.light-theme .userProfilePage .block{
     transform: translateY(0);
   }
 }
-
-

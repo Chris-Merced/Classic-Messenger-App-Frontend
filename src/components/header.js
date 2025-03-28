@@ -5,7 +5,7 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 
-//NEED TO KEEP WORKING ON USERPROFILE 
+//NEED TO KEEP WORKING ON USERPROFILE
 //Send friend request button does not change upon use
 
 //can add search for sidbar chat list
@@ -74,7 +74,6 @@ const HeaderComponent = () => {
 
   const logoutHandler = async () => {
     try {
-      
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/logout`,
         {
@@ -87,8 +86,8 @@ const HeaderComponent = () => {
 
       context.logout();
       chatContext.resetChatList();
-      navigate('/');
-      setUser("");  
+      navigate("/");
+      setUser("");
       window.location.reload();
     } catch (err) {
       console.log("Error with fetch: ", err);
@@ -140,40 +139,41 @@ const HeaderComponent = () => {
         </Link>
         {user && (
           <div className="interactionComponents">
-            <div className="searchBar">
-              <form onSubmit={searchDB}>
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  placeholder="Search Users"
-                  value={searchInput}
-                  onChange={(e) => {
-                    setSearchInput(e.target.value);
-                    const username = e.target.value;
-                    searchDB(e, username);
-                  }}
-                  onBlur={(e) => {
-                    setTimeout(() => {
-                      setSearchInput("");
+            <div className="searchComponent">
+              <div className="searchBar">
+                <form onSubmit={searchDB}>
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    placeholder="Search Users"
+                    value={searchInput}
+                    onChange={(e) => {
+                      setSearchInput(e.target.value);
+                      const username = e.target.value;
                       searchDB(e, username);
-                    }, 150);
-                  }}
-                ></input>
-                {searchInput && (
-                  <ul className="searchResults">
-                    {users.map((user, index) => (
-                      <li className="searchOption" key={index}>
-                        <Link to={`/userProfile/${user.id}`}>
-                          {user.username}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </form>
+                    }}
+                    onBlur={(e) => {
+                      setTimeout(() => {
+                        setSearchInput("");
+                        searchDB(e, username);
+                      }, 150);
+                    }}
+                  ></input>
+                </form>
+              </div>
+              {searchInput && (
+                <ul className="searchResults">
+                  {users.map((user, index) => (
+                    <li className="searchOption" key={index}>
+                      <Link to={`/userProfile/${user.id}`}>
+                        <button className="userListItem">{user.username}</button>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-
             <div className="userProfile">
               <div className="profileName">
                 {friendRequests.length !== 0 ? (

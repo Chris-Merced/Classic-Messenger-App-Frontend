@@ -88,16 +88,16 @@ const signUpComponent = () => {
   };
 
   return (
-    <div>
-      <h1>SignupPage</h1>
+    <div className="signupComponent">
+      <h1 className="signupHeader">Sign Up</h1>
       {signupSuccess ? (
         <div>Welcome to the Family</div>
       ) : (
-        <form onSubmit={submitHandler}>
-          <div>
+        <form className="signupForm" onSubmit={submitHandler}>
+          <div className="field">
             {serverError && <div>{serverError}</div>}
             <label htmlFor="username">Username:</label>
-            <input
+            <input className="signupInput"
               id="username"
               maxLength="30"
               name="username"
@@ -108,9 +108,9 @@ const signUpComponent = () => {
             {isSubmitted && usernameError && <span>{usernameError}</span>}
           </div>
 
-          <div>
+          <div className="field">
             <label htmlFor="password">Password:</label>
-            <input
+            <input className="signupInput"
               id="password"
               name="password"
               type="password"
@@ -121,9 +121,9 @@ const signUpComponent = () => {
             {isSubmitted && passwordError && <span>{passwordError}</span>}
           </div>
 
-          <div>
+          <div className="field">
             <label htmlFor="passwordConfirm">Confirm Password:</label>
-            <input
+            <input className="signupInput"
               type="password"
               id="passwordConfirm"
               name="passwordConfirm"
@@ -134,9 +134,9 @@ const signUpComponent = () => {
             ></input>
           </div>
 
-          <div>
+          <div className="field">
             <label htmlFor="email">Email:</label>
-            <input
+            <input className="signupInput"
               id="email"
               type="email"
               name="email"
@@ -147,7 +147,7 @@ const signUpComponent = () => {
             {isSubmitted && emailError && <span>{emailError}</span>}
           </div>
 
-          <button type="submit">Assimilate</button>
+          <button className="assimilateButton" type="submit">Assimilate</button>
         </form>
       )}
       <Link to="/" className="signup">
