@@ -5,9 +5,8 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 
-//NEED TO KEEP WORKING ON USERPROFILE
 //Send friend request button does not change upon use
-
+//add user profile page to drop down menu list 
 //can add search for sidbar chat list
 //can add search for messages list
 
