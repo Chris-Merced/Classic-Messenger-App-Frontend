@@ -121,13 +121,25 @@ const HeaderComponent = () => {
       );
       const data = await response.json();
       const users = data.users;
-
+      console.log("CHECKING USER SEARCH DATA: ")
+      console.log(users)
       setUsers(users);
     }
     if (username === "") {
       setUsers([]);
     }
   };
+
+  const sendUserToProfilePageSearch = (e, username) =>{
+    for(let i=0; i < users.length; i++){
+      if (users[i].username === username){
+        setSearchInput('')
+        navigate(`/userProfile/${users[i].id}`)
+
+        
+      }
+    }
+  }
 
   return (
     <>
@@ -158,6 +170,12 @@ const HeaderComponent = () => {
                         setSearchInput("");
                         searchDB(e, username);
                       }, 150);
+                    }}
+                    onKeyDown={(e)=>{
+                      if (e.key === "Enter"){
+                        e.preventDefault()
+                        sendUserToProfilePageSearch(e, e.target.value)
+                      }
                     }}
                   ></input>
                 </form>
