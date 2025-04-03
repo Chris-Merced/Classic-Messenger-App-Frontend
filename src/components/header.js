@@ -5,8 +5,6 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 
-//Send friend request button does not change upon use
-//add user profile page to drop down menu list 
 //can add search for sidbar chat list
 //can add search for messages list
 
@@ -120,8 +118,8 @@ const HeaderComponent = () => {
       );
       const data = await response.json();
       const users = data.users;
-      console.log("CHECKING USER SEARCH DATA: ")
-      console.log(users)
+      console.log("CHECKING USER SEARCH DATA: ");
+      console.log(users);
       setUsers(users);
     }
     if (username === "") {
@@ -129,16 +127,14 @@ const HeaderComponent = () => {
     }
   };
 
-  const sendUserToProfilePageSearch = (e, username) =>{
-    for(let i=0; i < users.length; i++){
-      if (users[i].username === username){
-        setSearchInput('')
-        navigate(`/userProfile/${users[i].id}`)
-
-        
+  const sendUserToProfilePageSearch = (e, username) => {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username === username) {
+        setSearchInput("");
+        navigate(`/userProfile/${users[i].id}`);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -170,10 +166,10 @@ const HeaderComponent = () => {
                         searchDB(e, username);
                       }, 150);
                     }}
-                    onKeyDown={(e)=>{
-                      if (e.key === "Enter"){
-                        e.preventDefault()
-                        sendUserToProfilePageSearch(e, e.target.value)
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        sendUserToProfilePageSearch(e, e.target.value);
                       }
                     }}
                   ></input>
@@ -184,7 +180,9 @@ const HeaderComponent = () => {
                   {users.map((user, index) => (
                     <li className="searchOption" key={index}>
                       <Link to={`/userProfile/${user.id}`}>
-                        <button className="userListItem">{user.username}</button>
+                        <button className="userListItem">
+                          {user.username}
+                        </button>
                       </Link>
                     </li>
                   ))}
@@ -201,11 +199,18 @@ const HeaderComponent = () => {
               </div>
 
               <div className="DropDown">
-                <button className="profileButton" onClick={isDropDown}>
+                <button className="dropdownButton" onClick={isDropDown}>
                   <div>{user.username}</div>
                   {dropDown ? <div>▲</div> : <div>▼</div>}
                 </button>
                 <div className={`Menu ${dropDown ? "show" : "hide"}`}>
+                  <div className="profile menu-item">
+                    <Link to={`/userProfile/${user.id}`}>
+                      <button className="profileButton" onClick={isDropDown}>
+                        Profile
+                      </button>
+                    </Link>
+                  </div>
                   <div className="friends menu-item">
                     <Link to={`/userProfile/friends`} className="friendsLink">
                       <button className="friendsButton" onClick={isDropDown}>

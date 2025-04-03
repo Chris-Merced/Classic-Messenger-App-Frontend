@@ -12,6 +12,7 @@ const UserProfile = () => {
   const [blockedByProfile, setBlockedByProfile] = useState("");
   const [friendStatus, setFriendStatus] = useState("");
   const [isPublic, setIsPublic] = useState("");
+  const [requestSent, setRequestSent] = useState(false)
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -125,7 +126,7 @@ const UserProfile = () => {
         body: JSON.stringify(data),
       }
     );
-
+    setRequestSent(true);
     const newData = await response.json();
   };
 
@@ -208,7 +209,7 @@ const UserProfile = () => {
             <button onClick={unblockUser}>Unblock User</button>
           )}
           {friendStatus === false && (userContext?.user?.id != userIdentifier && (
-            <button onClick={sendFriendRequest}>Send Friend Request</button>
+            requestSent ? <button>Request Sent!</button> : <button onClick={sendFriendRequest}>Send Friend Request</button>
           ))}
         </div> 
       ) : (
