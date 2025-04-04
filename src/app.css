@@ -332,23 +332,23 @@ body.light-theme .Menu {
   margin: 0;
 }
 
-.Menu .profile.menu-item{
-  all:unset;
+.Menu .profile.menu-item {
+  all: unset;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.3s ease; 
+  transition: all 0.3s ease;
 }
 
 .Menu .friends.menu-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; 
+  gap: 8px;
 }
 
-.Menu .profile a{
+.Menu .profile a {
   color: inherit;
   text-decoration: none;
   transform: color 0.3s ease;
@@ -356,7 +356,7 @@ body.light-theme .Menu {
   padding-right: 40%;
 }
 
-.profile .menu-item{
+.profile .menu-item {
   margin: 0;
   padding: 0;
   transition: all 0.3s ease;
@@ -367,20 +367,20 @@ body.light-theme .Menu {
   text-decoration: none;
 }
 
-button.profileButton{
-  background-color: rgba(0, 0, 0, 0.0);
+button.profileButton {
+  background-color: rgba(0, 0, 0, 0);
   font-family: "Poppins", sans-serif;
   font-size: 1em;
   font-weight: 500;
-  
-  transition: color 0.0s ease;
+
+  transition: color 0s ease;
 }
 
-button.profileButton:hover{
-  background-color: rgba(0, 0, 0, 0.0);
+button.profileButton:hover {
+  background-color: rgba(0, 0, 0, 0);
 }
 
-.Menu button.profileButton.menu-item{
+.Menu button.profileButton.menu-item {
   transition: all 0.3s ease;
 }
 
@@ -452,6 +452,7 @@ a.signup {
 }
 
 .chatList {
+  width: 100px;
   padding: 15px;
   border: 2px solid;
   border-color: var(--border-color-dark);
@@ -461,6 +462,19 @@ a.signup {
   flex-direction: column;
   margin-left: 4vw;
   box-shadow: 4px 4px 10px rgb(10, 10, 10);
+  transition: width 1s ease;
+}
+
+.chatList.show {
+  width: 200px;
+}
+
+.chatButton .show {
+  color: red;
+}
+
+.chat .show {
+  transition: width 3s ease;
 }
 
 body.light-theme .chatList {
@@ -554,8 +568,7 @@ body.light-theme .searchBar:hover {
   background-color: rgba(240, 240, 240, 0.5);
 }
 
-
-.searchComponent{
+.searchComponent {
   position: relative;
   margin-left: auto;
 }
@@ -582,23 +595,23 @@ body.light-theme .searchBar:hover {
   transform: translateX(10px);
 }
 
-.userListItem{
-  all:unset;
+.userListItem {
+  all: unset;
   padding-left: 30%;
   padding-right: 30%;
   transition: all ease 1s;
   border-radius: 10px;
 }
 
-body.light-theme .userListItem{
+body.light-theme .userListItem {
   color: rgb(56, 56, 56);
 }
 
-.userListItem:hover{
+.userListItem:hover {
   background-color: #5a5a5a;
 }
 
-body.light-theme .userListItem:hover{
+body.light-theme .userListItem:hover {
   background-color: rgba(139, 139, 139, 0.5);
 }
 
@@ -606,7 +619,7 @@ body.light-theme .searchResults {
   background-color: rgba(114, 114, 114, 0.2);
 }
 
-.searchOption{
+.searchOption {
   width: 100%;
   text-align: center;
 }
@@ -842,9 +855,11 @@ body.light-theme .online {
 
 .sendMessage {
 }
+
 .sideBar {
   margin-left: -75px;
   transform: translateY(20px);
+  transition: width 0.3s ease;
 }
 
 .friendsContent {
@@ -1029,7 +1044,7 @@ body.light-theme .signupHeader {
   width: 8px;
 }
 
-.scroll-container::-webkit-scrollbar:onClick{
+.scroll-container::-webkit-scrollbar:onclick {
   color: blue;
 }
 

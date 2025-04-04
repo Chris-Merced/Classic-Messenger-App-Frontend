@@ -16,6 +16,7 @@ module.exports = (env, argv) => {
       filename: 'bundle.js',
       clean: true
     },
+    devtool: 'source-map',
     module: {
       rules: [
         {

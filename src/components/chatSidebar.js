@@ -11,10 +11,10 @@ const SideBarComponent = () => {
   const location = useLocation();
   const intervalRef = useRef(null);
 
-
-
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
+  const [sidebarSearch, setSidebarSearch] = useState(false);
+  const [unmodifedChatList, ] = useState([]);
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
@@ -28,17 +28,18 @@ const SideBarComponent = () => {
 
   useEffect(() => {
     if (!listOfChats) return;
-  
-    
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-  
+
+    console.log(listOfChats)
+
     const getOnlineUsers = async () => {
       const usersList = listOfChats
-        .filter(chat => chat.participants && chat.participants.length === 1) 
-        .map(chat => chat.participants[0]); 
-  
+        .filter((chat) => chat.participants && chat.participants.length === 1)
+        .map((chat) => chat.participants[0]);
+
       try {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/conversations/getOnlineUsers?userList=${usersList}`
@@ -49,35 +50,35 @@ const SideBarComponent = () => {
         console.error("Error fetching online users:", error);
       }
     };
-  
-    getOnlineUsers(); 
-    intervalRef.current = setInterval(getOnlineUsers, 15000); 
-  
+
+    getOnlineUsers();
+    intervalRef.current = setInterval(getOnlineUsers, 15000);
+
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, [listOfChats]); 
+  }, [listOfChats]);
 
-  useEffect(()=>{
-    if(listOfChats){const chat = listOfChats[0];
-    console.log("CHECKING FIRST INDEX OF ARRAY LIST OF CHATS")
-    console.log(listOfChats[0])
-    
+  useEffect(() => {
+    if (listOfChats) {
+      const chat = listOfChats[0];
+      console.log("CHECKING FIRST INDEX OF ARRAY LIST OF CHATS");
+      console.log(listOfChats[0]);
+
       chatContext.changeChat({
         name: chat.name,
         conversationID: chat.conversation_id,
-        reciever: chat.participants
+        reciever: chat.participants,
       });
     }
-  },[listOfChats])
+  }, []);
 
   const changeChat = (chat) => {
-
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,
         conversationID: chat.conversation_id,
-        reciever: chat.participants
+        reciever: chat.participants,
       });
       if (location.pathname !== "/") {
         navigate("/");
@@ -94,12 +95,45 @@ const SideBarComponent = () => {
     }
   };
 
+  const isSideBarSearch = () => {
+    setSidebarSearch((prev) => !prev);
+  };
 
+  const changeDisplayedChatList = (search) => {
+    listOfChats.forEach(chat => {
+      console.log(chat)
+    });
+
+    setListOfChats((prev)=>prev.filter((chat)=>{
+      const regex = new RegExp(search)
+      if(!chat.name){
+        console.log(search)
+        console.log(chat.participants[0])
+        console.log(regex.test(chat.participants[0]))
+        if(regex.test(chat.participants[0].toString())){
+          console.log("made it1")
+          return chat
+        }
+        
+      }
+    }))
+
+  };
 
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
-      <ul className="chatList">
+      <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
+        <button className="sideBarSearchButton" onClick={isSideBarSearch}>
+          Search
+        </button>
+        {sidebarSearch && (
+          <input
+            className="sideBarSearch"
+            onChange={(e) => changeDisplayedChatList(e.target.value)}
+          ></input>
+        )}
         {listOfChats.map((chat, index) => (
+          chat &&
           <li className="chat" key={index}>
             <button className="chatButton" onClick={() => changeChat(chat)}>
               {chat.name ? chat.name : chat.participants}
@@ -112,6 +146,7 @@ const SideBarComponent = () => {
               <div className="offline"></div>
             )}
           </li>
+          
         ))}
       </ul>
     </div>

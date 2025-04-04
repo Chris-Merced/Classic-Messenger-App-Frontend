@@ -12,12 +12,11 @@ const UserProfile = () => {
   const [blockedByProfile, setBlockedByProfile] = useState("");
   const [friendStatus, setFriendStatus] = useState("");
   const [isPublic, setIsPublic] = useState("");
-  const [requestSent, setRequestSent] = useState(false)
+  const [requestSent, setRequestSent] = useState(false);
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -34,9 +33,12 @@ const UserProfile = () => {
         if (!response.ok) {
           throw new Error(data.message);
         }
-        console.log("CHECKING USER PROFILE RETRIEVED DATA: ")
-        
-        data.user = {...data.user, created_at: data.user.created_at.split("T")[0]}
+        console.log("CHECKING USER PROFILE RETRIEVED DATA: ");
+
+        data.user = {
+          ...data.user,
+          created_at: data.user.created_at.split("T")[0],
+        };
 
         setProfile(data.user);
       } catch (err) {
@@ -45,23 +47,28 @@ const UserProfile = () => {
     };
 
     const checkIfFriends = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
-      );
-      const friendStatus = await response.json();
-      setFriendStatus(friendStatus.friendStatus);
+      if (userContext?.user?.id) {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
+        );
+        const friendStatus = await response.json();
+        setFriendStatus(friendStatus.friendStatus);
+      }
     };
 
     const checkIfBlocked = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
-      );
-      const data = await response.json();
-      setIsBlocked(data.isBlocked);
+      if (userContext?.user?.id) {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
+        );
+        const data = await response.json();
+        setIsBlocked(data.isBlocked);
+      }
     };
 
-    getUserProfile();
     if (userContext?.user?.id) {
+      getUserProfile();
+
       checkIfFriends();
       checkIfBlocked();
     }
@@ -76,38 +83,41 @@ const UserProfile = () => {
       const data = await response.json();
       setIsPublic(data);
     };
-    if(userContext?.user?.id){
+    if (userContext?.user?.id) {
       checkIfPublic();
     }
   }, [isPublic]);
 
   useEffect(() => {
+    if (userContext?.user?.id) {
     const checkIfBlockedByProfile = async () => {
-      if (userContext?.user?.id) {
+      
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
         );
         const data = await response.json();
         setBlockedByProfile(data);
-      }
+      
     };
     checkIfBlockedByProfile();
+  }
   }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
-    const user = userContext.user;
+    if (userContext?.user?.id) {
+      const user = userContext.user;
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
+      );
+      const data = await response.json();
 
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
-    );
-    const data = await response.json();
-
-    if (data.conversation_id) {
-      chatContext.changeChat({
-        name: null,
-        conversationID: data.conversation_id,
-      });
-      navigate("/");
+      if (data.conversation_id) {
+        chatContext.changeChat({
+          name: null,
+          conversationID: data.conversation_id,
+        });
+        navigate("/");
+      }
     }
   };
 
@@ -177,67 +187,84 @@ const UserProfile = () => {
     );
 
     const data = await response.json();
-    if(data.changed){
-      if(isPublic){
-        setIsPublic(false)
-      }else{
-        setIsPublic(true)
+    if (data.changed) {
+      if (isPublic) {
+        setIsPublic(false);
+      } else {
+        setIsPublic(true);
       }
     }
   };
 
   console.log("User Identifier: " + userIdentifier);
-  console.log("User Context: " + userContext.user.id);
-
 
   return (
-    <div className="userProfilePage">
-      {profile && (isPublic || friendStatus) ? (
-        <div className="userProfilePermission">
-          <div>Welcome to the page of {profile.username}</div>
-          <div>Created at {profile.created_at}</div>
-          {blockedByProfile ? (
-            <div>You Are Currently Blocked by This User</div>
+    <div>
+      {userContext?.user?.id ? (
+        <div className="userProfilePage">
+          {profile && (isPublic || friendStatus) ? (
+            <div className="userProfilePermission">
+              <div>Welcome to the page of {profile.username}</div>
+              <div>Created at {profile.created_at}</div>
+              {blockedByProfile ? (
+                <div>You Are Currently Blocked by This User</div>
+              ) : (
+                <button onClick={() => sendDirectMessage(userContext.user.id)}>
+                  Direct Message
+                </button>
+              )}
+              {isBlocked === false ? (
+                <button className="block" onClick={blockUser}>
+                  Block User
+                </button>
+              ) : (
+                <button onClick={unblockUser}>Unblock User</button>
+              )}
+              {friendStatus === false &&
+                userContext?.user?.id != userIdentifier &&
+                (requestSent ? (
+                  <button>Request Sent!</button>
+                ) : (
+                  <button onClick={sendFriendRequest}>
+                    Send Friend Request
+                  </button>
+                ))}
+            </div>
           ) : (
-            <button onClick={() => sendDirectMessage(userContext.user.id)}>
-              Direct Message
-            </button>
+            <div className="userProfileNoPermission">
+              <div>Welcome to the page of {profile.username}</div>
+              <div>Created at {profile.created_at}</div>
+              {isBlocked === false ? (
+                <button className="block" onClick={blockUser}>
+                  Block User
+                </button>
+              ) : (
+                <button onClick={unblockUser}>Unblock User</button>
+              )}
+              {friendStatus === false &&
+                userContext?.user?.id != userIdentifier && (
+                  <button onClick={sendFriendRequest}>
+                    Send Friend Request
+                  </button>
+                )}
+            </div>
           )}
-          {isBlocked === false ? (
-            <button className="block" onClick={blockUser}>Block User</button>
-          ) : (
-            <button onClick={unblockUser}>Unblock User</button>
+          {userContext?.user?.id == userIdentifier && (
+            <div className="profileStatus">
+              {isPublic ? (
+                <button onClick={changeProfileStatus}>
+                  Change Profile to Private
+                </button>
+              ) : (
+                <button onClick={changeProfileStatus}>
+                  Change Profile to Public
+                </button>
+              )}
+            </div>
           )}
-          {friendStatus === false && (userContext?.user?.id != userIdentifier && (
-            requestSent ? <button>Request Sent!</button> : <button onClick={sendFriendRequest}>Send Friend Request</button>
-          ))}
-        </div> 
+        </div>
       ) : (
-        <div className="userProfileNoPermission">
-          <div>Welcome to the page of {profile.username}</div>
-          <div>Created at {profile.created_at}</div>
-          {isBlocked === false ? (
-            <button className="block" onClick={blockUser}>Block User</button>
-          ) : (
-            <button onClick={unblockUser}>Unblock User</button>
-          )}
-          {(friendStatus === false) && (userContext?.user?.id != userIdentifier && (
-            <button onClick={sendFriendRequest}>Send Friend Request</button>
-          ))}
-        </div>
-      )}
-      {userContext?.user?.id == userIdentifier && (
-        <div className="profileStatus">
-          {isPublic ? (
-            <button onClick={changeProfileStatus}>
-              Change Profile to Private
-            </button>
-          ) : (
-            <button onClick={changeProfileStatus}>
-              Change Profile to Public
-            </button>
-          )}
-        </div>
+        <div></div>
       )}
     </div>
   );
