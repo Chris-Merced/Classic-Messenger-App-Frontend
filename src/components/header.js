@@ -5,8 +5,8 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 
-//can add search for sidbar chat list
-//can add search for messages list
+//clean up the visual elements of the sidebar chat search functionality 
+//begin to implement user profile editing
 
 const HeaderComponent = () => {
   const [username, setUsername] = useState("");
