@@ -14,11 +14,12 @@ const SideBarComponent = () => {
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
   const [sidebarSearch, setSidebarSearch] = useState(false);
-  const [unmodifedChatList, ] = useState([]);
+  const [unmodifedChatList, setUnmodifiedChatList] = useState([]);
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
+      setUnmodifiedChatList(listOfChats);
     }
   }, [chatContext.chatList]);
 
@@ -104,8 +105,13 @@ const SideBarComponent = () => {
       console.log(chat)
     });
 
+    setListOfChats(unmodifedChatList);
+    if(search===''){
+      return;
+    }
     setListOfChats((prev)=>prev.filter((chat)=>{
       const regex = new RegExp(search)
+      
       if(!chat.name){
         console.log(search)
         console.log(chat.participants[0])
