@@ -13,10 +13,13 @@ const UserProfile = () => {
   const [friendStatus, setFriendStatus] = useState("");
   const [isPublic, setIsPublic] = useState("");
   const [requestSent, setRequestSent] = useState(false);
+  const [editPage, setEditPage] = useState(false);
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
+
+  //MAKE BUTTONS IN HEADER A DROP DOWN MENU
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -90,17 +93,15 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (userContext?.user?.id) {
-    const checkIfBlockedByProfile = async () => {
-      
+      const checkIfBlockedByProfile = async () => {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
         );
         const data = await response.json();
         setBlockedByProfile(data);
-      
-    };
-    checkIfBlockedByProfile();
-  }
+      };
+      checkIfBlockedByProfile();
+    }
   }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
@@ -196,7 +197,12 @@ const UserProfile = () => {
     }
   };
 
-  console.log("User Identifier: " + userIdentifier);
+  const isEditPage = () => {
+    setEditPage((prev) => !prev);
+    console.log(editPage)
+    console.log(userContext?.user?.id)
+    console.log(userIdentifier)
+  };
 
   return (
     <div>
@@ -204,62 +210,85 @@ const UserProfile = () => {
         <div className="userProfilePage">
           {profile && (isPublic || friendStatus) ? (
             <div className="userProfilePermission">
-              <div>Welcome to the page of {profile.username}</div>
-              <div>Created at {profile.created_at}</div>
-              {blockedByProfile ? (
-                <div>You Are Currently Blocked by This User</div>
-              ) : (
-                <button onClick={() => sendDirectMessage(userContext.user.id)}>
-                  Direct Message
-                </button>
-              )}
-              {isBlocked === false ? (
-                <button className="block" onClick={blockUser}>
-                  Block User
-                </button>
-              ) : (
-                <button onClick={unblockUser}>Unblock User</button>
-              )}
-              {friendStatus === false &&
-                userContext?.user?.id != userIdentifier &&
-                (requestSent ? (
-                  <button>Request Sent!</button>
+              
+              <div className="userHeader">
+                <img
+                  className="profileImage"
+                  src="/defaultProfileImage.png"
+                ></img>
+                {userContext?.user?.id == userIdentifier && editPage && <button className="editProfilePicture">ahahahahhqa</button>}
+                <h1>{profile.username}</h1>
+                {blockedByProfile ? (
+                  <div>You Are Currently Blocked by This User</div>
                 ) : (
-                  <button onClick={sendFriendRequest}>
-                    Send Friend Request
+                  <button
+                    onClick={() => sendDirectMessage(userContext.user.id)}
+                  >
+                    Direct Message
                   </button>
-                ))}
+                )}
+                {isBlocked === false ? userContext?.user?.id != userIdentifier && (
+                  <button className="block" onClick={blockUser}>
+                    Block User
+                  </button>
+                ) : (
+                  <button onClick={unblockUser}>Unblock User</button>
+                )}
+                {friendStatus === false &&
+                  userContext?.user?.id != userIdentifier &&
+                  (requestSent ? (
+                    <button>Request Sent!</button>
+                  ) : (
+                    <button onClick={sendFriendRequest}>
+                      Send Friend Request
+                    </button>
+                  ))}
+              </div>
+              <div>Created at {profile.created_at}</div>
+              <div>About Me:</div>
             </div>
           ) : (
             <div className="userProfileNoPermission">
-              <div>Welcome to the page of {profile.username}</div>
-              <div>Created at {profile.created_at}</div>
-              {isBlocked === false ? (
-                <button className="block" onClick={blockUser}>
-                  Block User
-                </button>
-              ) : (
-                <button onClick={unblockUser}>Unblock User</button>
-              )}
-              {friendStatus === false &&
-                userContext?.user?.id != userIdentifier && (
-                  <button onClick={sendFriendRequest}>
-                    Send Friend Request
+              <div className="userHeader">
+                <img
+                  className="profileImage"
+                  src="/defaultProfileImage.png"
+                ></img>
+                <div>{profile.username}</div>
+                {isBlocked === false ? (
+                  <button className="block" onClick={blockUser}>
+                    Block User
                   </button>
+                ) : (
+                  <button onClick={unblockUser}>Unblock User</button>
                 )}
+                {friendStatus === false &&
+                  userContext?.user?.id != userIdentifier && (
+                    <button onClick={sendFriendRequest}>
+                      Send Friend Request
+                    </button>
+                  )}
+              </div>
+              <div>Created at {profile.created_at}</div>
+              <div>About Me: </div>
             </div>
           )}
           {userContext?.user?.id == userIdentifier && (
-            <div className="profileStatus">
-              {isPublic ? (
-                <button onClick={changeProfileStatus}>
-                  Change Profile to Private
-                </button>
-              ) : (
-                <button onClick={changeProfileStatus}>
-                  Change Profile to Public
-                </button>
-              )}
+            <div>
+              <div className="profileStatus">
+                {isPublic ? (
+                  <button onClick={changeProfileStatus}>
+                    Change Profile to Private
+                  </button>
+                ) : (
+                  <button onClick={changeProfileStatus}>
+                    Change Profile to Public
+                  </button>
+                )}
+              </div>
+              <button className="editProfile" onClick={isEditPage}>
+                Edit Profile
+              </button>
             </div>
           )}
         </div>

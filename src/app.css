@@ -946,9 +946,28 @@ body.light-theme .userProfilePage .block {
 }
 
 .userProfilePage {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   margin-left: 10vw;
   display: flex;
+}
+
+.userHeader{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+}
+
+.profileImage{
+  width: auto;
+  height: 50px;
+}
+
+button.editProfilePicture{
+  position: absolute;
+  transform: translateX(-100px)
 }
 
 .profileStatus {
