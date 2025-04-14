@@ -14,6 +14,8 @@ const UserProfile = () => {
   const [isPublic, setIsPublic] = useState("");
   const [requestSent, setRequestSent] = useState(false);
   const [editPage, setEditPage] = useState(false);
+  const [profilePictureEdit, setProfilePictureEdit] = useState(null)
+
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -199,10 +201,30 @@ const UserProfile = () => {
 
   const isEditPage = () => {
     setEditPage((prev) => !prev);
-    console.log(editPage)
-    console.log(userContext?.user?.id)
-    console.log(userIdentifier)
+    console.log(editPage);
+    console.log(userContext?.user?.id);
+    console.log(userIdentifier);
   };
+
+  const handleProfilePictureChange = (e) =>{
+    setProfilePictureEdit(e.target.files[0])
+  }
+
+  const handleProfilePicture = async () =>{
+    if(!profilePictureEdit){
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append("ProfilePicture", profilePictureEdit)
+
+    const response =  await fetch(`${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`, {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    }) 
+    console.log(response)   
+  }
 
   return (
     <div>
@@ -210,13 +232,22 @@ const UserProfile = () => {
         <div className="userProfilePage">
           {profile && (isPublic || friendStatus) ? (
             <div className="userProfilePermission">
-              
               <div className="userHeader">
                 <img
                   className="profileImage"
                   src="/defaultProfileImage.png"
                 ></img>
-                {userContext?.user?.id == userIdentifier && editPage && <button className="editProfilePicture">ahahahahhqa</button>}
+                {userContext?.user?.id == userIdentifier && editPage && (
+                  <label>
+                    Upload Your Photo
+                    <input
+                      type="file"
+                      onChange={handleProfilePictureChange}
+                      className="editProfilePicture"
+                    />
+                    <button onClick={handleProfilePicture}>Change Picture</button>
+                  </label>
+                )}
                 <h1>{profile.username}</h1>
                 {blockedByProfile ? (
                   <div>You Are Currently Blocked by This User</div>
@@ -227,10 +258,12 @@ const UserProfile = () => {
                     Direct Message
                   </button>
                 )}
-                {isBlocked === false ? userContext?.user?.id != userIdentifier && (
-                  <button className="block" onClick={blockUser}>
-                    Block User
-                  </button>
+                {isBlocked === false ? (
+                  userContext?.user?.id != userIdentifier && (
+                    <button className="block" onClick={blockUser}>
+                      Block User
+                    </button>
+                  )
                 ) : (
                   <button onClick={unblockUser}>Unblock User</button>
                 )}
