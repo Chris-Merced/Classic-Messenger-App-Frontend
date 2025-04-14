@@ -217,6 +217,7 @@ const UserProfile = () => {
     
     const formData = new FormData();
     formData.append("ProfilePicture", profilePictureEdit)
+    formData.append("UserID", userContext.user.id)
 
     const response =  await fetch(`${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`, {
       method: "POST",
