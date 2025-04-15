@@ -217,14 +217,15 @@ const UserProfile = () => {
     
     const formData = new FormData();
     formData.append("ProfilePicture", profilePictureEdit)
-    formData.append("UserID", userContext.user.id)
+    formData.append("userID", userContext.user.id)
 
     const response =  await fetch(`${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`, {
       method: "POST",
       body: formData,
       credentials: "include"
     }) 
-    console.log(response)   
+    const data = await response.json()
+    console.log(data)
   }
 
   return (
