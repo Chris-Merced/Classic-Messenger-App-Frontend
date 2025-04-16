@@ -15,6 +15,7 @@ const SideBarComponent = () => {
   const [activeUsers, setActiveUsers] = useState({});
   const [sidebarSearch, setSidebarSearch] = useState(false);
   const [unmodifedChatList, setUnmodifiedChatList] = useState([]);
+  const [islight, setIsLight] = useState(null);
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
@@ -22,6 +23,22 @@ const SideBarComponent = () => {
       setUnmodifiedChatList(listOfChats);
     }
   }, [chatContext.chatList]);
+
+  useEffect(() => {
+    setIsLight(document.body.classList.contains("light-theme"));
+  }, []);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.body.classList.contains("light-theme"));
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     chatContext.changeLocation(location);
@@ -34,7 +51,7 @@ const SideBarComponent = () => {
       clearInterval(intervalRef.current);
     }
 
-    console.log(listOfChats)
+    console.log(listOfChats);
 
     const getOnlineUsers = async () => {
       const usersList = listOfChats
@@ -101,29 +118,29 @@ const SideBarComponent = () => {
   };
 
   const changeDisplayedChatList = (search) => {
-    listOfChats.forEach(chat => {
-      console.log(chat)
+    listOfChats.forEach((chat) => {
+      console.log(chat);
     });
 
     setListOfChats(unmodifedChatList);
-    if(search===''){
+    if (search === "") {
       return;
     }
-    setListOfChats((prev)=>prev.filter((chat)=>{
-      const regex = new RegExp(search)
-      
-      if(!chat.name){
-        console.log(search)
-        console.log(chat.participants[0])
-        console.log(regex.test(chat.participants[0]))
-        if(regex.test(chat.participants[0].toString())){
-          console.log("made it1")
-          return chat
-        }
-        
-      }
-    }))
+    setListOfChats((prev) =>
+      prev.filter((chat) => {
+        const regex = new RegExp(search);
 
+        if (!chat.name) {
+          console.log(search);
+          console.log(chat.participants[0]);
+          console.log(regex.test(chat.participants[0]));
+          if (regex.test(chat.participants[0].toString())) {
+            console.log("made it1");
+            return chat;
+          }
+        }
+      })
+    );
   };
 
   return listOfChats && userContext.user ? (
@@ -138,23 +155,48 @@ const SideBarComponent = () => {
             onChange={(e) => changeDisplayedChatList(e.target.value)}
           ></input>
         )}
-        {listOfChats.map((chat, index) => (
-          chat &&
-          <li className="chat" key={index}>
-            {!chat.name && chat.participants.length===1 && <img onClick={()=> changeChat(chat)} className="sideBarProfilePicture" src={chat.profilePicture}></img>}
-            <button className="chatButton" onClick={() => changeChat(chat)}>
-              {chat.name ? chat.name : chat.participants}
-            </button>
-            {chat.participants &&
-            chat.participants.length === 1 &&
-            activeUsers[chat.participants] ? (
-              <div className="online"></div>
-            ) : (
-              <div className="offline"></div>
-            )}
-          </li>
-          
-        ))}
+        {listOfChats.map(
+          (chat, index) =>
+            chat && (
+              <li className="chat" key={index}>
+                {!chat.name &&
+                  chat.participants.length === 1 &&
+                  chat.profilePicture && (
+                    <img
+                      onClick={() => changeChat(chat)}
+                      className="sideBarProfilePicture"
+                      src={chat.profilePicture}
+                    ></img>
+                  )}
+                {!chat.name &&
+                  chat.participants.length === 1 &&
+                  !chat.profilePicture && !islight && (
+                    <img
+                      className="sideBarProfilePicture"
+                      src="/defaultProfileImageLight.webp"
+                    ></img>
+                  )}
+                {!chat.name &&
+                  chat.participants.length === 1 &&
+                  !chat.profilePicture && islight && (
+                    <img
+                      className="sideBarProfilePicture"
+                      src="/defaultProfileImage.png"
+                    ></img>
+                  )}
+                <button className="chatButton" onClick={() => changeChat(chat)}>
+                  {chat.name ? chat.name : chat.participants}
+                </button>
+                {chat.participants &&
+                chat.participants.length === 1 &&
+                activeUsers[chat.participants] ? (
+                  <div className="online"></div>
+                ) : (
+                  <div className="offline"></div>
+                )}
+              </li>
+            )
+        )}
       </ul>
     </div>
   ) : (

@@ -452,7 +452,7 @@ a.signup {
 }
 
 .chatList {
-  width: 100px;
+  width: 200px;
   padding: 15px;
   border: 2px solid;
   border-color: var(--border-color-dark);
@@ -463,6 +463,7 @@ a.signup {
   margin-left: 4vw;
   box-shadow: 4px 4px 10px rgb(10, 10, 10);
   transition: width 1s ease;
+  gap:10px;
 }
 
 .chatList.show {
@@ -862,13 +863,14 @@ body.light-theme .online {
   transition: width 0.3s ease;
 }
 
+
 button.sideBarSearchButton{
   cursor: pointer;
 }
 
 .sideBarProfilePicture{
   width: auto;
-  height: 50px;
+  height: 35px;
   border-radius: 10px;
   cursor: pointer;
 }
