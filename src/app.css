@@ -963,6 +963,7 @@ body.light-theme .userProfilePage .block {
 .profileImage{
   width: auto;
   height: 50px;
+  border-radius: 10px;
 }
 
 button.editProfilePicture{

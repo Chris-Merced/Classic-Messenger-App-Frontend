@@ -14,7 +14,7 @@ const UserProfile = () => {
   const [isPublic, setIsPublic] = useState("");
   const [requestSent, setRequestSent] = useState(false);
   const [editPage, setEditPage] = useState(false);
-  const [profilePictureEdit, setProfilePictureEdit] = useState(null)
+  const [profilePictureEdit, setProfilePictureEdit] = useState(null);
 
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
@@ -201,32 +201,37 @@ const UserProfile = () => {
 
   const isEditPage = () => {
     setEditPage((prev) => !prev);
-    console.log(editPage);
-    console.log(userContext?.user?.id);
-    console.log(userIdentifier);
   };
 
-  const handleProfilePictureChange = (e) =>{
-    setProfilePictureEdit(e.target.files[0])
-  }
+  const handleProfilePictureChange = (e) => {
+    setProfilePictureEdit(e.target.files[0]);
+  };
 
-  const handleProfilePicture = async () =>{
-    if(!profilePictureEdit){
+  const handleProfilePicture = async () => {
+    if (!profilePictureEdit) {
       return;
     }
-    
-    const formData = new FormData();
-    formData.append("ProfilePicture", profilePictureEdit)
-    formData.append("userID", userContext.user.id)
 
-    const response =  await fetch(`${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`, {
-      method: "POST",
-      body: formData,
-      credentials: "include"
-    }) 
-    const data = await response.json()
-    console.log(data)
-  }
+    const formData = new FormData();
+    formData.append("ProfilePicture", profilePictureEdit);
+    formData.append("userID", userContext.user.id);
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`,
+      {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+  };
+
+  console.log(userContext);
+
+
+
 
   return (
     <div>
@@ -235,10 +240,17 @@ const UserProfile = () => {
           {profile && (isPublic || friendStatus) ? (
             <div className="userProfilePermission">
               <div className="userHeader">
-                <img
-                  className="profileImage"
-                  src="/defaultProfileImage.png"
-                ></img>
+                {userContext?.user?.profile_picture ? (
+                  <img
+                    className="profileImage"
+                    src={userContext.user.profile_picture}
+                  ></img>
+                ) : (
+                  <img
+                    className="profileImage"
+                    src="/defaultProfileImage.png"
+                  ></img>
+                )}
                 {userContext?.user?.id == userIdentifier && editPage && (
                   <label>
                     Upload Your Photo
@@ -247,7 +259,9 @@ const UserProfile = () => {
                       onChange={handleProfilePictureChange}
                       className="editProfilePicture"
                     />
-                    <button onClick={handleProfilePicture}>Change Picture</button>
+                    <button onClick={handleProfilePicture}>
+                      Change Picture
+                    </button>
                   </label>
                 )}
                 <h1>{profile.username}</h1>
