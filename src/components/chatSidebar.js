@@ -141,6 +141,7 @@ const SideBarComponent = () => {
         {listOfChats.map((chat, index) => (
           chat &&
           <li className="chat" key={index}>
+            {!chat.name && chat.participants.length===1 && <img onClick={()=> changeChat(chat)} className="sideBarProfilePicture" src={chat.profilePicture}></img>}
             <button className="chatButton" onClick={() => changeChat(chat)}>
               {chat.name ? chat.name : chat.participants}
             </button>
