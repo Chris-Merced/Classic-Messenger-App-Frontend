@@ -5,7 +5,7 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 
-//clean up the visual elements of the sidebar chat search functionality 
+//clean up the visual elements of the sidebar chat search functionality
 //begin to implement user profile editing
 
 const HeaderComponent = () => {
@@ -266,11 +266,10 @@ const HeaderComponent = () => {
             <button className="loginButton" type="submit">
               Log In
             </button>
+            <Link to="/signup" className="signup">
+              Signup
+            </Link>
           </form>
-
-          <Link to="/signup" className="signup">
-            Signup
-          </Link>
         </div>
       )}
     </>

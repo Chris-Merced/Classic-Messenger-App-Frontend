@@ -146,15 +146,22 @@ const SideBarComponent = () => {
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
       <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
-        <button className="sideBarSearchButton" onClick={isSideBarSearch}>
-          Search
-        </button>
-        {sidebarSearch && (
+        
+
+        <div className="sideBarSearch">
           <input
             className="sideBarSearch"
             onChange={(e) => changeDisplayedChatList(e.target.value)}
+            onBlur={(e) => {
+                      setTimeout(() => {
+                        setSidebarSearch("");
+                        changeDisplayedChatList('')
+                        e.target.value='';
+                      }, 150);
+                    }}
           ></input>
-        )}
+          <img className="sideBarSearchIcon" src="searchIcon.svg"></img>
+        </div>
         {listOfChats.map(
           (chat, index) =>
             chat && (
@@ -170,7 +177,8 @@ const SideBarComponent = () => {
                   )}
                 {!chat.name &&
                   chat.participants.length === 1 &&
-                  !chat.profilePicture && !islight && (
+                  !chat.profilePicture &&
+                  !islight && (
                     <img
                       className="sideBarProfilePicture"
                       src="/defaultProfileImageLight.webp"
@@ -178,7 +186,8 @@ const SideBarComponent = () => {
                   )}
                 {!chat.name &&
                   chat.participants.length === 1 &&
-                  !chat.profilePicture && islight && (
+                  !chat.profilePicture &&
+                  islight && (
                     <img
                       className="sideBarProfilePicture"
                       src="/defaultProfileImage.png"
