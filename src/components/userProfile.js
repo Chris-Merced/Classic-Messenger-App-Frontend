@@ -237,6 +237,7 @@ const UserProfile = () => {
   const changeAboutMe = async(e) =>{
     e.preventDefault()
     console.log(e.target[0].value)
+    //SET UP BACKEND ROUTE TO HANDLE ABOUT ME SETTING
 
   }
   console.log(userContext);
