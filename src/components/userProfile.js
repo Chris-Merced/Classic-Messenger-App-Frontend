@@ -267,7 +267,7 @@ const UserProfile = () => {
                 <h1>{profile.username}</h1>
                 {blockedByProfile ? (
                   <div>You Are Currently Blocked by This User</div>
-                ) : (
+                ) : (userContext.user.id != userIdentifier &&
                   <button
                     onClick={() => sendDirectMessage(userContext.user.id)}
                   >
