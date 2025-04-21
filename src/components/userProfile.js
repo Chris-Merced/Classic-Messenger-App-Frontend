@@ -23,6 +23,9 @@ const UserProfile = () => {
 
 
 
+//WHEN CHANGING PROFILE FROM PUBLIC TO PRIVATE IT CHANGES THE PROFILE PICTURE
+
+
   useEffect(() => {
     const getUserProfile = async () => {
       try {
@@ -43,9 +46,9 @@ const UserProfile = () => {
           ...data.user,
           created_at: data.user.created_at.split("T")[0],
         };
-        
-        console.log("USER DATA")
-        console.log(data)
+
+        console.log("USER DATA");
+        console.log(data);
 
         setProfile(data.user);
       } catch (err) {
@@ -176,7 +179,6 @@ const UserProfile = () => {
   };
 
   const changeProfileStatus = async () => {
-
     const body = { userID: userContext.user.id, status: isPublic };
 
     const response = await fetch(
@@ -228,10 +230,13 @@ const UserProfile = () => {
     console.log(data);
   };
 
+
+  const changeAboutMe = async(e) =>{
+    e.preventDefault()
+    console.log(e.target[0].value)
+
+  }
   console.log(userContext);
-
-
-
 
   return (
     <div>
@@ -267,12 +272,14 @@ const UserProfile = () => {
                 <h1>{profile.username}</h1>
                 {blockedByProfile ? (
                   <div>You Are Currently Blocked by This User</div>
-                ) : (userContext.user.id != userIdentifier &&
-                  <button
-                    onClick={() => sendDirectMessage(userContext.user.id)}
-                  >
-                    Direct Message
-                  </button>
+                ) : (
+                  userContext.user.id != userIdentifier && (
+                    <button
+                      onClick={() => sendDirectMessage(userContext.user.id)}
+                    >
+                      Direct Message
+                    </button>
+                  )
                 )}
                 {isBlocked === false ? (
                   userContext?.user?.id != userIdentifier && (
@@ -294,7 +301,25 @@ const UserProfile = () => {
                   ))}
               </div>
               <div>Created at {profile.created_at}</div>
-              <div>About Me:</div>
+              <div>About Me: </div>
+              
+              
+              {
+              !editPage ?
+              profile.about_me ? (
+                <div>{profile.about_me}</div>
+              ) : (
+                <div>
+                  Oop! This user hasn't set their About Me section! How
+                  mysterious!
+                </div>
+              )
+              : 
+              <form onSubmit={changeAboutMe}>
+              <textarea className="aboutMeTextArea" defaultValue={profile.about_me ? profile.about_me : ""}></textarea>
+              <button type='submit'>submit</button>
+              </form>
+              }
             </div>
           ) : (
             <div className="userProfileNoPermission">
@@ -320,6 +345,22 @@ const UserProfile = () => {
               </div>
               <div>Created at {profile.created_at}</div>
               <div>About Me: </div>
+               {
+              !editPage ?
+              profile.about_me ? (
+                <div>{profile.about_me}</div>
+              ) : (
+                <div>
+                  Oop! This user hasn't set their About Me section! How
+                  mysterious!
+                </div>
+              )
+              : 
+              <form onSubmit={changeAboutMe}>
+              <textarea className="aboutMeTextArea" defaultValue={profile.about_me ? profile.about_me : ""}></textarea>
+              <button type='submit'>submit</button>
+              </form>
+              }
             </div>
           )}
           {userContext?.user?.id == userIdentifier && (
