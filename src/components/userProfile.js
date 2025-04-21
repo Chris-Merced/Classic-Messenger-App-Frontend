@@ -82,6 +82,8 @@ const UserProfile = () => {
       checkIfFriends();
       checkIfBlocked();
     }
+
+    setEditPage(false)
   }, [userIdentifier, isBlocked]);
 
   useEffect(() => {
@@ -108,6 +110,7 @@ const UserProfile = () => {
       };
       checkIfBlockedByProfile();
     }
+
   }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
