@@ -51,7 +51,6 @@ const SideBarComponent = () => {
       clearInterval(intervalRef.current);
     }
 
-    console.log(listOfChats);
 
     const getOnlineUsers = async () => {
       const usersList = listOfChats
@@ -80,8 +79,6 @@ const SideBarComponent = () => {
   useEffect(() => {
     if (listOfChats) {
       const chat = listOfChats[0];
-      console.log("CHECKING FIRST INDEX OF ARRAY LIST OF CHATS");
-      console.log(listOfChats[0]);
 
       chatContext.changeChat({
         name: chat.name,
@@ -118,9 +115,6 @@ const SideBarComponent = () => {
   };
 
   const changeDisplayedChatList = (search) => {
-    listOfChats.forEach((chat) => {
-      console.log(chat);
-    });
 
     setListOfChats(unmodifedChatList);
     if (search === "") {
@@ -131,11 +125,7 @@ const SideBarComponent = () => {
         const regex = new RegExp(search);
 
         if (!chat.name) {
-          console.log(search);
-          console.log(chat.participants[0]);
-          console.log(regex.test(chat.participants[0]));
           if (regex.test(chat.participants[0].toString())) {
-            console.log("made it1");
             return chat;
           }
         }

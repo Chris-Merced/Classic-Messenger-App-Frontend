@@ -21,7 +21,7 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
-  //MAKE BUTTONS IN HEADER A DROP DOWN MENU
+
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -38,12 +38,14 @@ const UserProfile = () => {
         if (!response.ok) {
           throw new Error(data.message);
         }
-        console.log("CHECKING USER PROFILE RETRIEVED DATA: ");
 
         data.user = {
           ...data.user,
           created_at: data.user.created_at.split("T")[0],
         };
+        
+        console.log("USER DATA")
+        console.log(data)
 
         setProfile(data.user);
       } catch (err) {
@@ -81,7 +83,6 @@ const UserProfile = () => {
 
   useEffect(() => {
     const checkIfPublic = async () => {
-      console.log("Made it to checkifPublic");
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`
       );
@@ -175,7 +176,6 @@ const UserProfile = () => {
   };
 
   const changeProfileStatus = async () => {
-    console.log("hello world");
 
     const body = { userID: userContext.user.id, status: isPublic };
 
