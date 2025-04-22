@@ -21,10 +21,7 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
-
-
-//WHEN CHANGING PROFILE FROM PUBLIC TO PRIVATE IT CHANGES THE PROFILE PICTURE
-
+  //WHEN CHANGING PROFILE FROM PUBLIC TO PRIVATE IT CHANGES THE PROFILE PICTURE
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -83,7 +80,7 @@ const UserProfile = () => {
       checkIfBlocked();
     }
 
-    setEditPage(false)
+    setEditPage(false);
   }, [userIdentifier, isBlocked]);
 
   useEffect(() => {
@@ -110,7 +107,6 @@ const UserProfile = () => {
       };
       checkIfBlockedByProfile();
     }
-
   }, [userIdentifier]);
 
   const sendDirectMessage = async (userID) => {
@@ -233,13 +229,25 @@ const UserProfile = () => {
     console.log(data);
   };
 
+  const changeAboutMe = async (e) => {
+    e.preventDefault();
+    console.log(e.target[0].value);
 
-  const changeAboutMe = async(e) =>{
-    e.preventDefault()
-    console.log(e.target[0].value)
-    //SET UP BACKEND ROUTE TO HANDLE ABOUT ME SETTING
+    let body = e.target[0].value;
 
-  }
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/userProfile/aboutMe`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: body,
+      }
+    );
+
+    const data = await response.json();
+
+    console.log(data);
+  };
   console.log(userContext);
 
   return (
@@ -306,24 +314,25 @@ const UserProfile = () => {
               </div>
               <div>Created at {profile.created_at}</div>
               <div>About Me: </div>
-              
-              
-              {
-              !editPage ?
-              profile.about_me ? (
-                <div>{profile.about_me}</div>
+
+              {!editPage ? (
+                profile.about_me ? (
+                  <div>{profile.about_me}</div>
+                ) : (
+                  <div>
+                    Oop! This user hasn't set their About Me section! How
+                    mysterious!
+                  </div>
+                )
               ) : (
-                <div>
-                  Oop! This user hasn't set their About Me section! How
-                  mysterious!
-                </div>
-              )
-              : 
-              <form onSubmit={changeAboutMe}>
-              <textarea className="aboutMeTextArea" defaultValue={profile.about_me ? profile.about_me : ""}></textarea>
-              <button type='submit'>submit</button>
-              </form>
-              }
+                <form onSubmit={changeAboutMe}>
+                  <textarea
+                    className="aboutMeTextArea"
+                    defaultValue={profile.about_me ? profile.about_me : ""}
+                  ></textarea>
+                  <button type="submit">submit</button>
+                </form>
+              )}
             </div>
           ) : (
             <div className="userProfileNoPermission">
@@ -349,22 +358,24 @@ const UserProfile = () => {
               </div>
               <div>Created at {profile.created_at}</div>
               <div>About Me: </div>
-               {
-              !editPage ?
-              profile.about_me ? (
-                <div>{profile.about_me}</div>
+              {!editPage ? (
+                profile.about_me ? (
+                  <div>{profile.about_me}</div>
+                ) : (
+                  <div>
+                    Oop! This user hasn't set their About Me section! How
+                    mysterious!
+                  </div>
+                )
               ) : (
-                <div>
-                  Oop! This user hasn't set their About Me section! How
-                  mysterious!
-                </div>
-              )
-              : 
-              <form onSubmit={changeAboutMe}>
-              <textarea className="aboutMeTextArea" defaultValue={profile.about_me ? profile.about_me : ""}></textarea>
-              <button type='submit'>submit</button>
-              </form>
-              }
+                <form onSubmit={changeAboutMe}>
+                  <textarea
+                    className="aboutMeTextArea"
+                    defaultValue={profile.about_me ? profile.about_me : ""}
+                  ></textarea>
+                  <button type="submit">submit</button>
+                </form>
+              )}
             </div>
           )}
           {userContext?.user?.id == userIdentifier && (
