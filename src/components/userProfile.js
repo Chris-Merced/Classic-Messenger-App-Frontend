@@ -14,7 +14,10 @@ const UserProfile = () => {
   const [isPublic, setIsPublic] = useState("");
   const [requestSent, setRequestSent] = useState(false);
   const [editPage, setEditPage] = useState(false);
+  const [aboutMeEdit, setAboutMeEdit] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState(null);
   const [profilePictureEdit, setProfilePictureEdit] = useState(null);
+  const [profilePictureEditConfirm, setProfilePictureEditConfirm] = useState(false)
 
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
@@ -82,6 +85,42 @@ const UserProfile = () => {
 
     setEditPage(false);
   }, [userIdentifier, isBlocked]);
+
+
+  useEffect(()=>{
+    const getUserProfile = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/publicProfile?ID=${userIdentifier}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message);
+        }
+
+        data.user = {
+          ...data.user,
+          created_at: data.user.created_at.split("T")[0],
+        };
+
+        console.log("USER DATA");
+        console.log(data);
+
+        setProfile(data.user);
+      } catch (err) {
+        setError("Error occured on profile retrieval", err);
+      }
+    };
+
+    if(userContext?.user?.id){
+      getUserProfile();
+    }
+  }, [editPage])
 
   useEffect(() => {
     const checkIfPublic = async () => {
@@ -208,10 +247,14 @@ const UserProfile = () => {
     setProfilePictureEdit(e.target.files[0]);
   };
 
-  const handleProfilePicture = async () => {
+  const handleProfilePicture = async (clientX, clientY) => {
+    
     if (!profilePictureEdit) {
       return;
     }
+
+    setCursorPosition({ x: clientX, y: clientY });
+
 
     const formData = new FormData();
     formData.append("ProfilePicture", profilePictureEdit);
@@ -225,21 +268,30 @@ const UserProfile = () => {
         credentials: "include",
       }
     );
+    console.log(response)
+    if(response.ok){
+      console.log("MADE IT")
+      setProfilePictureEditConfirm(true)
+
+      setTimeout(()=>{
+        setProfilePictureEditConfirm(false)
+      }, 1500)
+    }
     const data = await response.json();
     console.log(data);
   };
 
   const changeAboutMe = async (e) => {
     e.preventDefault();
- 
 
-    let aboutMe = {aboutMe : e.target[0].value}
-  
+    let aboutMe = { aboutMe: e.target[0].value, userID: userContext.user.id };
+
+    setCursorPosition({ x: e.clientX, y: e.clientY });
 
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/userProfile/aboutMe`,
       {
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         method: "PATCH",
         credentials: "include",
         body: JSON.stringify(aboutMe),
@@ -248,9 +300,14 @@ const UserProfile = () => {
 
     const data = await response.json();
 
-    console.log(data);
+    if (response.ok) {
+      setAboutMeEdit(true);
+
+      setTimeout(() => {
+        setAboutMeEdit(false);
+      }, 1500);
+    }
   };
-  console.log(userContext);
 
   return (
     <div>
@@ -262,7 +319,7 @@ const UserProfile = () => {
                 {userContext?.user?.profile_picture ? (
                   <img
                     className="profileImage"
-                    src={userContext.user.profile_picture}
+                    src={profile.profile_picture}
                   ></img>
                 ) : (
                   <img
@@ -278,9 +335,22 @@ const UserProfile = () => {
                       onChange={handleProfilePictureChange}
                       className="editProfilePicture"
                     />
-                    <button onClick={handleProfilePicture}>
+                    <>
+                    <button onClick={(e)=>handleProfilePicture(e.clientX, e.clientY)}>
                       Change Picture
                     </button>
+                    {profilePictureEditConfirm && cursorPosition && (
+                    <div
+                      className="profilePicturePopup"
+                      style={{
+                        top: `${cursorPosition.y}px`,
+                        left: `${cursorPosition.x}px`,
+                      }}
+                    >
+                      Profile Picture Saved!
+                    </div>
+                  )}
+                    </>
                   </label>
                 )}
                 <h1>{profile.username}</h1>
@@ -327,13 +397,26 @@ const UserProfile = () => {
                   </div>
                 )
               ) : (
-                <form onSubmit={changeAboutMe}>
-                  <textarea
-                    className="aboutMeTextArea"
-                    defaultValue={profile.about_me ? profile.about_me : ""}
-                  ></textarea>
-                  <button type="submit">submit</button>
-                </form>
+                <>
+                  <form onSubmit={changeAboutMe}>
+                    <textarea
+                      className="aboutMeTextArea"
+                      defaultValue={profile.about_me ? profile.about_me : ""}
+                    ></textarea>
+                    <button type="submit">submit</button>
+                  </form>
+                  {aboutMeEdit && cursorPosition && (
+                    <div
+                      className="aboutMePopup"
+                      style={{
+                        top: `${cursorPosition.y}px`,
+                        left: `${cursorPosition.x}px`,
+                      }}
+                    >
+                      About Me Saved!
+                    </div>
+                  )}
+                </>
               )}
             </div>
           ) : (
@@ -370,13 +453,26 @@ const UserProfile = () => {
                   </div>
                 )
               ) : (
-                <form onSubmit={changeAboutMe}>
-                  <textarea
-                    className="aboutMeTextArea"
-                    defaultValue={profile.about_me ? profile.about_me : ""}
-                  ></textarea>
-                  <button type="submit">submit</button>
-                </form>
+                <>
+                  <form onSubmit={changeAboutMe}>
+                    <textarea
+                      className="aboutMeTextArea"
+                      defaultValue={profile.about_me ? profile.about_me : ""}
+                    ></textarea>
+                    <button type="submit">submit</button>
+                  </form>
+                  {aboutMeEdit && cursorPosition && (
+                    <div
+                      className="aboutMePopup"
+                      style={{
+                        top: `${cursorPosition.y}px`,
+                        left: `${cursorPosition.x}px`,
+                      }}
+                    >
+                      About Me Saved!
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}
