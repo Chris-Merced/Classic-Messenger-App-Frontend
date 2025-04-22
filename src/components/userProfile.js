@@ -231,16 +231,18 @@ const UserProfile = () => {
 
   const changeAboutMe = async (e) => {
     e.preventDefault();
-    console.log(e.target[0].value);
+ 
 
-    let body = e.target[0].value;
+    let aboutMe = {aboutMe : e.target[0].value}
+  
 
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/userProfile/aboutMe`,
       {
-        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        method: "PATCH",
         credentials: "include",
-        body: body,
+        body: JSON.stringify(aboutMe),
       }
     );
 
