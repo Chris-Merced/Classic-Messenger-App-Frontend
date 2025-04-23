@@ -86,7 +86,7 @@ const SideBarComponent = () => {
         reciever: chat.participants,
       });
     }
-  }, []);
+  }, [listOfChats]);
 
   const changeChat = (chat) => {
     if (chat.name) {

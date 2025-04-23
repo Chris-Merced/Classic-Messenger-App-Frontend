@@ -89,6 +89,7 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     const getMessages = async () => {
+      
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
@@ -144,6 +145,7 @@ const HomeChatComponent = () => {
       reciever: chat.reciever ? [...chat.reciever, user.username] : undefined,
       time: new Date().toISOString(),
     };
+
     console.log("Made it inside send message");
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
