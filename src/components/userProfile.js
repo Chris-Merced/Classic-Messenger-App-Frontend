@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,8 @@ const UserProfile = () => {
   const [aboutMeEdit, setAboutMeEdit] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(null);
   const [profilePictureEdit, setProfilePictureEdit] = useState(null);
-  const [profilePictureEditConfirm, setProfilePictureEditConfirm] = useState(false)
+  const [profilePictureEditConfirm, setProfilePictureEditConfirm] =
+    useState(false);
 
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
@@ -26,10 +27,6 @@ const UserProfile = () => {
 
   //WHEN CHANGING PROFILE FROM PUBLIC TO PRIVATE IT CHANGES THE PROFILE PICTURE
   //CLICKING DIRECT MESSAGE DOES NOTHING ON A USERS PROFILE
-  
-
-  //ON REFRESH THE CHAT IS CHANGED TO MAIN BUT THE MESSAGING STOPS WORKING
-  //USE LOCAL STORAGE TO SAVE THE CURRENT MESSAGE CONVERSATION
 
   //SOMETIMES THE SVG FOR THE MESSAGE SEARCH IS 404'D
   //SOMETIMES ONBLUR FOR MESSAGE SEARCH CAUSES THE ENTIRE SIDEBAR TO DISAPPEAR
@@ -54,9 +51,6 @@ const UserProfile = () => {
           ...data.user,
           created_at: data.user.created_at.split("T")[0],
         };
-
-        console.log("USER DATA");
-        console.log(data);
 
         setProfile(data.user);
       } catch (err) {
@@ -94,8 +88,7 @@ const UserProfile = () => {
     setEditPage(false);
   }, [userIdentifier, isBlocked]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const getUserProfile = async () => {
       try {
         const response = await fetch(
@@ -116,19 +109,16 @@ const UserProfile = () => {
           created_at: data.user.created_at.split("T")[0],
         };
 
-        console.log("USER DATA");
-        console.log(data);
-
         setProfile(data.user);
       } catch (err) {
         setError("Error occured on profile retrieval", err);
       }
     };
 
-    if(userContext?.user?.id){
+    if (userContext?.user?.id) {
       getUserProfile();
     }
-  }, [editPage])
+  }, [editPage]);
 
   useEffect(() => {
     const checkIfPublic = async () => {
@@ -156,23 +146,39 @@ const UserProfile = () => {
     }
   }, [userIdentifier]);
 
-  const sendDirectMessage = async (userID) => {
+  const sendDirectMessage = async () => {
     if (userContext?.user?.id) {
       const user = userContext.user;
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
-      );
-      const data = await response.json();
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
+        );
+        const data = await response.json();
 
-      if (data.conversation_id) {
-        chatContext.changeChat({
-          name: null,
-          conversationID: data.conversation_id,
-        });
-        navigate("/");
+        if (data.conversation_id) {
+          chatContext.changeChat({
+            name: null,
+            conversationID: data.conversation_id,
+            reciever: [profile.username],
+          });
+
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error in sendDirectMessage:", error);
       }
     }
   };
+
+  useEffect(() => {
+    if (
+      chatContext.currentChat &&
+      chatContext.currentChat.conversationID !== 1 &&
+      chatContext.currentChat.reciever?.[0] === profile.username
+    ) {
+      navigate("/");
+    }
+  }, [chatContext.currentChat, profile.username]);
 
   const sendFriendRequest = async () => {
     const data = {
@@ -256,13 +262,11 @@ const UserProfile = () => {
   };
 
   const handleProfilePicture = async (clientX, clientY) => {
-    
     if (!profilePictureEdit) {
       return;
     }
 
     setCursorPosition({ x: clientX, y: clientY });
-
 
     const formData = new FormData();
     formData.append("ProfilePicture", profilePictureEdit);
@@ -276,14 +280,12 @@ const UserProfile = () => {
         credentials: "include",
       }
     );
-    console.log(response)
-    if(response.ok){
-      console.log("MADE IT")
-      setProfilePictureEditConfirm(true)
+    if (response.ok) {
+      setProfilePictureEditConfirm(true);
 
-      setTimeout(()=>{
-        setProfilePictureEditConfirm(false)
-      }, 1500)
+      setTimeout(() => {
+        setProfilePictureEditConfirm(false);
+      }, 1500);
     }
     const data = await response.json();
     console.log(data);
@@ -344,20 +346,24 @@ const UserProfile = () => {
                       className="editProfilePicture"
                     />
                     <>
-                    <button onClick={(e)=>handleProfilePicture(e.clientX, e.clientY)}>
-                      Change Picture
-                    </button>
-                    {profilePictureEditConfirm && cursorPosition && (
-                    <div
-                      className="profilePicturePopup"
-                      style={{
-                        top: `${cursorPosition.y}px`,
-                        left: `${cursorPosition.x}px`,
-                      }}
-                    >
-                      Profile Picture Saved!
-                    </div>
-                  )}
+                      <button
+                        onClick={(e) =>
+                          handleProfilePicture(e.clientX, e.clientY)
+                        }
+                      >
+                        Change Picture
+                      </button>
+                      {profilePictureEditConfirm && cursorPosition && (
+                        <div
+                          className="profilePicturePopup"
+                          style={{
+                            top: `${cursorPosition.y}px`,
+                            left: `${cursorPosition.x}px`,
+                          }}
+                        >
+                          Profile Picture Saved!
+                        </div>
+                      )}
                     </>
                   </label>
                 )}

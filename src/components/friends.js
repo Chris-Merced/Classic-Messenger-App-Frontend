@@ -34,8 +34,6 @@ const FriendRequests = () => {
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`
       );
       const data = await response.json();
-      console.log("accessing data");
-      console.log("acessing data");
       if (data) {
         setFriends(data.friendsList);
       }
@@ -74,8 +72,6 @@ const FriendRequests = () => {
     }
 
     setFriendRequestsLength(friendRequestsLength - 1);
-    console.log("checking friend request length");
-    console.log(friendRequestsLength);
   };
 
   const denyFriend = async (requestID, index) => {
@@ -102,7 +98,6 @@ const FriendRequests = () => {
   };
 
   const removeFriend = async (friendID) => {
-    console.log("you made it");
 
     const body = { userID: user.id, friendID: friendID };
     const response = await fetch(

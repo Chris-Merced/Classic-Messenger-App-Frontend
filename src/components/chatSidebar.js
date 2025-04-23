@@ -10,6 +10,7 @@ const SideBarComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const intervalRef = useRef(null);
+  const hasInitializedRef = useRef(false);
 
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
@@ -51,7 +52,6 @@ const SideBarComponent = () => {
       clearInterval(intervalRef.current);
     }
 
-
     const getOnlineUsers = async () => {
       const usersList = listOfChats
         .filter((chat) => chat.participants && chat.participants.length === 1)
@@ -76,18 +76,6 @@ const SideBarComponent = () => {
     };
   }, [listOfChats]);
 
-  useEffect(() => {
-    if (listOfChats) {
-      const chat = listOfChats[0];
-
-      chatContext.changeChat({
-        name: chat.name,
-        conversationID: chat.conversation_id,
-        reciever: chat.participants,
-      });
-    }
-  }, [listOfChats]);
-
   const changeChat = (chat) => {
     if (chat.name) {
       chatContext.changeChat({
@@ -110,12 +98,25 @@ const SideBarComponent = () => {
     }
   };
 
+  useEffect(() => {
+    if (listOfChats && !hasInitializedRef.current) {
+      let chat = listOfChats[0];
+
+      chatContext.changeChat({
+        name: chat.name,
+        conversationID: chat.conversation_id,
+        reciever: chat.participants,
+      });
+
+      hasInitializedRef.current = true;
+    }
+  }, [listOfChats]);
+
   const isSideBarSearch = () => {
     setSidebarSearch((prev) => !prev);
   };
 
   const changeDisplayedChatList = (search) => {
-
     setListOfChats(unmodifedChatList);
     if (search === "") {
       return;
@@ -136,19 +137,17 @@ const SideBarComponent = () => {
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
       <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
-        
-
         <div className="sideBarSearch">
           <input
             className="sideBarSearch"
             onChange={(e) => changeDisplayedChatList(e.target.value)}
             onBlur={(e) => {
-                      setTimeout(() => {
-                        setSidebarSearch("");
-                        changeDisplayedChatList('')
-                        e.target.value='';
-                      }, 150);
-                    }}
+              setTimeout(() => {
+                setSidebarSearch("");
+                changeDisplayedChatList("");
+                e.target.value = "";
+              }, 150);
+            }}
           ></input>
           <img className="sideBarSearchIcon" src="searchIcon.svg"></img>
         </div>

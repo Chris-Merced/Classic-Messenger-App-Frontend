@@ -42,7 +42,7 @@ export const UserChats = ({ children }) => {
     }
   }, [userContext, location]);
 
-  const changeChat = (chat) => {
+  const changeChat = (chat, lock = false) => {
     setCurrentChat(chat);
   };
 
@@ -52,12 +52,17 @@ export const UserChats = ({ children }) => {
 
   const changeLocation = (location) => {
     setLocation(location);
-
   };
 
   return (
     <UserChatsContext.Provider
-      value={{ chatList, currentChat, changeChat, resetChatList, changeLocation }}
+      value={{
+        chatList,
+        currentChat,
+        changeChat,
+        resetChatList,
+        changeLocation,
+      }}
     >
       {children}
     </UserChatsContext.Provider>

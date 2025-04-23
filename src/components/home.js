@@ -27,6 +27,7 @@ const HomeChatComponent = () => {
   }, [userData]);
 
   useEffect(() => {
+    console.log("IS THIS HAPOPENING");
     setChat({ ...currentChat });
   }, [currentChat]);
 
@@ -45,12 +46,8 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     const setupMessageHandler = () => {
-      console.log("Setting up message handler");
       socketRef.current.onmessage = (message) => {
-        console.log("Message received in handler (before any processing)");
         message = JSON.parse(message.data);
-        console.log("Message parsed:", message);
-        console.log(chat);
         const dateObj = new Date(message.time);
         message = {
           ...message,
@@ -88,8 +85,9 @@ const HomeChatComponent = () => {
   }, [chat, socketRef.current]);
 
   useEffect(() => {
+    if (!chat || !chat.conversationID) return;
+
     const getMessages = async () => {
-      
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
@@ -146,8 +144,6 @@ const HomeChatComponent = () => {
       time: new Date().toISOString(),
     };
 
-    console.log("Made it inside send message");
-
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       console.log("made it inside to send message");
       socketRef.current.send(JSON.stringify(data));
@@ -171,23 +167,13 @@ const HomeChatComponent = () => {
   };
 
   return (
-    <div className="mainContent fadeInStaggered--1"> 
-      {user && <div className="mainChat scroll-container" ref={mainChatRef}>
-        <ul className="MessageList">
-          {messages.map((message, index) => (
-            <li className="message" key={index}>
-              {index === 0 && (
-                <div className="date">
-                  {messages[index].dateObj.toLocaleString("en-us", {
-                    month: "short",
-                    day: "2-digit",
-                    year: "numeric",
-                  })}
-                </div>
-              )}
-              {index > 0 &&
-                messages[index].dateObj.toDateString() !==
-                  messages[index - 1].dateObj.toDateString() && (
+    <div className="mainContent fadeInStaggered--1">
+      {user && (
+        <div className="mainChat scroll-container" ref={mainChatRef}>
+          <ul className="MessageList">
+            {messages.map((message, index) => (
+              <li className="message" key={index}>
+                {index === 0 && (
                   <div className="date">
                     {messages[index].dateObj.toLocaleString("en-us", {
                       month: "short",
@@ -196,28 +182,44 @@ const HomeChatComponent = () => {
                     })}
                   </div>
                 )}
-              <div className="messageHeader">
-                {index === 0 && <div className="username">{message.user}</div>}
                 {index > 0 &&
-                  (messages[index].user !== messages[index - 1].user ||
-                    messages[index].dateObj.toDateString() !==
-                      messages[index - 1].dateObj.toDateString()) && (
+                  messages[index].dateObj.toDateString() !==
+                    messages[index - 1].dateObj.toDateString() && (
+                    <div className="date">
+                      {messages[index].dateObj.toLocaleString("en-us", {
+                        month: "short",
+                        day: "2-digit",
+                        year: "numeric",
+                      })}
+                    </div>
+                  )}
+                <div className="messageHeader">
+                  {index === 0 && (
                     <div className="username">{message.user}</div>
                   )}
-                {index === 0 && <div className="initialTime">{messages[index].time}</div>}
-                {index > 0 &&
-                  (new Date(messages[index].dateObj).getTime() -
-                    new Date(messages[index - 1].dateObj).getTime() >=
-                    5 * 60 * 1000 ||
-                    messages[index].user !== messages[index - 1].user) && (
-                    <div className="timeElapsed">{messages[index].time}</div>
+                  {index > 0 &&
+                    (messages[index].user !== messages[index - 1].user ||
+                      messages[index].dateObj.toDateString() !==
+                        messages[index - 1].dateObj.toDateString()) && (
+                      <div className="username">{message.user}</div>
+                    )}
+                  {index === 0 && (
+                    <div className="initialTime">{messages[index].time}</div>
                   )}
-              </div>
-              <div className="messageText">{message.message}</div>
-            </li>
-          ))}
-        </ul>
-      </div>}
+                  {index > 0 &&
+                    (new Date(messages[index].dateObj).getTime() -
+                      new Date(messages[index - 1].dateObj).getTime() >=
+                      5 * 60 * 1000 ||
+                      messages[index].user !== messages[index - 1].user) && (
+                      <div className="timeElapsed">{messages[index].time}</div>
+                    )}
+                </div>
+                <div className="messageText">{message.message}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {user && (
         <div className="sendMessage">
           {isBlocked ? (

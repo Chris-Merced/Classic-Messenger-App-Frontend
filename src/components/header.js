@@ -66,7 +66,6 @@ const HeaderComponent = () => {
 
   const isDropDown = () => {
     setDropDown((prev) => !prev);
-    console.log("Dropdown state: " + !dropDown);
   };
 
   const logoutHandler = async () => {
@@ -118,8 +117,6 @@ const HeaderComponent = () => {
       );
       const data = await response.json();
       const users = data.users;
-      console.log("CHECKING USER SEARCH DATA: ");
-      console.log(users);
       setUsers(users);
     }
     if (username === "") {
