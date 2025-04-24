@@ -99,7 +99,9 @@ const SideBarComponent = () => {
   };
 
   useEffect(() => {
-    if (listOfChats && !hasInitializedRef.current) {
+    console.log(userContext.hasInitializedRef.current)
+    if (listOfChats && !userContext.hasInitializedRef.current) {
+      console.log("ACCESSING USEEFFECT FOR MAIN CHAT CHANGE ON INITIALIZATION")
       let chat = listOfChats[0];
 
       chatContext.changeChat({
@@ -108,7 +110,7 @@ const SideBarComponent = () => {
         reciever: chat.participants,
       });
 
-      hasInitializedRef.current = true;
+      userContext.hasInitializedRef.current = true;
     }
   }, [listOfChats]);
 

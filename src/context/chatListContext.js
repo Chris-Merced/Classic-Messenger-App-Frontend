@@ -11,10 +11,9 @@ export const UserChats = ({ children }) => {
   const userContext = useContext(UserContext);
   const [chatList, setChatList] = useState(null);
   const [location, setLocation] = useState("");
-  const [currentChat, setCurrentChat] = useState({
-    name: "main",
-    conversationID: 1,
-  });
+  const [currentChat, setCurrentChat] = useState();
+
+  
 
   useEffect(() => {
     const getChats = async () => {
@@ -42,8 +41,9 @@ export const UserChats = ({ children }) => {
     }
   }, [userContext, location]);
 
-  const changeChat = (chat, lock = false) => {
+  const changeChat = (chat) => {
     setCurrentChat(chat);
+    
   };
 
   const resetChatList = () => {

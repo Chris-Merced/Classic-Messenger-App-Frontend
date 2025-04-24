@@ -10,7 +10,7 @@ const HomeChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState("");
   const [conversationName, setConversationName] = useState("");
-  const [chat, setChat] = useState({ name: "main", conversationID: 1 });
+  const [chat, setChat] = useState();
   const [isBlocked, setIsBlocked] = useState("");
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
@@ -27,7 +27,6 @@ const HomeChatComponent = () => {
   }, [userData]);
 
   useEffect(() => {
-    console.log("IS THIS HAPOPENING");
     setChat({ ...currentChat });
   }, [currentChat]);
 

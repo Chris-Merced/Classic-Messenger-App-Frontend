@@ -161,6 +161,8 @@ const UserProfile = () => {
             conversationID: data.conversation_id,
             reciever: [profile.username],
           });
+          
+          console.log(data)
 
           navigate("/");
         }
@@ -170,15 +172,6 @@ const UserProfile = () => {
     }
   };
 
-  useEffect(() => {
-    if (
-      chatContext.currentChat &&
-      chatContext.currentChat.conversationID !== 1 &&
-      chatContext.currentChat.reciever?.[0] === profile.username
-    ) {
-      navigate("/");
-    }
-  }, [chatContext.currentChat, profile.username]);
 
   const sendFriendRequest = async () => {
     const data = {
