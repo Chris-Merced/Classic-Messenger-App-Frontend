@@ -5,7 +5,6 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const hasInitializedRef = useRef(false)
-  console.log("IS THIS BEING REPEATED EVERY TIME")
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

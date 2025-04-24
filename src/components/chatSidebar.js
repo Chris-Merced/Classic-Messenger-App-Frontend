@@ -10,7 +10,6 @@ const SideBarComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const intervalRef = useRef(null);
-  const hasInitializedRef = useRef(false);
 
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
@@ -99,9 +98,7 @@ const SideBarComponent = () => {
   };
 
   useEffect(() => {
-    console.log(userContext.hasInitializedRef.current)
     if (listOfChats && !userContext.hasInitializedRef.current) {
-      console.log("ACCESSING USEEFFECT FOR MAIN CHAT CHANGE ON INITIALIZATION")
       let chat = listOfChats[0];
 
       chatContext.changeChat({

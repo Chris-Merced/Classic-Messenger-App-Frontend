@@ -162,7 +162,6 @@ const UserProfile = () => {
             reciever: [profile.username],
           });
           
-          console.log(data)
 
           navigate("/");
         }
