@@ -75,6 +75,8 @@ const SideBarComponent = () => {
     };
   }, [listOfChats]);
 
+  console.log(listOfChats)
+
   const changeChat = (chat) => {
     if (chat.name) {
       chatContext.changeChat({
@@ -133,6 +135,8 @@ const SideBarComponent = () => {
     );
   };
 
+  console.log(listOfChats)
+
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
       <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
@@ -184,6 +188,7 @@ const SideBarComponent = () => {
                 <button className="chatButton" onClick={() => changeChat(chat)}>
                   {chat.name ? chat.name : chat.participants}
                 </button>
+                {!chat.is_read && <div>wow lazy</div>}
                 {chat.participants &&
                 chat.participants.length === 1 &&
                 activeUsers[chat.participants] ? (

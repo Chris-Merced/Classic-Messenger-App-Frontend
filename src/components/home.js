@@ -61,6 +61,8 @@ const HomeChatComponent = () => {
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
         }
+
+        //CALL TO BACKEND TO CHANGE CURRENT CONVERSATION TO SET IS READ
       };
     };
 
@@ -81,12 +83,15 @@ const HomeChatComponent = () => {
         }
       };
     }
+
   }, [chat, socketRef.current]);
 
   useEffect(() => {
     if (!chat || !chat.conversationID) return;
 
     const getMessages = async () => {
+
+      console.log(user.id)
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
