@@ -44,8 +44,8 @@ const HomeChatComponent = () => {
   }, [message]);
 
   useEffect(() => {
-    const setupMessageHandler = () => {
-      socketRef.current.onmessage = (message) => {
+    const setupMessageHandler = async() => {
+      socketRef.current.onmessage = async(message) => {
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
         message = {
@@ -60,9 +60,34 @@ const HomeChatComponent = () => {
 
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
+          //send through conversationID and userID to call to backend in order to change
+          //isread to true
+          if (message.conversationID != 1){
+          console.log("made it inside new async if statement")
+          const data = {conversationID: message.conversationID, senderID: message.userID}
+
+
+          console.log(message)
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`, {
+            method: 'PATCH',
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(data),
+            credentials: "include"
+          })
+
+          console.log(response.ok)
         }
 
-        //CALL TO BACKEND TO CHANGE CURRENT CONVERSATION TO SET IS READ
+        }else{
+          //chatContext.chatList <--- modify this then pass through the changeChatList
+          //chatContext.changeChatList(data) <---- use to change chatList after modification
+          //ELSE CHECK THE MESSAGE INFORMATION AND COMPARE IT TO THE CHATLIST TO CHANGE THE CHATLIST ISREAD
+        }
+        //CHAT OBJECT BEING SENT THROUGH TO CHATLIST NEEDS TO HAVE CONVERSATIONID FOR THIS TO WORK SMOOTHLY
+        //TARGET THE CHAT OF LISTOFCHATS THAT MATCHES THE CONVERSATION ID AND SET ISREAD FALSE ON MESSAGE
+        //REFRESH CHATLIST
+        //OR
+        //CALL TO BACKEND TO CHANGE CURRENT CONVERSATION TO SET IS READ ON CLICK OF CHAT
       };
     };
 
@@ -91,7 +116,6 @@ const HomeChatComponent = () => {
 
     const getMessages = async () => {
 
-      console.log(user.id)
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
@@ -148,6 +172,17 @@ const HomeChatComponent = () => {
       time: new Date().toISOString(),
     };
 
+     const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    );
+
+    if(response.ok){
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       console.log("made it inside to send message");
       socketRef.current.send(JSON.stringify(data));
@@ -158,16 +193,9 @@ const HomeChatComponent = () => {
     } else {
       console.log("console is not open");
     }
+  }
 
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    );
+    
   };
 
   return (

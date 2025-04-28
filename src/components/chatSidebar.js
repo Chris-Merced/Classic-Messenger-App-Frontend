@@ -75,7 +75,6 @@ const SideBarComponent = () => {
     };
   }, [listOfChats]);
 
-  console.log(listOfChats)
 
   const changeChat = (chat) => {
     if (chat.name) {
@@ -135,7 +134,6 @@ const SideBarComponent = () => {
     );
   };
 
-  console.log(listOfChats)
 
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">

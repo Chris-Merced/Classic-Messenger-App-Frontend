@@ -50,6 +50,10 @@ export const UserChats = ({ children }) => {
     setChatList("");
   };
 
+  const changeChatList= (data) =>{
+    setChatList(data);
+  }
+
   const changeLocation = (location) => {
     setLocation(location);
   };
@@ -62,6 +66,7 @@ export const UserChats = ({ children }) => {
         changeChat,
         resetChatList,
         changeLocation,
+        changeChatList
       }}
     >
       {children}
