@@ -44,8 +44,8 @@ const HomeChatComponent = () => {
   }, [message]);
 
   useEffect(() => {
-    const setupMessageHandler = async() => {
-      socketRef.current.onmessage = async(message) => {
+    const setupMessageHandler = async () => {
+      socketRef.current.onmessage = async (message) => {
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
         message = {
@@ -62,23 +62,27 @@ const HomeChatComponent = () => {
           setMessages((prevMessages) => [...prevMessages, message]);
           //send through conversationID and userID to call to backend in order to change
           //isread to true
-          if (message.conversationID != 1){
-          console.log("made it inside new async if statement")
-          const data = {conversationID: message.conversationID, senderID: message.userID}
+          if (message.conversationID != 1) {
+            console.log("made it inside new async if statement");
+            const data = {
+              conversationID: message.conversationID,
+              senderID: message.userID,
+            };
 
+            console.log(message);
+            const response = await fetch(
+              `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
+              {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+                credentials: "include",
+              }
+            );
 
-          console.log(message)
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`, {
-            method: 'PATCH',
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify(data),
-            credentials: "include"
-          })
-
-          console.log(response.ok)
-        }
-
-        }else{
+            console.log(response.ok);
+          }
+        } else {
           //chatContext.chatList <--- modify this then pass through the changeChatList
           //chatContext.changeChatList(data) <---- use to change chatList after modification
           //ELSE CHECK THE MESSAGE INFORMATION AND COMPARE IT TO THE CHATLIST TO CHANGE THE CHATLIST ISREAD
@@ -108,14 +112,12 @@ const HomeChatComponent = () => {
         }
       };
     }
-
   }, [chat, socketRef.current]);
 
   useEffect(() => {
     if (!chat || !chat.conversationID) return;
 
     const getMessages = async () => {
-
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
@@ -172,7 +174,7 @@ const HomeChatComponent = () => {
       time: new Date().toISOString(),
     };
 
-     const response = await fetch(
+    const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`,
       {
         method: "POST",
@@ -182,20 +184,21 @@ const HomeChatComponent = () => {
       }
     );
 
-    if(response.ok){
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      console.log("made it inside to send message");
-      socketRef.current.send(JSON.stringify(data));
-      setMessage("");
-      if (inputRef.current) {
-        inputRef.current.style.height = "auto";
+    if (response.ok) {
+      if (
+        socketRef.current &&
+        socketRef.current.readyState === WebSocket.OPEN
+      ) {
+        console.log("made it inside to send message");
+        socketRef.current.send(JSON.stringify(data));
+        setMessage("");
+        if (inputRef.current) {
+          inputRef.current.style.height = "auto";
+        }
+      } else {
+        console.log("console is not open");
       }
-    } else {
-      console.log("console is not open");
     }
-  }
-
-    
   };
 
   return (
