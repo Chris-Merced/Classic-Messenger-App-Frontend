@@ -46,6 +46,8 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
+        
+        console.log(message.data)
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
         message = {
@@ -63,7 +65,6 @@ const HomeChatComponent = () => {
           //send through conversationID and userID to call to backend in order to change
           //isread to true
           if (message.conversationID != 1) {
-            console.log("made it inside new async if statement");
             const data = {
               conversationID: message.conversationID,
               senderID: message.userID,
@@ -82,7 +83,19 @@ const HomeChatComponent = () => {
 
             console.log(response.ok);
           }
-        } else {
+        } else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
+          console.log("SOMETHING HAPPENED DINK DONK ")
+          console.log(message)
+          //console.log(chatContext.chatList)
+          let modifiedChatList = chatContext.chatList
+
+          /*for (let i=0; i<modifiedChatList.userChats.length; i++){
+            if(modifiedChatList.userChats[i].conversationID===message.conversationID){
+              console.log("We found the one")
+              console.log(modifiedChatList.userChats[i])
+
+            }
+          }*/
           //chatContext.chatList <--- modify this then pass through the changeChatList
           //chatContext.changeChatList(data) <---- use to change chatList after modification
           //ELSE CHECK THE MESSAGE INFORMATION AND COMPARE IT TO THE CHATLIST TO CHANGE THE CHATLIST ISREAD
