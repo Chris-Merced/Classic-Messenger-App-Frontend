@@ -47,6 +47,7 @@ const HomeChatComponent = () => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
         
+        console.log("RECIEVED MESSAGE")
         console.log(message.data)
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
@@ -59,15 +60,24 @@ const HomeChatComponent = () => {
           }),
           dateObj,
         };
-
+        
+        console.log(message)
+        console.log(chat.conversationID)
         if (message.conversationID === chat.conversationID) {
+          
+          
+          console.log("ARE WE MAKING IT HERE")
+          console.log(context)
           setMessages((prevMessages) => [...prevMessages, message]);
           //send through conversationID and userID to call to backend in order to change
           //isread to true
-          if (message.conversationID != 1) {
+          if (message.conversationID != 1 && context.user.username !== message.user) {
+            console.log("ARE WE MAKING IT IN HERE ")
+            const string = "testing string"
             const data = {
               conversationID: message.conversationID,
               senderID: message.userID,
+              testID: string
             };
 
             console.log(message);
@@ -83,23 +93,28 @@ const HomeChatComponent = () => {
 
             console.log(response.ok);
           }
-        } else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
+        } /*else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
           console.log("SOMETHING HAPPENED DINK DONK ")
           console.log(message)
           //console.log(chatContext.chatList)
           let modifiedChatList = chatContext.chatList
+          
+          console.log(message.conversationID)
 
-          /*for (let i=0; i<modifiedChatList.userChats.length; i++){
-            if(modifiedChatList.userChats[i].conversationID===message.conversationID){
+          for (let i=0; i<modifiedChatList.userChats.length; i++){
+            if(modifiedChatList.userChats[i].conversation_id===message.conversationID){
+              
               console.log("We found the one")
               console.log(modifiedChatList.userChats[i])
+              //modifiedChatList.userChats[i].is_read = false;
 
             }
-          }*/
+          }
+          console.log(modifiedChatList)
           //chatContext.chatList <--- modify this then pass through the changeChatList
           //chatContext.changeChatList(data) <---- use to change chatList after modification
           //ELSE CHECK THE MESSAGE INFORMATION AND COMPARE IT TO THE CHATLIST TO CHANGE THE CHATLIST ISREAD
-        }
+        }*/
         //CHAT OBJECT BEING SENT THROUGH TO CHATLIST NEEDS TO HAVE CONVERSATIONID FOR THIS TO WORK SMOOTHLY
         //TARGET THE CHAT OF LISTOFCHATS THAT MATCHES THE CONVERSATION ID AND SET ISREAD FALSE ON MESSAGE
         //REFRESH CHATLIST
