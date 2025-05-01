@@ -93,7 +93,7 @@ const HomeChatComponent = () => {
 
             console.log(response.ok);
           }
-        } /*else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
+        } else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
           console.log("SOMETHING HAPPENED DINK DONK ")
           console.log(message)
           //console.log(chatContext.chatList)
@@ -106,20 +106,17 @@ const HomeChatComponent = () => {
               
               console.log("We found the one")
               console.log(modifiedChatList.userChats[i])
-              //modifiedChatList.userChats[i].is_read = false;
+              modifiedChatList.userChats[i].is_read = false;
 
             }
           }
           console.log(modifiedChatList)
           //chatContext.chatList <--- modify this then pass through the changeChatList
-          //chatContext.changeChatList(data) <---- use to change chatList after modification
-          //ELSE CHECK THE MESSAGE INFORMATION AND COMPARE IT TO THE CHATLIST TO CHANGE THE CHATLIST ISREAD
-        }*/
-        //CHAT OBJECT BEING SENT THROUGH TO CHATLIST NEEDS TO HAVE CONVERSATIONID FOR THIS TO WORK SMOOTHLY
-        //TARGET THE CHAT OF LISTOFCHATS THAT MATCHES THE CONVERSATION ID AND SET ISREAD FALSE ON MESSAGE
-        //REFRESH CHATLIST
-        //OR
-        //CALL TO BACKEND TO CHANGE CURRENT CONVERSATION TO SET IS READ ON CLICK OF CHAT
+          chatContext.changeChatList({ ...chatContext.chatList, userChats: [...modifiedChatList.userChats] });
+        }
+        //NEXT STEP FOR FINALITY IN DIRECT MESSAGE FUNCTIONALTIY:
+        //WHEN CLICKING ON A MESSAGE SET THE CHAT ISREAD TO FALSE, THIS WILL HAVE TO BE DONE WITHIN CHATSIDEBAR.JS
+        //THIS SHOULD BE SIMPLE IMPLEMENTATION USE THE SAME PROCESS AS ABOVE TO TARGET THE CORRECT CHAT ONCLICK
       };
     };
 

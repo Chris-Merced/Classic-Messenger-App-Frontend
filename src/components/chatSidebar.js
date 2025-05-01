@@ -68,7 +68,7 @@ const SideBarComponent = () => {
     };
 
     getOnlineUsers();
-    intervalRef.current = setInterval(()=>{console.log("triggered");getOnlineUsers()}, 15000);
+    intervalRef.current = setInterval(getOnlineUsers, 5000);
 
     return () => {
       clearInterval(intervalRef.current);
