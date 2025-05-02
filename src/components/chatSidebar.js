@@ -134,6 +134,18 @@ const SideBarComponent = () => {
     );
   };
 
+  const updateIsRead = (chat) =>{
+    let modifiedChatList=chatContext.chatList
+    
+    for(let i =0; i<modifiedChatList.userChats.length; i++){
+      if(modifiedChatList.userChats[i].conversation_id === chat.conversation_id){
+        modifiedChatList.userChats[i].is_read=true
+      }
+    }
+    
+    chatContext.changeChatList({...modifiedChatList, userChats: [...modifiedChatList.userChats]})
+  }
+
 
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
@@ -183,7 +195,7 @@ const SideBarComponent = () => {
                       src="/defaultProfileImage.png"
                     ></img>
                   )}
-                <button className="chatButton" onClick={() => changeChat(chat)}>
+                <button className="chatButton" onClick={() => {changeChat(chat); updateIsRead(chat);}}>
                   {chat.name ? chat.name : chat.participants}
                 </button>
                 {!chat.is_read && <div>wow lazy</div>}

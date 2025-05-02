@@ -46,9 +46,8 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
-        
-        console.log("RECIEVED MESSAGE")
         console.log(message.data)
+        
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
         message = {
@@ -61,26 +60,15 @@ const HomeChatComponent = () => {
           dateObj,
         };
         
-        console.log(message)
-        console.log(chat.conversationID)
         if (message.conversationID === chat.conversationID) {
-          
-          
-          console.log("ARE WE MAKING IT HERE")
-          console.log(context)
           setMessages((prevMessages) => [...prevMessages, message]);
-          //send through conversationID and userID to call to backend in order to change
-          //isread to true
+          
           if (message.conversationID != 1 && context.user.username !== message.user) {
-            console.log("ARE WE MAKING IT IN HERE ")
-            const string = "testing string"
             const data = {
               conversationID: message.conversationID,
               senderID: message.userID,
-              testID: string
             };
 
-            console.log(message);
             const response = await fetch(
               `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
               {
@@ -94,29 +82,26 @@ const HomeChatComponent = () => {
             console.log(response.ok);
           }
         } else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
-          console.log("SOMETHING HAPPENED DINK DONK ")
-          console.log(message)
-          //console.log(chatContext.chatList)
           let modifiedChatList = chatContext.chatList
-          
-          console.log(message.conversationID)
 
           for (let i=0; i<modifiedChatList.userChats.length; i++){
             if(modifiedChatList.userChats[i].conversation_id===message.conversationID){
-              
-              console.log("We found the one")
-              console.log(modifiedChatList.userChats[i])
               modifiedChatList.userChats[i].is_read = false;
-
             }
           }
-          console.log(modifiedChatList)
-          //chatContext.chatList <--- modify this then pass through the changeChatList
           chatContext.changeChatList({ ...chatContext.chatList, userChats: [...modifiedChatList.userChats] });
         }
-        //NEXT STEP FOR FINALITY IN DIRECT MESSAGE FUNCTIONALTIY:
-        //WHEN CLICKING ON A MESSAGE SET THE CHAT ISREAD TO FALSE, THIS WILL HAVE TO BE DONE WITHIN CHATSIDEBAR.JS
-        //THIS SHOULD BE SIMPLE IMPLEMENTATION USE THE SAME PROCESS AS ABOVE TO TARGET THE CORRECT CHAT ONCLICK
+        
+        let modifiedChatList = chatContext.chatList
+
+        for (let i=0; i<modifiedChatList.userChats.length; i++){
+          if(modifiedChatList.userChats[i].conversation_id===message.conversationID){
+            const tempItem = modifiedChatList.userChats.splice(i, 1)[0]
+            modifiedChatList.userChats.splice(1, 0, tempItem)
+            chatContext.changeChatList({ ...chatContext.chatList, userChats: [...modifiedChatList.userChats] });
+          }
+        }
+
       };
     };
 
