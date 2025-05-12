@@ -10,17 +10,21 @@ const SideBarComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const intervalRef = useRef(null);
+  const unmodifiedChatList = useRef(null);
 
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
   const [sidebarSearch, setSidebarSearch] = useState(false);
-  const [unmodifedChatList, setUnmodifiedChatList] = useState([]);
   const [islight, setIsLight] = useState(null);
+
+
+
+  //NOTIFICATION ON INCOMING MESSAGE NEEDS TO BE MODIFIED TO BE VISUALLY PLEASING
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
-      setUnmodifiedChatList(listOfChats);
+      unmodifiedChatList.current = chatContext.chatList.userChats;
     }
   }, [chatContext.chatList]);
 
@@ -75,7 +79,6 @@ const SideBarComponent = () => {
     };
   }, [listOfChats]);
 
-
   const changeChat = (chat) => {
     if (chat.name) {
       chatContext.changeChat({
@@ -117,12 +120,12 @@ const SideBarComponent = () => {
   };
 
   const changeDisplayedChatList = (search) => {
-    setListOfChats(unmodifedChatList);
+    setListOfChats(unmodifiedChatList.current);
     if (search === "") {
       return;
     }
-    setListOfChats((prev) =>
-      prev.filter((chat) => {
+    setListOfChats((prev) => {
+      let newListOfChats = prev.filter((chat) => {
         const regex = new RegExp(search);
 
         if (!chat.name) {
@@ -130,23 +133,32 @@ const SideBarComponent = () => {
             return chat;
           }
         }
-      })
-    );
+        if (chat.name) {
+          return chat;
+        }
+      });
+      return newListOfChats;
+    });
   };
 
-  const updateIsRead = (chat) =>{
-    let modifiedChatList=chatContext.chatList
-    
-    for(let i =0; i<modifiedChatList.userChats.length; i++){
-      if(modifiedChatList.userChats[i].conversation_id === chat.conversation_id){
-        modifiedChatList.userChats[i].is_read=true
+  const updateIsRead = (chat) => {
+    let modifiedChatList = chatContext.chatList;
+
+    for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+      if (
+        modifiedChatList.userChats[i].conversation_id === chat.conversation_id
+      ) {
+        modifiedChatList.userChats[i].is_read = true;
       }
     }
-    
-    chatContext.changeChatList({...modifiedChatList, userChats: [...modifiedChatList.userChats]})
-  }
 
-
+    chatContext.changeChatList({
+      ...modifiedChatList,
+      userChats: [...modifiedChatList.userChats],
+    });
+  };
+  console.log("LIST OF CHATS BEFORE RENDER");
+  console.log(listOfChats);
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
       <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
@@ -195,7 +207,13 @@ const SideBarComponent = () => {
                       src="/defaultProfileImage.png"
                     ></img>
                   )}
-                <button className="chatButton" onClick={() => {changeChat(chat); updateIsRead(chat);}}>
+                <button
+                  className="chatButton"
+                  onClick={() => {
+                    changeChat(chat);
+                    updateIsRead(chat);
+                  }}
+                >
                   {chat.name ? chat.name : chat.participants}
                 </button>
                 {!chat.is_read && <div>wow lazy</div>}
