@@ -128,6 +128,13 @@ body.light-theme button.loginButton:hover{
   animation: slideIn 0.2s ease-in-out forwards;
 }
 
+.messageNotification{
+  width: 28px;
+  height: 14px;
+  background-color: rgb(126, 0, 0);
+  border-radius: 50%;
+}
+
 .div {
   border-bottom: 1px solid;
 }

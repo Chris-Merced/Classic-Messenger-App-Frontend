@@ -215,8 +215,9 @@ const SideBarComponent = () => {
                   }}
                 >
                   {chat.name ? chat.name : chat.participants}
+                  
                 </button>
-                {!chat.is_read && <div>wow lazy</div>}
+                {!chat.is_read && <div className="messageNotification"></div>}
                 {chat.participants &&
                 chat.participants.length === 1 &&
                 activeUsers[chat.participants] ? (
