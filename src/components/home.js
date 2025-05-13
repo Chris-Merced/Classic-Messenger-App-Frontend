@@ -211,9 +211,14 @@ const HomeChatComponent = () => {
     }
   };
 
+  console.log("CURRENT CHAT")
+  console.log(currentChat)
+
   return (
     <div className="mainContent fadeInStaggered--1">
       {user && (
+        <>{currentChat &&
+        <h1>{currentChat.name ? currentChat.name : currentChat.reciever[0]}</h1>}
         <div className="mainChat scroll-container" ref={mainChatRef}>
           <ul className="MessageList">
             {messages.map((message, index) => (
@@ -264,6 +269,7 @@ const HomeChatComponent = () => {
             ))}
           </ul>
         </div>
+        </>
       )}
       {user && (
         <div className="sendMessage">
