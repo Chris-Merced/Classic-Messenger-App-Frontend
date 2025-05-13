@@ -211,8 +211,6 @@ const HomeChatComponent = () => {
     }
   };
 
-  console.log("CURRENT CHAT")
-  console.log(currentChat)
 
   return (
     <div className="mainContent fadeInStaggered--1">

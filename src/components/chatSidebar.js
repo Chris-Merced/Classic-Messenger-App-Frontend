@@ -19,7 +19,6 @@ const SideBarComponent = () => {
 
 
 
-  //NOTIFICATION ON INCOMING MESSAGE NEEDS TO BE MODIFIED TO BE VISUALLY PLEASING
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
@@ -157,8 +156,6 @@ const SideBarComponent = () => {
       userChats: [...modifiedChatList.userChats],
     });
   };
-  console.log("LIST OF CHATS BEFORE RENDER");
-  console.log(listOfChats);
   return listOfChats && userContext.user ? (
     <div className="sideBar fadeInStaggered">
       <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
