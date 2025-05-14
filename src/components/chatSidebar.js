@@ -17,9 +17,6 @@ const SideBarComponent = () => {
   const [sidebarSearch, setSidebarSearch] = useState(false);
   const [islight, setIsLight] = useState(null);
 
-
-
-
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
       setListOfChats(chatContext.chatList.userChats);
@@ -156,12 +153,26 @@ const SideBarComponent = () => {
       userChats: [...modifiedChatList.userChats],
     });
   };
+
+  if (!listOfChats || !userContext.user) return <div aria-hidden="true"></div>;
+
   return listOfChats && userContext.user ? (
-    <div className="sideBar fadeInStaggered">
-      <ul className={`chatList ${sidebarSearch ? "show" : "hide"}`}>
-        <div className="sideBarSearch">
+    <div
+      className="sideBar fadeInStaggered"
+      role="navigation"
+      aria-label="Chat navigation"
+    >
+      <ul
+        className={`chatList ${
+          sidebarSearch ? "show" : "hide"
+        }`}
+        role="list"
+      >
+        <div className="sideBarSearch" role="search">
           <input
+            type="search"
             className="sideBarSearch"
+            aria-label="Search chats"
             onChange={(e) => changeDisplayedChatList(e.target.value)}
             onBlur={(e) => {
               setTimeout(() => {
@@ -171,12 +182,18 @@ const SideBarComponent = () => {
               }, 150);
             }}
           ></input>
-          <img className="sideBarSearchIcon" src="searchIcon.svg"></img>
+          <img
+            className="sideBarSearchIcon"
+            src="searchIcon.svg"
+            role="button"
+            aria-label="Toggle search"
+            aria-hidden="true"
+          ></img>
         </div>
         {listOfChats.map(
           (chat, index) =>
             chat && (
-              <li className="chat" key={index}>
+              <li className="chat" key={index} role="listitem">
                 {!chat.name &&
                   chat.participants.length === 1 &&
                   chat.profilePicture && (
@@ -184,6 +201,7 @@ const SideBarComponent = () => {
                       onClick={() => changeChat(chat)}
                       className="sideBarProfilePicture"
                       src={chat.profilePicture}
+                      alt={`${chat.participants} profile picture`}
                     ></img>
                   )}
                 {!chat.name &&
@@ -193,6 +211,7 @@ const SideBarComponent = () => {
                     <img
                       className="sideBarProfilePicture"
                       src="/defaultProfileImageLight.webp"
+                      alt="User profile placeholder"
                     ></img>
                   )}
                 {!chat.name &&
@@ -202,6 +221,7 @@ const SideBarComponent = () => {
                     <img
                       className="sideBarProfilePicture"
                       src="/defaultProfileImage.png"
+                      alt="User profile placeholder"
                     ></img>
                   )}
                 <button
@@ -210,17 +230,35 @@ const SideBarComponent = () => {
                     changeChat(chat);
                     updateIsRead(chat);
                   }}
+                  aria-current={
+                    chatContext.currentChat?.conversationID ===
+                    chat.conversation_id
+                      ? "page"
+                      : undefined
+                  }
                 >
                   {chat.name ? chat.name : chat.participants}
-                  
                 </button>
-                {!chat.is_read && <div className="messageNotification"></div>}
-                {chat.participants &&
-                chat.participants.length === 1 &&
+                {!chat.is_read && (
+                  <div
+                    className="messageNotification"
+                    role="status"
+                    aria-label="Unread messages"
+                  ></div>
+                )}
+                {chat.participants && chat.participants.length === 1 &&
                 activeUsers[chat.participants] ? (
-                  <div className="online"></div>
+                  <div
+                    className="online"
+                    role="status"
+                    aria-label="User online"
+                  ></div>
                 ) : (
-                  <div className="offline"></div>
+                  <div
+                    className="offline"
+                    role="status"
+                    aria-label="User offline"
+                  ></div>
                 )}
               </li>
             )
@@ -233,3 +271,4 @@ const SideBarComponent = () => {
 };
 
 export default SideBarComponent;
+
