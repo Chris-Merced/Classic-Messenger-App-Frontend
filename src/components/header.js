@@ -133,51 +133,71 @@ const HeaderComponent = () => {
     }
   };
 
-  return (
+ return (
     <>
-      <div className="websiteHeader">
+      <header
+        className="websiteHeader"
+        role="banner"
+        aria-label="Site header"
+      >
         <Link to="/" className="homepageLink">
           <h1 className="welcomeHeader">
             <span>Welcome</span> <strong>Home</strong>
           </h1>
         </Link>
+
         {user && (
           <div className="interactionComponents">
-            <div className="searchComponent">
+            <div
+              className="searchComponent"
+              role="search"
+              aria-label="Search users"
+            >
               <div className="searchBar">
-                <form onSubmit={searchDB}>
+                <form onSubmit={searchDB} role="search">
                   <input
                     type="text"
                     name="search"
                     id="search"
                     placeholder="Search Users"
+                    aria-label="Search Users"
                     value={searchInput}
-                    onChange={(e) => {
+                    onChange={e => {
                       setSearchInput(e.target.value);
-                      const username = e.target.value;
-                      searchDB(e, username);
+                      searchDB(e, e.target.value);
                     }}
-                    onBlur={(e) => {
+                    onBlur={e => {
                       setTimeout(() => {
                         setSearchInput("");
-                        searchDB(e, username);
+                        searchDB(e, e.target.value);
                       }, 150);
                     }}
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.key === "Enter") {
                         e.preventDefault();
                         sendUserToProfilePageSearch(e, e.target.value);
                       }
                     }}
-                  ></input>
+                  />
                 </form>
               </div>
               {searchInput && (
-                <ul className="searchResults">
+                <ul
+                  className="searchResults"
+                  role="list"
+                  aria-label="Search results"
+                >
                   {users.map((user, index) => (
-                    <li className="searchOption" key={index}>
-                      <Link to={`/userProfile/${user.id}`}>
-                        <button className="userListItem">
+                    <li
+                      className="searchOption"
+                      key={index}
+                      role="listitem"
+                    >
+                      <Link to={`/userProfile/${user.id}`}> 
+                        <button
+                          className="userListItem"
+                          aria-label={`View profile of ${user.username}`}
+                        >
                           {user.username}
                         </button>
                       </Link>
@@ -186,91 +206,165 @@ const HeaderComponent = () => {
                 </ul>
               )}
             </div>
-            <div className="userProfile">
-              <div className="profileName">
+
+            <div
+              className="userProfile"
+              role="region"
+              aria-label="User menu"
+            >
+              <div
+                className="profileName"
+                role="status"
+                aria-label={
+                  friendRequests.length
+                    ? `You have ${friendRequests.length} new friend requests`
+                    : "No new friend requests"
+                }
+              >
                 {friendRequests.length !== 0 ? (
-                  <div className="notifications">!</div>
+                  <div className="notifications" aria-hidden="true">
+                    !
+                  </div>
                 ) : (
-                  <span></span>
+                  <span aria-hidden="true"></span>
                 )}
               </div>
 
               <div className="DropDown">
-                <button className="dropdownButton" onClick={isDropDown}>
+                <button
+                  id="dropdown-button"
+                  className="dropdownButton"
+                  onClick={isDropDown}
+                  aria-haspopup="menu"
+                  aria-expanded={dropDown}
+                  aria-controls="user-menu"
+                  aria-label="User options"
+                >
                   <div>{user.username}</div>
-                  {dropDown ? <div>▲</div> : <div>▼</div>}
+                  <div aria-hidden="true">{dropDown ? "▲" : "▼"}</div>
                 </button>
-                <div className={`Menu ${dropDown ? "show" : "hide"}`}>
+
+                <div
+                  id="user-menu"
+                  className={`Menu ${dropDown ? "show" : "hide"}`}
+                  role="menu"
+                  aria-labelledby="dropdown-button"
+                >
                   <div className="profile menu-item">
-                    <Link to={`/userProfile/${user.id}`}>
-                      <button className="profileButton" onClick={isDropDown}>
+                    <Link to={`/userProfile/${user.id}`}> 
+                      <button
+                        className="profileButton"
+                        onClick={isDropDown}
+                        role="menuitem"
+                      >
                         Profile
                       </button>
                     </Link>
                   </div>
+
                   <div className="friends menu-item">
-                    <Link to={`/userProfile/friends`} className="friendsLink">
-                      <button className="friendsButton" onClick={isDropDown}>
+                    <Link
+                      to={`/userProfile/friends`}
+                      className="friendsLink"
+                    > 
+                      <button
+                        className="friendsButton"
+                        onClick={isDropDown}
+                        role="menuitem"
+                      >
                         Friends
                       </button>
                     </Link>
                     {friendRequests.length !== 0 && (
-                      <div className="notifications friendRequestNotifications">
-                        {friendRequests?.length}
+                      <div
+                        className="notifications friendRequestNotifications"
+                        role="status"
+                        aria-label={`You have ${friendRequests.length} pending friend requests`}
+                      >
+                        {friendRequests.length}
                       </div>
                     )}
                   </div>
-                  <button className="logout menu-item" onClick={logoutHandler}>
+
+                  <button
+                    className="logout menu-item"
+                    onClick={logoutHandler}
+                    role="menuitem"
+                  >
                     Log Out
                   </button>
                 </div>
               </div>
-              <button onClick={toggleTheme} className="themeToggle">
+
+              <button
+                onClick={toggleTheme}
+                className="themeToggle"
+                aria-label="Toggle theme"
+              >
                 {isLightTheme ? "🌙" : "☀️"}
               </button>
             </div>
           </div>
-        )}{" "}
+        )}
+
         {!user && (
-          <button onClick={toggleTheme} className="themeToggle noUser">
+          <button
+            onClick={toggleTheme}
+            className="themeToggle noUser"
+            aria-label="Toggle theme"
+          >
             {isLightTheme ? "🌙" : "☀️"}
           </button>
         )}
-      </div>
+      </header>
+
       {!user && location.pathname !== "/signup" && (
-        <div className="loginHeader">
-          <form className="loginForm" onSubmit={loginHandler}>
+        <section
+          className="loginHeader"
+          role="region"
+          aria-label="Login form"
+        >
+          <form
+            className="loginForm"
+            onSubmit={loginHandler}
+            role="form"
+            aria-labelledby="login-heading"
+          >
+            <h2 id="login-heading" className="sr-only">
+              Log In
+            </h2>
             <div className="usernameForm">
-              <label htmlFor="username">Username: </label>
+              <label htmlFor="username">Username:</label>
               <input
                 className="usernameInput"
                 name="username"
                 id="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              ></input>
+                onChange={e => setUsername(e.target.value)}
+              />
             </div>
             <div className="passwordForm">
-              <label htmlFor="password">Password: </label>
+              <label htmlFor="password">Password:</label>
               <input
                 className="passwordInput"
                 name="password"
                 id="password"
                 type="password"
-                onChange={(e) => setPassword(e.target.value)}
-              ></input>
+                onChange={e => setPassword(e.target.value)}
+              />
             </div>
-            <button className="loginButton" type="submit">
+            <button className="loginButton" type="submit" aria-label="Log In">
               Log In
             </button>
             <Link to="/signup" className="signup">
               Signup
             </Link>
           </form>
-        </div>
+        </section>
       )}
     </>
   );
 };
 
 export default HeaderComponent;
+
