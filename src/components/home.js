@@ -22,7 +22,6 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
-
   //MAKE SURE THAT WE CLEAN UP THE VISUAL ELEMENTS OF THE PROFILE EDIT PAGE
   //WHEN SENDING A MESSAGE IN MAIN IT SETS MAIN AS THE SECOND MESSAGE
   //SET IT TO WHERE IF CHAT IS MAIN THEN IT IS SET AS FIRST IN THE ARRAY
@@ -51,8 +50,8 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
-        console.log(message.data)
-        
+        console.log(message.data);
+
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
         message = {
@@ -64,11 +63,14 @@ const HomeChatComponent = () => {
           }),
           dateObj,
         };
-        
+
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
-          
-          if (message.conversationID != 1 && context.user.username !== message.user) {
+
+          if (
+            message.conversationID != 1 &&
+            context.user.username !== message.user
+          ) {
             const data = {
               conversationID: message.conversationID,
               senderID: message.userID,
@@ -86,27 +88,42 @@ const HomeChatComponent = () => {
 
             console.log(response.ok);
           }
-        } else if (message.conversationID !== chat.conversationID && message.conversationID!= 1){
-          let modifiedChatList = chatContext.chatList
+        } else if (
+          message.conversationID !== chat.conversationID &&
+          message.conversationID != 1
+        ) {
+          let modifiedChatList = chatContext.chatList;
 
-          for (let i=0; i<modifiedChatList.userChats.length; i++){
-            if(modifiedChatList.userChats[i].conversation_id===message.conversationID){
+          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+            if (
+              modifiedChatList.userChats[i].conversation_id ===
+              message.conversationID
+            ) {
               modifiedChatList.userChats[i].is_read = false;
             }
           }
-          chatContext.changeChatList({ ...chatContext.chatList, userChats: [...modifiedChatList.userChats] });
+          chatContext.changeChatList({
+            ...chatContext.chatList,
+            userChats: [...modifiedChatList.userChats],
+          });
         }
-        
-        let modifiedChatList = chatContext.chatList
 
-        for (let i=0; i<modifiedChatList.userChats.length; i++){
-          if(modifiedChatList.userChats[i].conversation_id===message.conversationID && message.conversationID !== 1){
-            const tempItem = modifiedChatList.userChats.splice(i, 1)[0]
-            modifiedChatList.userChats.splice(1, 0, tempItem)
-            chatContext.changeChatList({ ...chatContext.chatList, userChats: [...modifiedChatList.userChats] });
+        let modifiedChatList = chatContext.chatList;
+
+        for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+          if (
+            modifiedChatList.userChats[i].conversation_id ===
+              message.conversationID &&
+            message.conversationID !== 1
+          ) {
+            const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+            modifiedChatList.userChats.splice(1, 0, tempItem);
+            chatContext.changeChatList({
+              ...chatContext.chatList,
+              userChats: [...modifiedChatList.userChats],
+            });
           }
         }
-
       };
     };
 
@@ -216,29 +233,42 @@ const HomeChatComponent = () => {
     }
   };
 
-
   return (
-    <div className="mainContent fadeInStaggered--1">
+    <div
+      className="mainContent fadeInStaggered--1"
+      role="main"
+      aria-label="Chat interface"
+    >
       {user && (
-        <>{currentChat &&
-        <h1>{currentChat.name ? currentChat.name : currentChat.reciever[0]}</h1>}
-        <div className="mainChat scroll-container" ref={mainChatRef}>
-          <ul className="MessageList">
-            {messages.map((message, index) => (
-              <li className="message" key={index}>
-                {index === 0 && (
-                  <div className="date">
-                    {messages[index].dateObj.toLocaleString("en-us", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
-                  </div>
-                )}
-                {index > 0 &&
-                  messages[index].dateObj.toDateString() !==
-                    messages[index - 1].dateObj.toDateString() && (
-                    <div className="date">
+        <>
+          {currentChat && (
+            <h1 role="heading" aria-level="1">
+              {currentChat.name ? currentChat.name : currentChat.reciever[0]}
+            </h1>
+          )}
+          <div
+            className="mainChat scroll-container"
+            ref={mainChatRef}
+            role="log"
+            aria-live="polite"
+            aria-label="Message log"
+          >
+            <ul className="MessageList" role="list">
+              {messages.map((message, index) => (
+                <li className="message" key={index} role="listitem">
+                  {index === 0 && (
+                    <div
+                      className="date"
+                      role="separator"
+                      aria-label={messages[index].dateObj.toLocaleString(
+                        "en-us",
+                        {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        }
+                      )}
+                    >
                       {messages[index].dateObj.toLocaleString("en-us", {
                         month: "short",
                         day: "2-digit",
@@ -246,40 +276,89 @@ const HomeChatComponent = () => {
                       })}
                     </div>
                   )}
-                <div className="messageHeader">
-                  {index === 0 && (
-                    <div className="username">{message.user}</div>
-                  )}
                   {index > 0 &&
-                    (messages[index].user !== messages[index - 1].user ||
-                      messages[index].dateObj.toDateString() !==
-                        messages[index - 1].dateObj.toDateString()) && (
-                      <div className="username">{message.user}</div>
+                    messages[index].dateObj.toDateString() !==
+                      messages[index - 1].dateObj.toDateString() && (
+                      <div
+                        className="date"
+                        role="separator"
+                        aria-label={messages[index].dateObj.toLocaleString(
+                          "en-us",
+                          {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      >
+                        {messages[index].dateObj.toLocaleString("en-us", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })}
+                      </div>
                     )}
-                  {index === 0 && (
-                    <div className="initialTime">{messages[index].time}</div>
-                  )}
-                  {index > 0 &&
-                    (new Date(messages[index].dateObj).getTime() -
-                      new Date(messages[index - 1].dateObj).getTime() >=
-                      5 * 60 * 1000 ||
-                      messages[index].user !== messages[index - 1].user) && (
-                      <div className="timeElapsed">{messages[index].time}</div>
+                  <div
+                    className="messageHeader"
+                    role="group"
+                    aria-label={`${message.user} at ${messages[index].time}`}
+                  >
+                    {index === 0 && (
+                      <div className="username" role="heading" aria-level="2">
+                        {message.user}
+                      </div>
                     )}
-                </div>
-                <div className="messageText">{message.message}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
+                    {index > 0 &&
+                      (messages[index].user !== messages[index - 1].user ||
+                        messages[index].dateObj.toDateString() !==
+                          messages[index - 1].dateObj.toDateString()) && (
+                        <div className="username" role="heading" aria-level="2">
+                          {message.user}
+                        </div>
+                      )}
+                    {index === 0 && (
+                      <div
+                        className="initialTime"
+                        aria-label={`Sent at ${messages[index].time}`}
+                      >
+                        {messages[index].time}
+                      </div>
+                    )}
+                    {index > 0 &&
+                      (new Date(messages[index].dateObj).getTime() -
+                        new Date(messages[index - 1].dateObj).getTime() >=
+                        5 * 60 * 1000 ||
+                        messages[index].user !== messages[index - 1].user) && (
+                        <div
+                          className="timeElapsed"
+                          aria-label={`Sent at ${messages[index].time}`}
+                        >
+                          {messages[index].time}
+                        </div>
+                      )}
+                  </div>
+                  <div
+                    className="messageText"
+                    aria-label={`Message: ${message.message}`}
+                  >
+                    {message.message}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
       {user && (
-        <div className="sendMessage">
+        <div className="sendMessage" role="region" aria-label="Compose message">
           {isBlocked ? (
-            <div>You've been Blocked by this user</div>
+            <div role="alert">You've been Blocked by this user</div>
           ) : (
-            <form className="sendMessageForm fadeInStaggered">
+            <form
+              className="sendMessageForm fadeInStaggered"
+              role="form"
+              aria-label="Send a new message"
+            >
               <div style={{ position: "relative", display: "inline-block" }}>
                 <textarea
                   className="sendMessageInput"
@@ -312,9 +391,14 @@ const HomeChatComponent = () => {
                   }}
                   rows={1}
                   ref={inputRef}
+                  aria-label="Type your message here"
                 />
               </div>
-              <button className="sendMessageButton" onClick={sendMessage}>
+              <button
+                className="sendMessageButton"
+                onClick={sendMessage}
+                aria-label="Send message"
+              >
                 <img
                   className="sendMessageImage"
                   src="/sendMessageGrey.png"
