@@ -22,6 +22,9 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
+
+  //MAKE SURE THAT WE CLEAN UP THE VISUAL ELEMENTS OF THE PROFILE EDITING PAGE
+
   useEffect(() => {
     setUser(userData);
   }, [userData]);
