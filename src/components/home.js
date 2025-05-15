@@ -23,7 +23,9 @@ const HomeChatComponent = () => {
   const { currentChat } = chatContext;
 
 
-  //MAKE SURE THAT WE CLEAN UP THE VISUAL ELEMENTS OF THE PROFILE EDITING PAGE
+  //MAKE SURE THAT WE CLEAN UP THE VISUAL ELEMENTS OF THE PROFILE EDIT PAGE
+  //WHEN SENDING A MESSAGE IN MAIN IT SETS MAIN AS THE SECOND MESSAGE
+  //SET IT TO WHERE IF CHAT IS MAIN THEN IT IS SET AS FIRST IN THE ARRAY
 
   useEffect(() => {
     setUser(userData);
@@ -98,7 +100,7 @@ const HomeChatComponent = () => {
         let modifiedChatList = chatContext.chatList
 
         for (let i=0; i<modifiedChatList.userChats.length; i++){
-          if(modifiedChatList.userChats[i].conversation_id===message.conversationID){
+          if(modifiedChatList.userChats[i].conversation_id===message.conversationID && message.conversationID !== 1){
             const tempItem = modifiedChatList.userChats.splice(i, 1)[0]
             modifiedChatList.userChats.splice(1, 0, tempItem)
             chatContext.changeChatList({ ...chatContext.chatList, userChats: [...modifiedChatList.userChats] });
