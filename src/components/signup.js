@@ -89,68 +89,92 @@ const signUpComponent = () => {
 
   return (
     <div className="signupComponent">
-      <h1 className="signupHeader">Sign Up</h1>
+      <h1 id="signup-header" className="signupHeader">Sign Up</h1>
       {signupSuccess ? (
-        <div>Welcome to the Family</div>
+        <div role="status" aria-live="polite">Welcome to the Family</div>
       ) : (
-        <form className="signupForm" onSubmit={submitHandler}>
+        <form
+          className="signupForm"
+          onSubmit={submitHandler}
+          role="form"
+          aria-labelledby="signup-header"
+        >
           <div className="field">
-            {serverError && <div>{serverError}</div>}
+            {serverError && (
+              <div role="alert" aria-live="assertive">{serverError}</div>
+            )}
             <label htmlFor="username">Username:</label>
-            <input className="signupInput"
+            <input
+              className="signupInput"
               id="username"
-              maxLength="30"
               name="username"
+              maxLength="30"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              aria-invalid={usernameError}
-            ></input>
-            {isSubmitted && usernameError && <span>{usernameError}</span>}
+              aria-required="true"
+              aria-invalid={!!usernameError}
+              aria-describedby="username-error"
+            />
+            {isSubmitted && usernameError && (
+              <span id="username-error" role="alert">{usernameError}</span>
+            )}
           </div>
 
           <div className="field">
             <label htmlFor="password">Password:</label>
-            <input className="signupInput"
+            <input
+              className="signupInput"
               id="password"
               name="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              aria-required="true"
               aria-invalid={!!passwordError}
-            ></input>
-            {isSubmitted && passwordError && <span>{passwordError}</span>}
+              aria-describedby="password-error"
+            />
+            {isSubmitted && passwordError && (
+              <span id="password-error" role="alert">{passwordError}</span>
+            )}
           </div>
 
           <div className="field">
             <label htmlFor="passwordConfirm">Confirm Password:</label>
-            <input className="signupInput"
-              type="password"
+            <input
+              className="signupInput"
               id="passwordConfirm"
               name="passwordConfirm"
+              type="password"
               value={passwordConfirm}
-              onChange={(e) => {
-                setPasswordConfirm(e.target.value);
-              }}
-            ></input>
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              aria-required="true"
+            />
           </div>
 
           <div className="field">
             <label htmlFor="email">Email:</label>
-            <input className="signupInput"
+            <input
+              className="signupInput"
               id="email"
-              type="email"
               name="email"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              aria-required="true"
               aria-invalid={!!emailError}
-            ></input>
-            {isSubmitted && emailError && <span>{emailError}</span>}
+              aria-describedby="email-error"
+            />
+            {isSubmitted && emailError && (
+              <span id="email-error" role="alert">{emailError}</span>
+            )}
           </div>
 
-          <button className="assimilateButton" type="submit">Assimilate</button>
+          <button className="assimilateButton" type="submit" aria-label="Submit sign up form">
+            Assimilate
+          </button>
         </form>
       )}
-      <Link to="/" className="signup">
+      <Link to="/" className="signup" aria-label="Return to home page">
         Come Back Home
       </Link>
     </div>
