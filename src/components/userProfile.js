@@ -312,34 +312,37 @@ const UserProfile = () => {
   return (
     <div>
       {userContext?.user?.id ? (
-        <div className="userProfilePage">
+        <div className="userProfilePage" role="region" aria-label="User profile page">
           {profile && (isPublic || friendStatus) ? (
-            <div className="userProfilePermission">
-              <div className="userHeader">
+            <div className="userProfilePermission" role="region" aria-label="Profile content">
+              <div className="userHeader" role="banner">
                 {userContext?.user?.profile_picture ? (
                   <img
                     className="profileImage"
                     src={profile.profile_picture}
-                  ></img>
+                    alt={`${profile.username} profile picture`}
+                  />
                 ) : (
                   <img
                     className="profileImage"
                     src="/defaultProfileImage.png"
-                  ></img>
+                    alt="Default profile picture"
+                  />
                 )}
                 {userContext?.user?.id == userIdentifier && editPage && (
-                  <label>
+                  <label htmlFor="profile-picture-upload" aria-label="Upload your photo">
                     Upload Your Photo
                     <input
+                      id="profile-picture-upload"
                       type="file"
                       onChange={handleProfilePictureChange}
                       className="editProfilePicture"
+                      aria-label="Choose profile picture file"
                     />
                     <>
                       <button
-                        onClick={(e) =>
-                          handleProfilePicture(e.clientX, e.clientY)
-                        }
+                        onClick={(e) => handleProfilePicture(e.clientX, e.clientY)}
+                        aria-label="Save profile picture"
                       >
                         Change Picture
                       </button>
@@ -350,6 +353,8 @@ const UserProfile = () => {
                             top: `${cursorPosition.y}px`,
                             left: `${cursorPosition.x}px`,
                           }}
+                          role="status"
+                          aria-live="polite"
                         >
                           Profile Picture Saved!
                         </div>
@@ -359,11 +364,12 @@ const UserProfile = () => {
                 )}
                 <h1>{profile.username}</h1>
                 {blockedByProfile ? (
-                  <div>You Are Currently Blocked by This User</div>
+                  <div role="alert">You Are Currently Blocked by This User</div>
                 ) : (
                   userContext.user.id != userIdentifier && (
                     <button
                       onClick={() => sendDirectMessage(userContext.user.id)}
+                      aria-label={`Send direct message to ${profile.username}`}
                     >
                       Direct Message
                     </button>
@@ -371,136 +377,182 @@ const UserProfile = () => {
                 )}
                 {isBlocked === false ? (
                   userContext?.user?.id != userIdentifier && (
-                    <button className="block" onClick={blockUser}>
+                    <button
+                      className="block"
+                      onClick={blockUser}
+                      aria-label={`Block user ${profile.username}`}
+                    >
                       Block User
                     </button>
                   )
                 ) : (
-                  <button onClick={unblockUser}>Unblock User</button>
+                  <button
+                    onClick={unblockUser}
+                    aria-label={`Unblock user ${profile.username}`}
+                  >
+                    Unblock User
+                  </button>
                 )}
                 {friendStatus === false &&
                   userContext?.user?.id != userIdentifier &&
                   (requestSent ? (
-                    <button>Request Sent!</button>
+                    <button aria-label="Friend request sent">Request Sent!</button>
                   ) : (
-                    <button onClick={sendFriendRequest}>
+                    <button
+                      onClick={sendFriendRequest}
+                      aria-label={`Send friend request to ${profile.username}`}
+                    >
                       Send Friend Request
                     </button>
                   ))}
               </div>
-              <div>Created at {profile.created_at}</div>
-              <div>About Me: </div>
-
-              {!editPage ? (
-                profile.about_me ? (
-                  <div>{profile.about_me}</div>
+              <div role="contentinfo" aria-label={`Profile created at ${profile.created_at}`}>
+                Created at {profile.created_at}
+              </div>
+              <div role="region" aria-label="About Me section">
+                <div>About Me:</div>
+                {!editPage ? (
+                  profile.about_me ? (
+                    <div>{profile.about_me}</div>
+                  ) : (
+                    <div role="note">Oop! This user hasn't set their About Me section! How mysterious!</div>
+                  )
                 ) : (
-                  <div>
-                    Oop! This user hasn't set their About Me section! How
-                    mysterious!
-                  </div>
-                )
-              ) : (
-                <>
-                  <form onSubmit={changeAboutMe}>
-                    <textarea
-                      className="aboutMeTextArea"
-                      defaultValue={profile.about_me ? profile.about_me : ""}
-                    ></textarea>
-                    <button type="submit">submit</button>
-                  </form>
-                  {aboutMeEdit && cursorPosition && (
-                    <div
-                      className="aboutMePopup"
-                      style={{
-                        top: `${cursorPosition.y}px`,
-                        left: `${cursorPosition.x}px`,
-                      }}
-                    >
-                      About Me Saved!
-                    </div>
-                  )}
-                </>
-              )}
+                  <>
+                    <form onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
+                      <textarea
+                        className="aboutMeTextArea"
+                        defaultValue={profile.about_me ? profile.about_me : ""}
+                        aria-label="About me text"
+                      ></textarea>
+                      <button type="submit" aria-label="Submit About Me">
+                        submit
+                      </button>
+                    </form>
+                    {aboutMeEdit && cursorPosition && (
+                      <div
+                        className="aboutMePopup"
+                        style={{
+                          top: `${cursorPosition.y}px`,
+                          left: `${cursorPosition.x}px`,
+                        }}
+                        role="status"
+                        aria-live="polite"
+                      >
+                        About Me Saved!
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           ) : (
-            <div className="userProfileNoPermission">
-              <div className="userHeader">
+            <div className="userProfileNoPermission" role="region" aria-label="No profile permission">
+              <div className="userHeader" role="banner">
                 <img
                   className="profileImage"
                   src="/defaultProfileImage.png"
-                ></img>
+                  alt="Default profile picture"
+                />
                 <div>{profile.username}</div>
                 {isBlocked === false ? (
-                  <button className="block" onClick={blockUser}>
+                  <button
+                    className="block"
+                    onClick={blockUser}
+                    aria-label={`Block user ${profile.username}`}
+                  >
                     Block User
                   </button>
                 ) : (
-                  <button onClick={unblockUser}>Unblock User</button>
+                  <button
+                    onClick={unblockUser}
+                    aria-label={`Unblock user ${profile.username}`}
+                  >
+                    Unblock User
+                  </button>
                 )}
                 {friendStatus === false &&
                   userContext?.user?.id != userIdentifier && (
-                    <button onClick={sendFriendRequest}>
+                    <button
+                      onClick={sendFriendRequest}
+                      aria-label={`Send friend request to ${profile.username}`}
+                    >
                       Send Friend Request
                     </button>
                   )}
               </div>
-              <div>Created at {profile.created_at}</div>
-              <div>About Me: </div>
-              {!editPage ? (
-                profile.about_me ? (
-                  <div>{profile.about_me}</div>
+              <div role="contentinfo" aria-label={`Profile created at ${profile.created_at}`}>
+                Created at {profile.created_at}
+              </div>
+              <div role="region" aria-label="About Me section">
+                <div>About Me:</div>
+                {!editPage ? (
+                  profile.about_me ? (
+                    <div>{profile.about_me}</div>
+                  ) : (
+                    <div role="note">Oop! This user hasn't set their About Me section! How mysterious!</div>
+                  )
                 ) : (
-                  <div>
-                    Oop! This user hasn't set their About Me section! How
-                    mysterious!
-                  </div>
-                )
-              ) : (
-                <>
-                  <form onSubmit={changeAboutMe}>
-                    <textarea
-                      className="aboutMeTextArea"
-                      defaultValue={profile.about_me ? profile.about_me : ""}
-                    ></textarea>
-                    <button type="submit">submit</button>
-                  </form>
-                  {aboutMeEdit && cursorPosition && (
-                    <div
-                      className="aboutMePopup"
-                      style={{
-                        top: `${cursorPosition.y}px`,
-                        left: `${cursorPosition.x}px`,
-                      }}
-                    >
-                      About Me Saved!
-                    </div>
-                  )}
-                </>
-              )}
+                  <>
+                    <form onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
+                      <textarea
+                        className="aboutMeTextArea"
+                        defaultValue={profile.about_me ? profile.about_me : ""}
+                        aria-label="About me text"
+                      ></textarea>
+                      <button type="submit" aria-label="Submit About Me">
+                        submit
+                      </button>
+                    </form>
+                    {aboutMeEdit && cursorPosition && (
+                      <div
+                        className="aboutMePopup"
+                        style={{
+                          top: `${cursorPosition.y}px`,
+                          left: `${cursorPosition.x}px`,
+                        }}
+                        role="status"
+                        aria-live="polite"
+                      >
+                        About Me Saved!
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           )}
           {userContext?.user?.id == userIdentifier && (
             <div>
-              <div className="profileStatus">
+              <div className="profileStatus" role="region" aria-label="Profile visibility toggle">
                 {isPublic ? (
-                  <button onClick={changeProfileStatus}>
+                  <button
+                    onClick={changeProfileStatus}
+                    aria-label="Change profile to private"
+                  >
                     Change Profile to Private
                   </button>
                 ) : (
-                  <button onClick={changeProfileStatus}>
+                  <button
+                    onClick={changeProfileStatus}
+                    aria-label="Change profile to public"
+                  >
                     Change Profile to Public
                   </button>
                 )}
               </div>
-              <button className="editProfile" onClick={isEditPage}>
+              <button
+                className="editProfile"
+                onClick={isEditPage}
+                aria-label="Edit profile"
+              >
                 Edit Profile
               </button>
             </div>
           )}
         </div>
       ) : (
-        <div></div>
+        <div role="alert">No user logged in</div>
       )}
     </div>
   );
