@@ -484,39 +484,11 @@ const UserProfile = () => {
               </div>
               <div role="region" aria-label="About Me section">
                 <div>About Me:</div>
-                {!editPage ? (
                   profile.about_me ? (
                     <div>{profile.about_me}</div>
                   ) : (
                     <div role="note">Oop! This user hasn't set their About Me section! How mysterious!</div>
                   )
-                ) : (
-                  <>
-                    <form onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
-                      <textarea
-                        className="aboutMeTextArea"
-                        defaultValue={profile.about_me ? profile.about_me : ""}
-                        aria-label="About me text"
-                      ></textarea>
-                      <button type="submit" aria-label="Submit About Me">
-                        submit
-                      </button>
-                    </form>
-                    {aboutMeEdit && cursorPosition && (
-                      <div
-                        className="aboutMePopup"
-                        style={{
-                          top: `${cursorPosition.y}px`,
-                          left: `${cursorPosition.x}px`,
-                        }}
-                        role="status"
-                        aria-live="polite"
-                      >
-                        About Me Saved!
-                      </div>
-                    )}
-                  </>
-                )}
               </div>
             </div>
           )}
