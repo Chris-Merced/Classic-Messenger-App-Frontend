@@ -328,7 +328,7 @@ const UserProfile = () => {
                   />
                 )}
                 {userContext?.user?.id == userIdentifier && editPage && (
-                  <label htmlFor="profile-picture-upload" aria-label="Upload your photo">
+                  <label className="editProfilePicture" htmlFor="profile-picture-upload" aria-label="Upload your photo">
                     Upload Your Photo
                     <input
                       id="profile-picture-upload"
@@ -339,6 +339,7 @@ const UserProfile = () => {
                     />
                     <>
                       <button
+                        className="changeProfilePicture"
                         onClick={(e) => handleProfilePicture(e.clientX, e.clientY)}
                         aria-label="Save profile picture"
                       >
@@ -407,8 +408,8 @@ const UserProfile = () => {
               <div role="contentinfo" aria-label={`Profile created at ${profile.created_at}`}>
                 Created at {profile.created_at}
               </div>
-              <div role="region" aria-label="About Me section">
-                <div>About Me:</div>
+              <div className="aboutMeSection" role="region" aria-label="About Me section">
+                <div className="aboutMeHeader">About Me:</div>
                 {!editPage ? (
                   profile.about_me ? (
                     <div>{profile.about_me}</div>
@@ -417,14 +418,14 @@ const UserProfile = () => {
                   )
                 ) : (
                   <>
-                    <form onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
+                    <form className="editAboutMe" onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
                       <textarea
                         className="aboutMeTextArea"
                         defaultValue={profile.about_me ? profile.about_me : ""}
                         aria-label="About me text"
                       ></textarea>
-                      <button type="submit" aria-label="Submit About Me">
-                        submit
+                      <button className="aboutMeSubmit" type="submit" aria-label="Submit About Me">
+                        submitted
                       </button>
                     </form>
                     {aboutMeEdit && cursorPosition && (

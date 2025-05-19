@@ -278,6 +278,37 @@ body.light-theme .welcomeHeader {
 button.profileButton div {
 }
 
+.editProfilePicture{
+  display: flex;
+  flex-direction: column;
+}
+
+.userProfilePage button.changeProfilePicture{
+  width: 50%;
+}
+
+.aboutMeSection{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.aboutMeHeader{
+  font-weight: bolder;
+  border-bottom: 1px solid;
+  width: 30%;
+}
+
+.editAboutMe{
+  display:flex;
+  flex-direction: column;
+  padding-right: 250px;
+}
+
+.userProfilePage .editAboutMe button{
+  margin-right: 20px;
+  width: 85px;
+}
+
 body.light-theme button.profileButton div {
   color: rgb(121, 117, 117);
 }
