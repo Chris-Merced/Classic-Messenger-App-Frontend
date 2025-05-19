@@ -26,8 +26,6 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
 
-  //SOMETIMES THE SVG FOR THE MESSAGE SEARCH IS 404'D
-  //SOMETIMES ONBLUR FOR MESSAGE SEARCH CAUSES THE ENTIRE SIDEBAR TO DISAPPEAR
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -313,7 +311,7 @@ const UserProfile = () => {
     <div>
       {userContext?.user?.id ? (
         <div className="userProfilePage" role="region" aria-label="User profile page">
-          {profile && (isPublic || friendStatus) ? (
+          {profile && (isPublic || friendStatus || userContext?.user?.id == userIdentifier) ? (
             <div className="userProfilePermission" role="region" aria-label="Profile content">
               <div className="userHeader" role="banner">
                 {userContext?.user?.profile_picture ? (
