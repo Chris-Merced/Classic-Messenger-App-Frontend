@@ -318,7 +318,7 @@ const HeaderComponent = () => {
         )}
       </header>
 
-      {!user && location.pathname !== "/signup" && (
+      {!user && location.pathname !== "/signup" && location.pathname !== "/oauth" && (
         <section
           className="loginHeader"
           role="region"
