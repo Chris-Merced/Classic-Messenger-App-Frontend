@@ -537,8 +537,8 @@ button.friendsButton:hover {
   color: var(--primary-color);
   border-bottom: 1px solid;
   margin-left: auto;
-  margin-right: -15px;
-  transform: translateX(20px)
+  margin-right: auto;
+  transform: translateX(180px)
 }
 
 a.signup {
