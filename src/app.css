@@ -107,6 +107,8 @@ body.light-theme {
 
 button.loginButton {
   all: unset;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
   text-align: center;
   border-radius: 15px;
@@ -116,9 +118,11 @@ button.loginButton {
   transition: all ease 0.7s;
   width: 150px;
   margin-left: auto;
-  margin-right: 20px;
-  margin-bottom: 16px;
+  margin-right: 5px;
+  gap: 5px;
 }
+
+
 
 button.loginButton:hover {
   background-color: rgba(240, 240, 240, 0.527);
@@ -513,6 +517,7 @@ button.friendsButton:hover {
   color: var(--primary-color);
   border-bottom: 1px solid;
   margin-left: auto;
+  margin-right: 10px;
 }
 
 a.signup {

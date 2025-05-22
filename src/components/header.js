@@ -356,6 +356,7 @@ const HeaderComponent = () => {
             <button className="loginButton" type="submit" aria-label="Log In">
               Log In
             </button>
+            <button className="loginButton">Log in with <img src='googleLogo.png'></img></button>
             <Link to="/signup" className="signup">
               Signup
             </Link>
