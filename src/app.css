@@ -123,6 +123,26 @@ button.loginButton {
 }
 
 
+button.OAuthButton {
+   all: unset;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 15px;
+  border: 2px solid;
+  border-color: #808080;
+  background-color: rgba(168, 168, 168, 0.5);
+  transition: all ease 0.7s;
+  width: 150px;
+  margin-left: auto;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-bottom: 10px;
+  transform: translateX(135px);
+  gap: 5px;
+}
+
 
 button.loginButton:hover {
   background-color: rgba(240, 240, 240, 0.527);
@@ -517,7 +537,8 @@ button.friendsButton:hover {
   color: var(--primary-color);
   border-bottom: 1px solid;
   margin-left: auto;
-  margin-right: 10px;
+  margin-right: -15px;
+  transform: translateX(20px)
 }
 
 a.signup {

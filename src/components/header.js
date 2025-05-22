@@ -133,13 +133,13 @@ const HeaderComponent = () => {
     }
   };
 
- return (
+  const initiateOauth = () => {
+    console.log("hellow world");
+  };
+
+  return (
     <>
-      <header
-        className="websiteHeader"
-        role="banner"
-        aria-label="Site header"
-      >
+      <header className="websiteHeader" role="banner" aria-label="Site header">
         <Link to="/" className="homepageLink">
           <h1 className="welcomeHeader">
             <span>Welcome</span> <strong>Home</strong>
@@ -162,17 +162,17 @@ const HeaderComponent = () => {
                     placeholder="Search Users"
                     aria-label="Search Users"
                     value={searchInput}
-                    onChange={e => {
+                    onChange={(e) => {
                       setSearchInput(e.target.value);
                       searchDB(e, e.target.value);
                     }}
-                    onBlur={e => {
+                    onBlur={(e) => {
                       setTimeout(() => {
                         setSearchInput("");
                         searchDB(e, e.target.value);
                       }, 150);
                     }}
-                    onKeyDown={e => {
+                    onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
                         sendUserToProfilePageSearch(e, e.target.value);
@@ -188,12 +188,8 @@ const HeaderComponent = () => {
                   aria-label="Search results"
                 >
                   {users.map((user, index) => (
-                    <li
-                      className="searchOption"
-                      key={index}
-                      role="listitem"
-                    >
-                      <Link to={`/userProfile/${user.id}`}> 
+                    <li className="searchOption" key={index} role="listitem">
+                      <Link to={`/userProfile/${user.id}`}>
                         <button
                           className="userListItem"
                           aria-label={`View profile of ${user.username}`}
@@ -207,11 +203,7 @@ const HeaderComponent = () => {
               )}
             </div>
 
-            <div
-              className="userProfile"
-              role="region"
-              aria-label="User menu"
-            >
+            <div className="userProfile" role="region" aria-label="User menu">
               <div
                 className="profileName"
                 role="status"
@@ -251,7 +243,7 @@ const HeaderComponent = () => {
                   aria-labelledby="dropdown-button"
                 >
                   <div className="profile menu-item">
-                    <Link to={`/userProfile/${user.id}`}> 
+                    <Link to={`/userProfile/${user.id}`}>
                       <button
                         className="profileButton"
                         onClick={isDropDown}
@@ -263,10 +255,7 @@ const HeaderComponent = () => {
                   </div>
 
                   <div className="friends menu-item">
-                    <Link
-                      to={`/userProfile/friends`}
-                      className="friendsLink"
-                    > 
+                    <Link to={`/userProfile/friends`} className="friendsLink">
                       <button
                         className="friendsButton"
                         onClick={isDropDown}
@@ -318,54 +307,57 @@ const HeaderComponent = () => {
         )}
       </header>
 
-      {!user && location.pathname !== "/signup" && location.pathname !== "/oauth" && (
-        <section
-          className="loginHeader"
-          role="region"
-          aria-label="Login form"
-        >
-          <form
-            className="loginForm"
-            onSubmit={loginHandler}
-            role="form"
-            aria-labelledby="login-heading"
+      {!user &&
+        location.pathname !== "/signup" &&
+        location.pathname !== "/oauth" && (
+          <section
+            className="loginHeader"
+            role="region"
+            aria-label="Login form"
           >
-            <h2 id="login-heading" className="sr-only">
-              Log In
-            </h2>
-            <div className="usernameForm">
-              <label htmlFor="username">Username:</label>
-              <input
-                className="usernameInput"
-                name="username"
-                id="username"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="passwordForm">
-              <label htmlFor="password">Password:</label>
-              <input
-                className="passwordInput"
-                name="password"
-                id="password"
-                type="password"
-                onChange={e => setPassword(e.target.value)}
-              />
-            </div>
-            <button className="loginButton" type="submit" aria-label="Log In">
-              Log In
+            <form
+              className="loginForm"
+              onSubmit={loginHandler}
+              role="form"
+              aria-labelledby="login-heading"
+            >
+              <h2 id="login-heading" className="sr-only">
+                Log In
+              </h2>
+              <div className="usernameForm">
+                <label htmlFor="username">Username:</label>
+                <input
+                  className="usernameInput"
+                  name="username"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="passwordForm">
+                <label htmlFor="password">Password:</label>
+                <input
+                  className="passwordInput"
+                  name="password"
+                  id="password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <button className="loginButton" type="submit" aria-label="Log In">
+                Log In
+              </button>
+            </form>
+            <button className="OAuthButton" onClick={initiateOauth}>
+              Log in with <img src="googleLogo.png"></img>
             </button>
-            <button className="loginButton">Log in with <img src='googleLogo.png'></img></button>
             <Link to="/signup" className="signup">
               Signup
             </Link>
-          </form>
-        </section>
-      )}
+          </section>
+        )}
     </>
   );
 };
 
 export default HeaderComponent;
-
