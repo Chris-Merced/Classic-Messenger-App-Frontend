@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
+import {v4 as uuidv4} from 'uuid';
 
 //clean up the visual elements of the sidebar chat search functionality
 //begin to implement user profile editing
@@ -135,11 +136,14 @@ const HeaderComponent = () => {
 
   const initiateOauth = () => {
     const rootURL = "https://accounts.google.com/o/oauth2/v2/auth"
+    const state = uuidv4();
+    document.cookie = `oauth_state=${state}; SameSite=Strict; path=/`;
     const options = {
       client_id: process.env.REACT_APP_OAUTH_CLIENTID,
       redirect_uri: `${process.env.REACT_APP_FRONTEND_URL}/oauth`,
       response_type: 'code',
       scope: 'openid email profile',
+      state,
     }
 
     const params=new URLSearchParams(options)
