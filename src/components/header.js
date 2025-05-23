@@ -134,7 +134,17 @@ const HeaderComponent = () => {
   };
 
   const initiateOauth = () => {
-    console.log("hellow world");
+    const rootURL = "https://accounts.google.com/o/oauth2/v2/auth"
+    const options = {
+      client_id: process.env.REACT_APP_OAUTH_CLIENTID,
+      redirect_uri: `${process.env.REACT_APP_FRONTEND_URL}/oauth`,
+      response_type: 'code',
+      scope: 'openid email profile',
+    }
+
+    const params=new URLSearchParams(options)
+    window.location.href = `${rootURL}?${params.toString()}`;
+
   };
 
   return (

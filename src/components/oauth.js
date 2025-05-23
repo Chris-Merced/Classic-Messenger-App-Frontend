@@ -1,12 +1,15 @@
-import React from "react"
-
+import React from "react";
 
 const OAuth = () => {
-return(
-    <>
-    <h1></h1>
-    </>
-)
-}
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  console.log(code);
 
-export default OAuth
+  return (
+    <>
+      <h1></h1>
+    </>
+  );
+};
+
+export default OAuth;
