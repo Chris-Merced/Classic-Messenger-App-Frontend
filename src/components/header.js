@@ -6,8 +6,6 @@ import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
 import {v4 as uuidv4} from 'uuid';
 
-//clean up the visual elements of the sidebar chat search functionality
-//begin to implement user profile editing
 
 const HeaderComponent = () => {
   const [username, setUsername] = useState("");

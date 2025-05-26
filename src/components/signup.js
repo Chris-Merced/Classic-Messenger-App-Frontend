@@ -90,9 +90,12 @@ const signUpComponent = () => {
     }
   };
 
+  console.log("USER STATUS")
+  console.log(user)
+
   return (
     <>
-      {user ? (
+      {user.user ? (
         <span>You are already logged in</span>
       ) : (
         <div className="signupComponent">
