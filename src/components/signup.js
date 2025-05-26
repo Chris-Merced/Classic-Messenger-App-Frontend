@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 const signUpComponent = () => {
   const [username, setUsername] = useState("");
@@ -14,12 +15,14 @@ const signUpComponent = () => {
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [serverError, setServerError] = useState("");
 
+  const user = useContext(UserContext);
+
   const validatePassword = (password) => {
     if (password === "") {
       return "Please enter in a password";
     }
-    if(password !== passwordConfirm){
-      return "Passwords do not match"
+    if (password !== passwordConfirm) {
+      return "Passwords do not match";
     }
     return "";
   };
@@ -88,96 +91,119 @@ const signUpComponent = () => {
   };
 
   return (
-    <div className="signupComponent">
-      <h1 id="signup-header" className="signupHeader">Sign Up</h1>
-      {signupSuccess ? (
-        <div role="status" aria-live="polite">Welcome to the Family</div>
+    <>
+      {user ? (
+        <span>You are already logged in</span>
       ) : (
-        <form
-          className="signupForm"
-          onSubmit={submitHandler}
-          role="form"
-          aria-labelledby="signup-header"
-        >
-          <div className="field">
-            {serverError && (
-              <div role="alert" aria-live="assertive">{serverError}</div>
-            )}
-            <label htmlFor="username">Username:</label>
-            <input
-              className="signupInput"
-              id="username"
-              name="username"
-              maxLength="30"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              aria-required="true"
-              aria-invalid={!!usernameError}
-              aria-describedby="username-error"
-            />
-            {isSubmitted && usernameError && (
-              <span id="username-error" role="alert">{usernameError}</span>
-            )}
-          </div>
+        <div className="signupComponent">
+          <h1 id="signup-header" className="signupHeader">
+            Sign Up
+          </h1>
+          {signupSuccess ? (
+            <div role="status" aria-live="polite">
+              Welcome to the Family
+            </div>
+          ) : (
+            <form
+              className="signupForm"
+              onSubmit={submitHandler}
+              role="form"
+              aria-labelledby="signup-header"
+            >
+              {serverError && (
+                <div className="signupError" role="alert" aria-live="assertive">
+                  {serverError}
+                </div>
+              )}
 
-          <div className="field">
-            <label htmlFor="password">Password:</label>
-            <input
-              className="signupInput"
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              aria-required="true"
-              aria-invalid={!!passwordError}
-              aria-describedby="password-error"
-            />
-            {isSubmitted && passwordError && (
-              <span id="password-error" role="alert">{passwordError}</span>
-            )}
-          </div>
+              <div className="field">
+                <label htmlFor="username">Username:</label>
+                <input
+                  className="signupInput"
+                  id="username"
+                  name="username"
+                  maxLength="30"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  aria-required="true"
+                  aria-invalid={!!usernameError}
+                  aria-describedby="username-error"
+                />
+                {isSubmitted && usernameError && (
+                  <span id="username-error" role="alert">
+                    {usernameError}
+                  </span>
+                )}
+              </div>
 
-          <div className="field">
-            <label htmlFor="passwordConfirm">Confirm Password:</label>
-            <input
-              className="signupInput"
-              id="passwordConfirm"
-              name="passwordConfirm"
-              type="password"
-              value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
-              aria-required="true"
-            />
-          </div>
+              <div className="field">
+                <label htmlFor="password">Password:</label>
+                <input
+                  className="signupInput"
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  aria-required="true"
+                  aria-invalid={!!passwordError}
+                  aria-describedby="password-error"
+                />
+                {isSubmitted && passwordError && (
+                  <span id="password-error" role="alert">
+                    {passwordError}
+                  </span>
+                )}
+              </div>
 
-          <div className="field">
-            <label htmlFor="email">Email:</label>
-            <input
-              className="signupInput"
-              id="email"
-              name="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-required="true"
-              aria-invalid={!!emailError}
-              aria-describedby="email-error"
-            />
-            {isSubmitted && emailError && (
-              <span id="email-error" role="alert">{emailError}</span>
-            )}
-          </div>
+              <div className="field">
+                <label htmlFor="passwordConfirm">Confirm Password:</label>
+                <input
+                  className="signupInput"
+                  id="passwordConfirm"
+                  name="passwordConfirm"
+                  type="password"
+                  value={passwordConfirm}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  aria-required="true"
+                />
+              </div>
 
-          <button className="assimilateButton" type="submit" aria-label="Submit sign up form">
-            Assimilate
-          </button>
-        </form>
+              <div className="field">
+                <label htmlFor="email">Email:</label>
+                <input
+                  className="signupInput"
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  aria-required="true"
+                  aria-invalid={!!emailError}
+                  aria-describedby="email-error"
+                />
+                {isSubmitted && emailError && (
+                  <span id="email-error" role="alert">
+                    {emailError}
+                  </span>
+                )}
+              </div>
+
+              <button
+                className="assimilateButton"
+                type="submit"
+                aria-label="Submit sign up form"
+              >
+                Assimilate
+              </button>
+            </form>
+          )}
+          <Link to="/" className="signup" aria-label="Return to home page">
+            Come Back Home
+          </Link>
+        </div>
       )}
-      <Link to="/" className="signup" aria-label="Return to home page">
-        Come Back Home
-      </Link>
-    </div>
+    </>
   );
 };
 

@@ -1167,6 +1167,11 @@ body.light-theme .aboutMePopup {
   flex-direction: column;
 }
 
+.signupError{
+  color: rgb(179, 74, 74);
+  
+}
+
 .signupForm {
   display: flex;
   flex-direction: column;
