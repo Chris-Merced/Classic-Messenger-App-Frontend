@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const hasInitializedRef = useRef(false)
+  const hasInitializedRef = useRef(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -46,8 +45,15 @@ export const UserProvider = ({ children }) => {
     });
 
     const newData = await response.json();
+
     setUser(newData);
+
     return response;
+  };
+
+  const oauthLogin = async (data) => {
+    setUser(data);
+    return data;
   };
 
   const logout = () => {
@@ -55,7 +61,17 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ hasInitializedRef, user, loading, error, logout, login }}>
+    <UserContext.Provider
+      value={{
+        hasInitializedRef,
+        user,
+        loading,
+        error,
+        logout,
+        login,
+        oauthLogin,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

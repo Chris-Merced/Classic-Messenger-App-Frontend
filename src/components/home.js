@@ -30,8 +30,10 @@ const HomeChatComponent = () => {
   //WHEN VALIDATING USER ALL VALIDATIONS ARE TOLOWER() SO ENTRY OF USERNAME IS NOT CASE SENSITIVE
 
   useEffect(() => {
-    setUser(userData);
-  }, [userData]);
+    if(context?.user?.id){
+      setUser(userData);
+    }
+  }, [context?.user]);
 
   useEffect(() => {
     setChat({ ...currentChat });

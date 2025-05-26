@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import { UserContext } from '../context/userContext'
 
 const OAuth = () => {
   const params = new URLSearchParams(window.location.search);
-
+  const user = useContext(UserContext)
   useEffect(() => {
     const acquireCode = async () => {
       const code = { code: params.get("code") };
@@ -27,9 +28,16 @@ const OAuth = () => {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(code),
+            credentials: 'include'
           }
         );
         document.cookie = "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+
+        const data = await response.json()
+        console.log(data)
+        const newrseposne = await user.oauthLogin(data)
+        window.location.href = '/'        
       }
     };
     acquireCode();

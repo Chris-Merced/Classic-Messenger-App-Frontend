@@ -24,7 +24,7 @@ const HeaderComponent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUser(userData);
+    if(userData){setUser(userData);}
 
     const getUserFriendRequests = async () => {
       const response = await fetch(
@@ -101,7 +101,7 @@ const HeaderComponent = () => {
 
     setPassword("");
     setUsername("");
-    window.location.reload();
+    //window.location.reload();
   };
 
   const searchDB = async (e, username) => {
