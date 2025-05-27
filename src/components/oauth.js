@@ -6,7 +6,9 @@ const OAuth = () => {
   const user = useContext(UserContext);
   const [isSignup, setIsSignup] = useState(false);
   const [signupEmail, setSignupEmail] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState(null);
+
   useEffect(() => {
     const acquireCode = async () => {
       const code = { code: params.get("code") };
@@ -46,7 +48,7 @@ const OAuth = () => {
           setSignupEmail(data.email);
         } else {
           await user.oauthLogin(data);
-          //window.location.href = "/";
+          window.location.href = "/";
         }
       }
     };
@@ -55,12 +57,26 @@ const OAuth = () => {
 
   const oauthSignup = async (e) => {
     e.preventDefault();
-    
-    console.log("weow");
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/oauth/signup`,{
-      method: 'POST',
-      credentials: 'include'
-    })
+    const regex = /^[a-zA-Z0-9]+$/;
+    console.log("USERNAME");
+
+    if (username === "") {
+      setUsernameError("Please enter in a username");
+    } else if (!regex.test(username)) {
+      setUsernameError(
+        "Please enter in a valid username (One word, can contain numbers)"
+      );
+    } else {
+      console.log("weow");
+      setUsernameError(null)
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/oauth/signup`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+    }
   };
 
   return (
@@ -69,8 +85,16 @@ const OAuth = () => {
         <form onSubmit={oauthSignup}>
           <h1>Sign Up</h1>
           <div className="oauthEmailSignup">Email: {signupEmail}</div>
+          {usernameError && (
+            <div className="oauthSignupError">{usernameError}</div>
+          )}
           <label htmlFor="username">Username: </label>
-          <input id="username" placeholder="Enter Username" value={`${username ? username : ''}`} onChange={(e)=>setUsername(e.target.value)} />
+          <input
+            id="username"
+            placeholder="Enter Username"
+            value={`${username ? username : ""}`}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <button type="submit">Signup</button>
         </form>
       )}

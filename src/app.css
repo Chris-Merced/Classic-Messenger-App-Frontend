@@ -72,7 +72,6 @@ body.light-theme {
   transition: background-color 0.6s ease;
 }
 
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -80,7 +79,7 @@ body.light-theme {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
 }
@@ -122,9 +121,8 @@ button.loginButton {
   gap: 5px;
 }
 
-
 button.OAuthButton {
-   all: unset;
+  all: unset;
   display: flex;
   justify-content: center;
   cursor: pointer;
@@ -143,12 +141,11 @@ button.OAuthButton {
   gap: 5px;
 }
 
-
 button.loginButton:hover {
   background-color: rgba(240, 240, 240, 0.527);
 }
 
-body.light-theme button.loginButton:hover{
+body.light-theme button.loginButton:hover {
   background-color: rgba(131, 131, 131, 0.5);
 }
 
@@ -165,7 +162,7 @@ body.light-theme button.loginButton:hover{
   animation: slideIn 0.2s ease-in-out forwards;
 }
 
-.messageNotification{
+.messageNotification {
   width: 28px;
   height: 14px;
   background-color: rgb(126, 0, 0);
@@ -302,33 +299,33 @@ body.light-theme .welcomeHeader {
 button.profileButton div {
 }
 
-.editProfilePicture{
+.editProfilePicture {
   display: flex;
   flex-direction: column;
 }
 
-.userProfilePage button.changeProfilePicture{
+.userProfilePage button.changeProfilePicture {
   width: 50%;
 }
 
-.aboutMeSection{
+.aboutMeSection {
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-.aboutMeHeader{
+.aboutMeHeader {
   font-weight: bolder;
   border-bottom: 1px solid;
   width: 30%;
 }
 
-.editAboutMe{
-  display:flex;
+.editAboutMe {
+  display: flex;
   flex-direction: column;
   padding-right: 250px;
 }
 
-.userProfilePage .editAboutMe button{
+.userProfilePage .editAboutMe button {
   margin-right: 20px;
   width: 85px;
 }
@@ -347,15 +344,15 @@ body.light-theme .DropDown button {
   color: rgb(75, 75, 75);
 }
 
-.usernameForm{
-  display:flex;
+.usernameForm {
+  display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.passwordForm{
+.passwordForm {
   display: flex;
-  gap:10px;
+  gap: 10px;
 }
 
 .DropDown button {
@@ -538,7 +535,7 @@ button.friendsButton:hover {
   border-bottom: 1px solid;
   margin-left: auto;
   margin-right: auto;
-  transform: translateX(180px)
+  transform: translateX(180px);
 }
 
 a.signup {
@@ -556,7 +553,7 @@ a.signup {
   margin-left: 4vw;
   box-shadow: 4px 4px 10px rgb(10, 10, 10);
   transition: width 1s ease;
-  gap:10px;
+  gap: 10px;
 }
 
 .chatList.show {
@@ -950,36 +947,33 @@ body.light-theme .online {
 .sendMessage {
 }
 
-
-
 .sideBar {
   margin-left: -75px;
   transform: translateY(20px);
   transition: width 0.3s ease;
 }
 
-
-.sideBarSearch{
-  display:flex;
+.sideBarSearch {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   transition: all 1s ease;
   background-color: grey;
-  border:none;
+  border: none;
   width: 20px;
   height: 33px;
   border-radius: 10px;
-  color:white
+  color: white;
 }
 
-body.light-theme .sideBarSearch{
+body.light-theme .sideBarSearch {
   color: black;
   background-color: #9e9e9e;
 }
 
-.sideBarSearch:focus{
-  width:700%;
+.sideBarSearch:focus {
+  width: 700%;
   padding-left: 40px;
   border: none;
   outline: none;
@@ -987,25 +981,25 @@ body.light-theme .sideBarSearch{
   border-color: grey;
 }
 
-button.sideBarSearchButton{
+button.sideBarSearchButton {
   cursor: pointer;
 }
 
-.sideBarSearchIcon{
-  width:auto;
-  height:23px;
+.sideBarSearchIcon {
+  width: auto;
+  height: 23px;
   position: absolute;
   background-color: gray;
   border-radius: 10px;
-  padding:5px;
+  padding: 5px;
   pointer-events: none;
 }
 
-body.light-theme .sideBarSearchIcon{
-    background-color: #9e9e9e;
+body.light-theme .sideBarSearchIcon {
+  background-color: #9e9e9e;
 }
 
-.sideBarProfilePicture{
+.sideBarProfilePicture {
   width: auto;
   height: 35px;
   border-radius: 10px;
@@ -1103,27 +1097,27 @@ body.light-theme .userProfilePage .block {
   display: flex;
 }
 
-.userHeader{
+.userHeader {
   display: flex;
   gap: 10px;
   align-items: center;
   position: relative;
 }
 
-.profileImage{
+.profileImage {
   width: auto;
   height: 50px;
   border-radius: 10px;
 }
 
-button.editProfilePicture{
+button.editProfilePicture {
   position: absolute;
-  transform: translateX(-100px)
+  transform: translateX(-100px);
 }
 
 .aboutMePopup {
   position: absolute;
-  color:#f0f0f0;
+  color: #f0f0f0;
   background-color: rgb(131, 131, 131);
   padding: 8px 12px;
   border: 1px solid black;
@@ -1136,13 +1130,13 @@ button.editProfilePicture{
 }
 
 body.light-theme .aboutMePopup {
-  color:rgb(56, 56, 56);
+  color: rgb(56, 56, 56);
   background-color: rgb(177, 177, 177);
 }
 
-.profilePicturePopup{
-   position: absolute;
-  color:#f0f0f0;
+.profilePicturePopup {
+  position: absolute;
+  color: #f0f0f0;
   background-color: rgb(131, 131, 131);
   padding: 8px 12px;
   border: 1px solid black;
@@ -1167,9 +1161,12 @@ body.light-theme .aboutMePopup {
   flex-direction: column;
 }
 
-.signupError{
+.signupError {
   color: rgb(179, 74, 74);
-  
+}
+
+.oauthSignupError {
+  color: rgb(179, 74, 74);
 }
 
 .signupForm {
@@ -1321,7 +1318,7 @@ body.light-theme .signupHeader {
   }
   10% {
     opacity: 1;
-    transform: translate(50%,-150%) scale(1);
+    transform: translate(50%, -150%) scale(1);
   }
   90% {
     opacity: 1;
@@ -1340,7 +1337,7 @@ body.light-theme .signupHeader {
   }
   10% {
     opacity: 1;
-    transform: translate(-800%,-160%) scale(1);
+    transform: translate(-800%, -160%) scale(1);
   }
   90% {
     opacity: 1;
