@@ -53,7 +53,6 @@ export const UserProvider = ({ children }) => {
 
   const oauthLogin = async (data) => {
     setUser(data);
-    return data;
   };
 
   const logout = () => {

@@ -1,9 +1,12 @@
-import React, { useEffect, useContext } from "react";
-import { UserContext } from '../context/userContext'
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 const OAuth = () => {
   const params = new URLSearchParams(window.location.search);
-  const user = useContext(UserContext)
+  const user = useContext(UserContext);
+  const [isSignup, setIsSignup] = useState(false);
+  const [signupEmail, setSignupEmail] = useState(null);
+  const [username, setUsername] = useState(null);
   useEffect(() => {
     const acquireCode = async () => {
       const code = { code: params.get("code") };
@@ -19,8 +22,9 @@ const OAuth = () => {
 
       if (state !== cookies.oauth_state) {
         console.error("Mismatching states, aborting OAuth");
-        document.cookie = "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        window.location.href=`${process.env.REACT_APP_FRONTEND_URL}`
+        document.cookie =
+          "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = `${process.env.REACT_APP_FRONTEND_URL}`;
       } else {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/oauth`,
@@ -28,24 +32,48 @@ const OAuth = () => {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(code),
-            credentials: 'include'
+            credentials: "include",
           }
         );
-        document.cookie = "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
+        document.cookie =
+          "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-        const data = await response.json()
-        console.log(data)
-        const newrseposne = await user.oauthLogin(data)
-        window.location.href = '/'        
+        const data = await response.json();
+        if (data.status === "signup incomplete") {
+          console.log("No bueno");
+          setIsSignup(true);
+          setSignupEmail(data.email);
+        } else {
+          await user.oauthLogin(data);
+          //window.location.href = "/";
+        }
       }
     };
     acquireCode();
   }, []);
 
+  const oauthSignup = async (e) => {
+    e.preventDefault();
+    
+    console.log("weow");
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/oauth/signup`,{
+      method: 'POST',
+      credentials: 'include'
+    })
+  };
+
   return (
     <>
-      <h1></h1>
+      {isSignup && (
+        <form onSubmit={oauthSignup}>
+          <h1>Sign Up</h1>
+          <div className="oauthEmailSignup">Email: {signupEmail}</div>
+          <label htmlFor="username">Username: </label>
+          <input id="username" placeholder="Enter Username" value={`${username ? username : ''}`} onChange={(e)=>setUsername(e.target.value)} />
+          <button type="submit">Signup</button>
+        </form>
+      )}
     </>
   );
 };
