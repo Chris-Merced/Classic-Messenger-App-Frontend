@@ -69,10 +69,21 @@ const OAuth = () => {
     } else {
       console.log("weow");
       setUsernameError(null)
+      console.log(signupEmail)
+      console.log(username)
+      const data = {
+        email: signupEmail, username
+      }
+
+      const testData = JSON.stringify(data)
+      console.log(testData)
+
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/oauth/signup`,
         {
           method: "POST",
+          headers: {"Content-Type" : "application/json"},
+          body: JSON.stringify(data),
           credentials: "include",
         }
       );
