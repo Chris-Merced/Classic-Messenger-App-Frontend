@@ -8,7 +8,7 @@ const OAuth = () => {
   const [signupEmail, setSignupEmail] = useState(null);
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState(null);
-
+  const [databaseError, setDatabaseError] = useState(null);
   useEffect(() => {
     const acquireCode = async () => {
       const code = { code: params.get("code") };
@@ -43,10 +43,11 @@ const OAuth = () => {
 
         const data = await response.json();
         if (data.status === "signup incomplete") {
-          console.log("No bueno");
           setIsSignup(true);
           setSignupEmail(data.email);
         } else {
+          console.log("CHECKING DATA STRCTURE")
+          console.log(data)
           await user.oauthLogin(data);
           window.location.href = "/";
         }
@@ -83,6 +84,20 @@ const OAuth = () => {
           credentials: "include",
         }
       );
+
+      const userInfo = await res.json()
+      
+      if(userInfo.error){
+        setDatabaseError(userInfo.error)
+      }else if(userInfo.message === "User Successfully Added"){
+        setDatabaseError(null)
+        const data = {
+          username: userInfo.username,
+          id: userInfo.id
+        }
+        await user.oauthLogin(data)
+        window.location.href = '/'
+      }
     }
   };
 
@@ -91,6 +106,7 @@ const OAuth = () => {
       {isSignup && (
         <form onSubmit={oauthSignup}>
           <h1>Sign Up</h1>
+          {databaseError && <div className="oauthSignupError">{databaseError}</div>}
           <div className="oauthEmailSignup">Email: {signupEmail}</div>
           {usernameError && (
             <div className="oauthSignupError">{usernameError}</div>
