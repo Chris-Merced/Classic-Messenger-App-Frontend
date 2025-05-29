@@ -412,7 +412,7 @@ const UserProfile = () => {
                 <div className="aboutMeHeader">About Me:</div>
                 {!editPage ? (
                   profile.about_me ? (
-                    <div>{profile.about_me}</div>
+                    <div className="aboutMeData">{profile.about_me}</div>
                   ) : (
                     <div role="note">Oop! This user hasn't set their About Me section! How mysterious!</div>
                   )
@@ -420,12 +420,12 @@ const UserProfile = () => {
                   <>
                     <form className="editAboutMe" onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
                       <textarea
-                        className="aboutMeTextArea"
+                        className="aboutMeInput"
                         defaultValue={profile.about_me ? profile.about_me : ""}
                         aria-label="About me text"
                       ></textarea>
                       <button className="aboutMeSubmit" type="submit" aria-label="Submit About Me">
-                        submitted
+                        Save About Me
                       </button>
                     </form>
                     {aboutMeEdit && cursorPosition && (
@@ -494,7 +494,7 @@ const UserProfile = () => {
             </div>
           )}
           {userContext?.user?.id == userIdentifier && (
-            <div>
+            <div className="userProfileMod">
               <div className="profileStatus" role="region" aria-label="Profile visibility toggle">
                 {isPublic ? (
                   <button

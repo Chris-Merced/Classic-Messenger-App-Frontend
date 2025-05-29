@@ -282,6 +282,81 @@ body.light-theme .welcomeHeader {
   display: flex;
 }
 
+textarea.aboutMeInput {
+  all: unset;
+  width: 100%;
+  min-height: 120px;
+  height: 250px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  background-color: rgba(179, 177, 177, 0.5);
+  border: 2px solid var(--border-color-dark);
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: inherit;
+  transition: background-color 0.6s ease, border-color 0.6s ease;
+  resize: vertical;
+  box-sizing: border-box;
+  resize: none;
+}
+
+textarea.aboutMeInput:focus {
+  background-color: rgba(131, 131, 131, 0.9);
+  outline: none;
+}
+
+body.light-theme textarea.aboutMeInput {
+  background-color: rgba(146, 146, 146, 0.5);
+  border-color: var(--border-color-light);
+}
+
+body.light-theme textarea.aboutMeInput:focus {
+  background-color: rgba(200, 200, 200, 0.9);
+}
+
+textarea.aboutMeInput::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea.aboutMeInput::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea.aboutMeInput::-webkit-resizer {
+  display: none;
+  size: 1px;
+  opacity: 0;
+}
+
+textarea.aboutMeInput::-webkit-scrollbar-thumb {
+  background-color: rgba(66, 66, 66, 0.4);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+
+}
+
+textarea.aboutMeInput:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(36, 35, 35, 0.6);
+}
+
+form.editAboutMe button.aboutMeSubmit {
+  width: 40%;
+}
+
+
+
+.userProfileMod {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userProfileMod button.editProfile{
+  width:100px;
+}
+
 .DropDown {
   border: 2px solid;
   border-color: var(--border-color-dark);
@@ -313,16 +388,22 @@ button.profileButton div {
   margin-bottom: 30px;
 }
 
+
 .aboutMeHeader {
   font-weight: bolder;
   border-bottom: 1px solid;
   width: 30%;
 }
 
+.aboutMeData{
+  white-space: pre-wrap;
+}
+
 .editAboutMe {
   display: flex;
   flex-direction: column;
-  padding-right: 250px;
+  padding-right: 100px;
+  margin-top: 10px;
 }
 
 .userProfilePage .editAboutMe button {
