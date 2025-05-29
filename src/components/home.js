@@ -22,7 +22,6 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
-  //SEE HOW WE CAN MAKE IT TO WHERE WHITESPACE IS CAPTURED (I.E. HITTING ENTER TO CREATE PARAGRAPHS)
 
   useEffect(() => {
     if(context?.user?.id){

@@ -25,8 +25,6 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
     const getUserProfile = async () => {
       try {
@@ -157,7 +155,6 @@ const UserProfile = () => {
             conversationID: data.conversation_id,
             reciever: [profile.username],
           });
-          
 
           navigate("/");
         }
@@ -166,7 +163,6 @@ const UserProfile = () => {
       }
     }
   };
-
 
   const sendFriendRequest = async () => {
     const data = {
@@ -282,7 +278,13 @@ const UserProfile = () => {
   const changeAboutMe = async (e) => {
     e.preventDefault();
 
-    let aboutMe = { aboutMe: e.target[0].value, userID: userContext.user.id };
+    let aboutMe = {
+      aboutMe: e.target[0].value
+        .trim()
+        .replace(/ {3,}/g, "  ")
+        .replace(/\n{3,}/g, "\n\n"),
+      userID: userContext.user.id,
+    };
 
     setCursorPosition({ x: e.clientX, y: e.clientY });
 
@@ -310,9 +312,20 @@ const UserProfile = () => {
   return (
     <div>
       {userContext?.user?.id ? (
-        <div className="userProfilePage" role="region" aria-label="User profile page">
-          {profile && (isPublic || friendStatus || userContext?.user?.id == userIdentifier) ? (
-            <div className="userProfilePermission" role="region" aria-label="Profile content">
+        <div
+          className="userProfilePage"
+          role="region"
+          aria-label="User profile page"
+        >
+          {profile &&
+          (isPublic ||
+            friendStatus ||
+            userContext?.user?.id == userIdentifier) ? (
+            <div
+              className="userProfilePermission"
+              role="region"
+              aria-label="Profile content"
+            >
               <div className="userHeader" role="banner">
                 {userContext?.user?.profile_picture ? (
                   <img
@@ -328,7 +341,11 @@ const UserProfile = () => {
                   />
                 )}
                 {userContext?.user?.id == userIdentifier && editPage && (
-                  <label className="editProfilePicture" htmlFor="profile-picture-upload" aria-label="Upload your photo">
+                  <label
+                    className="editProfilePicture"
+                    htmlFor="profile-picture-upload"
+                    aria-label="Upload your photo"
+                  >
                     Upload Your Photo
                     <input
                       id="profile-picture-upload"
@@ -340,7 +357,9 @@ const UserProfile = () => {
                     <>
                       <button
                         className="changeProfilePicture"
-                        onClick={(e) => handleProfilePicture(e.clientX, e.clientY)}
+                        onClick={(e) =>
+                          handleProfilePicture(e.clientX, e.clientY)
+                        }
                         aria-label="Save profile picture"
                       >
                         Change Picture
@@ -395,7 +414,9 @@ const UserProfile = () => {
                 {friendStatus === false &&
                   userContext?.user?.id != userIdentifier &&
                   (requestSent ? (
-                    <button aria-label="Friend request sent">Request Sent!</button>
+                    <button aria-label="Friend request sent">
+                      Request Sent!
+                    </button>
                   ) : (
                     <button
                       onClick={sendFriendRequest}
@@ -405,26 +426,45 @@ const UserProfile = () => {
                     </button>
                   ))}
               </div>
-              <div role="contentinfo" aria-label={`Profile created at ${profile.created_at}`}>
+              <div
+                role="contentinfo"
+                aria-label={`Profile created at ${profile.created_at}`}
+              >
                 Created at {profile.created_at}
               </div>
-              <div className="aboutMeSection" role="region" aria-label="About Me section">
+              <div
+                className="aboutMeSection"
+                role="region"
+                aria-label="About Me section"
+              >
                 <div className="aboutMeHeader">About Me:</div>
                 {!editPage ? (
                   profile.about_me ? (
                     <div className="aboutMeData">{profile.about_me}</div>
                   ) : (
-                    <div role="note">Oop! This user hasn't set their About Me section! How mysterious!</div>
+                    <div role="note">
+                      Oop! This user hasn't set their About Me section! How
+                      mysterious!
+                    </div>
                   )
                 ) : (
                   <>
-                    <form className="editAboutMe" onSubmit={changeAboutMe} role="form" aria-label="Edit About Me form">
+                    <form
+                      className="editAboutMe"
+                      onSubmit={changeAboutMe}
+                      role="form"
+                      aria-label="Edit About Me form"
+                    >
                       <textarea
                         className="aboutMeInput"
                         defaultValue={profile.about_me ? profile.about_me : ""}
                         aria-label="About me text"
                       ></textarea>
-                      <button className="aboutMeSubmit" type="submit" aria-label="Submit About Me">
+                      <button
+                        className="aboutMeSubmit"
+                        type="submit"
+                        aria-label="Submit About Me"
+                      >
                         Save About Me
                       </button>
                     </form>
@@ -446,7 +486,11 @@ const UserProfile = () => {
               </div>
             </div>
           ) : (
-            <div className="userProfileNoPermission" role="region" aria-label="No profile permission">
+            <div
+              className="userProfileNoPermission"
+              role="region"
+              aria-label="No profile permission"
+            >
               <div className="userHeader" role="banner">
                 <img
                   className="profileImage"
@@ -480,22 +524,30 @@ const UserProfile = () => {
                     </button>
                   )}
               </div>
-              <div role="contentinfo" aria-label={`Profile created at ${profile.created_at}`}>
+              <div
+                role="contentinfo"
+                aria-label={`Profile created at ${profile.created_at}`}
+              >
                 Created at {profile.created_at}
               </div>
               <div role="region" aria-label="About Me section">
                 <div>About Me:</div>
-                  profile.about_me ? (
-                    <div>{profile.about_me}</div>
-                  ) : (
-                    <div role="note">Oop! This user hasn't set their About Me section! How mysterious!</div>
-                  )
+                profile.about_me ? (<div>{profile.about_me}</div>) : (
+                <div role="note">
+                  Oop! This user hasn't set their About Me section! How
+                  mysterious!
+                </div>
+                )
               </div>
             </div>
           )}
           {userContext?.user?.id == userIdentifier && (
             <div className="userProfileMod">
-              <div className="profileStatus" role="region" aria-label="Profile visibility toggle">
+              <div
+                className="profileStatus"
+                role="region"
+                aria-label="Profile visibility toggle"
+              >
                 {isPublic ? (
                   <button
                     onClick={changeProfileStatus}
