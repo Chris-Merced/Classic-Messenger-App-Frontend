@@ -361,7 +361,7 @@ const HeaderComponent = () => {
               </button>
             </form>
             <button className="OAuthButton" onClick={initiateOauth}>
-              Log in with <img src="googleLogo.png"></img>
+              Log in Or Sign Up With <img src="googleLogo.png"></img>
             </button>
             <Link to="/signup" className="signup">
               Signup
