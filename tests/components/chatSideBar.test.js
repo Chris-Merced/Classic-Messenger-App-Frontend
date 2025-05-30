@@ -1,20 +1,26 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import SideBarComponent from '../../src/components/chatSidebar';
-import { UserChatsContext } from '../../src/context/chatListContext';
-import { UserContext } from '../../src/context/userContext';
+import React from "react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
+import "@testing-library/jest-dom";
+import SideBarComponent from "../../src/components/chatSidebar";
+import { UserChatsContext } from "../../src/context/chatListContext";
+import { UserContext } from "../../src/context/userContext";
 
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
+jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
-  useLocation: () => ({ pathname: '/chats' }),
+  useLocation: () => ({ pathname: "/chats" }),
 }));
 
 const originalConsoleError = console.error;
 beforeAll(() => {
   console.error = (msg, ...args) => {
-    if (typeof msg === 'string' && msg.includes('not wrapped in act')) return;
+    if (typeof msg === "string" && msg.includes("not wrapped in act")) return;
     originalConsoleError(msg, ...args);
   };
 });
@@ -22,7 +28,7 @@ afterAll(() => {
   console.error = originalConsoleError;
 });
 
-describe('SideBarComponent', () => {
+describe("SideBarComponent", () => {
   const mockChangeChat = jest.fn();
   const mockChangeChatList = jest.fn();
   const mockChangeLocation = jest.fn();
@@ -30,24 +36,24 @@ describe('SideBarComponent', () => {
   const chatsData = {
     userChats: [
       {
-        name: 'Chat Alpha',
+        name: "Chat Alpha",
         id: 1,
-        conversation_id: 'alpha123',
-        participants: ['alice', 'bob'],
+        conversation_id: "alpha123",
+        participants: ["alice", "bob"],
         is_read: false,
       },
       {
-        name: 'Chat Beta',
+        name: "Chat Beta",
         id: 2,
-        conversation_id: 'beta456',
-        participants: ['alice', 'charlie'],
+        conversation_id: "beta456",
+        participants: ["alice", "charlie"],
         is_read: true,
       },
     ],
   };
 
   const userCtx = {
-    user: { id: 1, name: 'Alice' },
+    user: { id: 1, name: "Alice" },
     hasInitializedRef: { current: false },
   };
 
@@ -81,54 +87,58 @@ describe('SideBarComponent', () => {
     );
   };
 
-  it('renders all chats from context', async () => {
+  it("renders all chats from context", async () => {
     await act(async () => {
       renderSidebar();
     });
 
-    expect(await screen.findByText('Chat Alpha')).toBeInTheDocument();
-    expect(screen.getByText('Chat Beta')).toBeInTheDocument();
+    expect(await screen.findByText("Chat Alpha")).toBeInTheDocument();
+    expect(screen.getByText("Chat Beta")).toBeInTheDocument();
   });
 
-  it('shows an unread-indicator only for unread chats', async () => {
+  it("shows an unread-indicator only for unread chats", async () => {
     await act(async () => {
       renderSidebar();
     });
-    await screen.findByText('Chat Alpha');
+    await screen.findByText("Chat Alpha");
 
-    const dots = screen.getAllByLabelText('Unread messages');
+    const dots = screen.getAllByLabelText("Unread messages");
     expect(dots).toHaveLength(1);
   });
 
-  it('does not filter out named chats when typing in search (current behavior)', async () => {
+  it("does not filter out named chats when typing in search (current behavior)", async () => {
     await act(async () => {
       renderSidebar();
     });
-    await screen.findByText('Chat Alpha');
+    await screen.findByText("Chat Alpha");
 
-    const searchInput = screen.getByRole('searchbox', { name: /search chats/i });
-    fireEvent.change(searchInput, { target: { value: 'Alpha' } });
+    const searchInput = screen.getByRole("searchbox", {
+      name: /search chats/i,
+    });
+    fireEvent.change(searchInput, { target: { value: "Alpha" } });
 
-    expect(screen.getByText('Chat Alpha')).toBeInTheDocument();
-    expect(screen.getByText('Chat Beta')).toBeInTheDocument();
+    expect(screen.getByText("Chat Alpha")).toBeInTheDocument();
+    expect(screen.getByText("Chat Beta")).toBeInTheDocument();
   });
 
-  it('calls changeChat and marks as read when a chat is clicked', async () => {
+  it("calls changeChat and marks as read when a chat is clicked", async () => {
     await act(async () => {
       renderSidebar();
     });
-    const alphaBtn = await screen.findByText('Chat Alpha');
+    const alphaBtn = await screen.findByText("Chat Alpha");
     fireEvent.click(alphaBtn);
 
     expect(mockChangeChat).toHaveBeenCalledWith({
-      conversationID: 'alpha123',
-      reciever: ['alice', 'bob'],
-      name: 'Chat Alpha',
+      conversationID: "alpha123",
+      reciever: ["alice", "bob"],
+      name: "Chat Alpha",
     });
 
     expect(mockChangeChatList).toHaveBeenCalled();
     const updated = mockChangeChatList.mock.calls[0][0];
-    const clicked = updated.userChats.find(c => c.conversation_id === 'alpha123');
+    const clicked = updated.userChats.find(
+      (c) => c.conversation_id === "alpha123"
+    );
     expect(clicked.is_read).toBe(true);
   });
 });
