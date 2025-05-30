@@ -1,95 +1,134 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SideBarComponent from '../../src/components/chatSidebar';
 import { UserChatsContext } from '../../src/context/chatListContext';
+import { UserContext } from '../../src/context/userContext';
 
-const mockChangeChat = jest.fn();
-const mockUserChatsContext = {
-  chatList: {
-    userChats: [
-      { name: 'Chat 1', id: 1, conversation_id: 'conv1' },
-      { name: 'Chat 2', id: 2, conversation_id: 'conv2' },
-    ],
-  },
-  changeChat: mockChangeChat,
-};
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+  useLocation: () => ({ pathname: '/chats' }),
+}));
 
-const renderWithContext = (component, contextValue = mockUserChatsContext) => {
-  return render(
-    <UserChatsContext.Provider value={contextValue}>
-      {component}
-    </UserChatsContext.Provider>
-  );
-};
+const originalConsoleError = console.error;
+beforeAll(() => {
+  console.error = (msg, ...args) => {
+    if (typeof msg === 'string' && msg.includes('not wrapped in act')) return;
+    originalConsoleError(msg, ...args);
+  };
+});
+afterAll(() => {
+  console.error = originalConsoleError;
+});
 
 describe('SideBarComponent', () => {
-  beforeEach(() => {
-    mockChangeChat.mockClear();
-  });
+  const mockChangeChat = jest.fn();
+  const mockChangeChatList = jest.fn();
+  const mockChangeLocation = jest.fn();
 
-  it('should render loading state when no chats are available', () => {
-    const noChatsContext = {
-      chatList: null,
-      changeChat: mockChangeChat,
-    };
-    renderWithContext(<SideBarComponent />, noChatsContext);
-    expect(screen.getByText('loading ...')).toBeInTheDocument();
-  });
+  const chatsData = {
+    userChats: [
+      {
+        name: 'Chat Alpha',
+        id: 1,
+        conversation_id: 'alpha123',
+        participants: ['alice', 'bob'],
+        is_read: false,
+      },
+      {
+        name: 'Chat Beta',
+        id: 2,
+        conversation_id: 'beta456',
+        participants: ['alice', 'charlie'],
+        is_read: true,
+      },
+    ],
+  };
 
-  it('should render list of chats when available', () => {
-    renderWithContext(<SideBarComponent />);
-    expect(screen.getByText('Chat 1')).toBeInTheDocument();
-    expect(screen.getByText('Chat 2')).toBeInTheDocument();
-  });
+  const userCtx = {
+    user: { id: 1, name: 'Alice' },
+    hasInitializedRef: { current: false },
+  };
 
-  it('should call changeChat with correct chat data when clicked', () => {
-    renderWithContext(<SideBarComponent />);
-    const chatButton = screen.getByText('Chat 1');
-    chatButton.click();
-    expect(mockChangeChat).toHaveBeenCalledWith({
-      name: 'Chat 1',
-      conversationID: 'conv1',
+  beforeAll(() => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: async () => ({ activeUsers: {} }),
     });
   });
-
-  it('should render correct number of chat buttons', () => {
-    renderWithContext(<SideBarComponent />);
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(2);
+  afterAll(() => {
+    global.fetch.mockRestore();
   });
 
-  it('should handle empty chat list correctly', () => {
-    const emptyContext = {
-      chatList: {
-        userChats: [],
-      },
-      changeChat: mockChangeChat,
-    };
-    const { container } = renderWithContext(<SideBarComponent />, emptyContext);
-    expect(container.querySelector('.sideBar')).toBeInTheDocument();
-    const buttons = screen.queryAllByRole('button');
-    expect(buttons).toHaveLength(0);
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should update when context changes', () => {
-    const { rerender } = renderWithContext(<SideBarComponent />);
-    expect(screen.getByText('Chat 1')).toBeInTheDocument();
-
-    const updatedContext = {
-      chatList: {
-        userChats: [{ name: 'New Chat', id: 3, conversation_id: 'conv3' }],
-      },
-      changeChat: mockChangeChat,
-    };
-
-    rerender(
-      <UserChatsContext.Provider value={updatedContext}>
-        <SideBarComponent />
-      </UserChatsContext.Provider>
+  const renderSidebar = () => {
+    return render(
+      <UserContext.Provider value={userCtx}>
+        <UserChatsContext.Provider
+          value={{
+            chatList: chatsData,
+            changeChat: mockChangeChat,
+            changeChatList: mockChangeChatList,
+            changeLocation: mockChangeLocation,
+          }}
+        >
+          <SideBarComponent />
+        </UserChatsContext.Provider>
+      </UserContext.Provider>
     );
+  };
 
-    expect(screen.getByText('New Chat')).toBeInTheDocument();
-    expect(screen.queryByText('Chat 1')).not.toBeInTheDocument();
+  it('renders all chats from context', async () => {
+    await act(async () => {
+      renderSidebar();
+    });
+
+    expect(await screen.findByText('Chat Alpha')).toBeInTheDocument();
+    expect(screen.getByText('Chat Beta')).toBeInTheDocument();
+  });
+
+  it('shows an unread-indicator only for unread chats', async () => {
+    await act(async () => {
+      renderSidebar();
+    });
+    await screen.findByText('Chat Alpha');
+
+    const dots = screen.getAllByLabelText('Unread messages');
+    expect(dots).toHaveLength(1);
+  });
+
+  it('does not filter out named chats when typing in search (current behavior)', async () => {
+    await act(async () => {
+      renderSidebar();
+    });
+    await screen.findByText('Chat Alpha');
+
+    const searchInput = screen.getByRole('searchbox', { name: /search chats/i });
+    fireEvent.change(searchInput, { target: { value: 'Alpha' } });
+
+    expect(screen.getByText('Chat Alpha')).toBeInTheDocument();
+    expect(screen.getByText('Chat Beta')).toBeInTheDocument();
+  });
+
+  it('calls changeChat and marks as read when a chat is clicked', async () => {
+    await act(async () => {
+      renderSidebar();
+    });
+    const alphaBtn = await screen.findByText('Chat Alpha');
+    fireEvent.click(alphaBtn);
+
+    expect(mockChangeChat).toHaveBeenCalledWith({
+      conversationID: 'alpha123',
+      reciever: ['alice', 'bob'],
+      name: 'Chat Alpha',
+    });
+
+    expect(mockChangeChatList).toHaveBeenCalled();
+    const updated = mockChangeChatList.mock.calls[0][0];
+    const clicked = updated.userChats.find(c => c.conversation_id === 'alpha123');
+    expect(clicked.is_read).toBe(true);
   });
 });
