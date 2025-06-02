@@ -5,6 +5,10 @@ import HeaderComponent from "../../src/components/header";
 import { UserContext } from "../../src/context/userContext";
 import { UserChatsContext } from "../../src/context/chatListContext";
 
+
+//Tests have been made in tandem with the use of ChatGPT
+//This test suite is to validate critical application functionality
+//  and avoid regression
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => {
   const original = jest.requireActual("react-router-dom");

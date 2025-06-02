@@ -7,6 +7,10 @@ import { UserContext } from '../../src/context/userContext';
 import { WebsocketContext } from '../../src/context/websocketContext';
 import { UserChatsContext } from '../../src/context/chatListContext';
 
+
+//Tests have been made in tandem with the use of ChatGPT
+//This test suite is to validate critical application functionality
+//  and avoid regression
 const formatTime = (isoString) =>
   new Date(isoString).toLocaleString('en-US', {
     hour: '2-digit',

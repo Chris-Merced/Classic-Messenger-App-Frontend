@@ -11,6 +11,10 @@ import SideBarComponent from "../../src/components/chatSidebar";
 import { UserChatsContext } from "../../src/context/chatListContext";
 import { UserContext } from "../../src/context/userContext";
 
+
+//Tests have been made in tandem with the use of ChatGPT
+//This test suite is to validate critical application functionality
+//  and avoid regression
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
