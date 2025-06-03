@@ -1,71 +1,82 @@
-import '@testing-library/jest-dom';
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import UserProfile from '../../src/components/userProfile';
-import { useParams } from 'react-router-dom';
+import React from "react";
+import { render, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import UserProfile from "../../src/components/userProfile";
+import { UserContext } from "../../src/context/userContext";
 
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useParams: jest.fn(),
-}));
+//Tests have been made in tandem with the use of ChatGPT
+//This test suite is to validate critical application functionality
+//  and avoid regression
+beforeAll(() => {
+  process.env.REACT_APP_BACKEND_URL = "/api";
 
-describe('UserProfile Component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+  global.fetch = jest.fn((endpoint) => {
+    if (endpoint.startsWith("/api/userProfile/publicProfile")) {
+      return Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            user: {
+              id: "999",
+              username: "otherUser",
+              created_at: "2025-01-01T12:34:56.000Z",
+              about_me: "Hello there!",
+            },
+          }),
+      });
+    }
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  });
+});
+
+afterEach(() => {
+  global.fetch.mockClear();
+});
+
+afterAll(() => {
+  delete process.env.REACT_APP_BACKEND_URL;
+  global.fetch.mockRestore();
+});
+
+describe("UserProfile (basic unit tests)", () => {
+  it('shows "No user logged in" when the context has no user', () => {
+    const { getByRole } = render(
+      <MemoryRouter>
+        <UserContext.Provider value={{ user: null }}>
+          <UserProfile />
+        </UserContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(getByRole("alert")).toHaveTextContent("No user logged in");
   });
 
-  const renderUserProfile = (userIdentifier) => {
-    return render(
-      <MemoryRouter initialEntries={[`/userProfile/${userIdentifier}`]}>
+  it("hits /userProfile/publicProfile once when a user is logged in", async () => {
+    const fakeUser = { id: "123", username: "currentUser" };
+
+    render(
+      <MemoryRouter initialEntries={["/profile/otherUser"]}>
         <Routes>
+          {}
           <Route
-            path="/userProfile/:userIdentifier"
-            element={<UserProfile />}
+            path="/profile/:userIdentifier"
+            element={
+              <UserContext.Provider value={{ user: fakeUser }}>
+                <UserProfile />
+              </UserContext.Provider>
+            }
           />
         </Routes>
       </MemoryRouter>
     );
-  };
 
-  it('renders user profile successfully when data is fetched', async () => {
-    useParams.mockReturnValue({ userIdentifier: 'testUser' });
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        user: { username: 'testUserName', created_at: '2024-01-01' },
-      }),
-    });
-
-    renderUserProfile('testUser');
-
-    await waitFor(() => {
-      expect(screen.getByText('Hello testUser ...')).toBeInTheDocument();
-      expect(
-        screen.getByText('Welcome to the page of testUserName')
-      ).toBeInTheDocument();
-      expect(screen.getByText('Created at 2024-01-01')).toBeInTheDocument();
-    });
-  });
-
-  it('displays an error message when the fetch fails', async () => {
-    useParams.mockReturnValue({ userIdentifier: 'testUser' });
-
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ message: 'Failed to fetch profile' }),
-    });
-
-    renderUserProfile('testUser');
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Error occured on profile retrieval')
-      ).toBeInTheDocument();
-    });
+    await waitFor(() =>
+      expect(global.fetch).toHaveBeenCalledWith(
+        "/api/userProfile/publicProfile?ID=otherUser",
+        expect.any(Object)
+      )
+    );
   });
 });

@@ -68,19 +68,21 @@ const UserProfile = () => {
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
         );
         const data = await response.json();
-        setIsBlocked(data.isBlocked);
+        if (data.isBlocked !== isBlocked) {
+          setIsBlocked(data.isBlocked);
+        }
       }
     };
-
+    console.log("CHECKING HOW MANY TIMES THIS IS CALLED ");
     if (userContext?.user?.id) {
       getUserProfile();
+      checkIfBlocked();
 
       checkIfFriends();
-      checkIfBlocked();
     }
 
     setEditPage(false);
-  }, [userIdentifier, isBlocked]);
+  }, [userIdentifier]);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -125,7 +127,7 @@ const UserProfile = () => {
     if (userContext?.user?.id) {
       checkIfPublic();
     }
-  }, [isPublic]);
+  }, [userIdentifier]);
 
   useEffect(() => {
     if (userContext?.user?.id) {

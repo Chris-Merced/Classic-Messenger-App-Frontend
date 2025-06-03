@@ -14,7 +14,6 @@ describe('SignUpComponent (core behaviors)', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Default fetch stub; individual tests will override as needed
     global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({}) });
   });
 
@@ -81,7 +80,6 @@ describe('SignUpComponent (core behaviors)', () => {
   });
 
   it('submits valid data and shows "Welcome to the Family" on success', async () => {
-    // Stub fetch so that signup response is ok:true
     global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ id: 'newUser' }) });
     renderWithContext();
     fireEvent.change(screen.getByLabelText(/Username:/i), { target: { value: 'validUser' } });
@@ -95,7 +93,6 @@ describe('SignUpComponent (core behaviors)', () => {
   });
 
   it('displays server error message when signup fails', async () => {
-    // Stub fetch so that signup response is ok:false with a message
     global.fetch = jest.fn().mockResolvedValue({ ok: false, json: async () => ({ message: 'User already exists' }) });
     renderWithContext();
     fireEvent.change(screen.getByLabelText(/Username:/i), { target: { value: 'validUser' } });
