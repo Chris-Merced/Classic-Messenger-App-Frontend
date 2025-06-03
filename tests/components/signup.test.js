@@ -3,170 +3,108 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import SignUpComponent from '../../src/components/signup';
+import { UserContext } from '../../src/context/userContext';
 
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
 
-describe('SignUpComponent', () => {
+//Tests have been made in tandem with the use of ChatGPT
+//This test suite is to validate critical application functionality
+//  and avoid regression
+describe('SignUpComponent (core behaviors)', () => {
+  let userContext;
+
   beforeEach(() => {
     jest.clearAllMocks();
-
-    process.env.REACT_APP_BACKEND_URL = 'http://localhost:3000';
+    // Default fetch stub; individual tests will override as needed
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({}) });
   });
 
-  afterEach(() => {
-    delete process.env.REACT_APP_BACKEND_URL;
-  });
-
-  const renderComponent = () => {
+  const renderWithContext = (overrideUser) => {
+    userContext = { user: overrideUser || null, login: jest.fn(), logout: jest.fn() };
     return render(
       <MemoryRouter>
-        <SignUpComponent />
+        <UserContext.Provider value={userContext}>
+          <SignUpComponent />
+        </UserContext.Provider>
       </MemoryRouter>
     );
   };
 
-  it('renders signup form correctly', () => {
-    renderComponent();
+  it('shows "You are already logged in" when user is present', () => {
+    renderWithContext({ id: 'u1', username: 'test' });
+    expect(screen.getByText(/You are already logged in/i)).toBeInTheDocument();
+  });
 
+  it('renders the signup form when no user is present', () => {
+    renderWithContext();
+    expect(screen.getByRole('form', { name: /Sign Up/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/Username:/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password:/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email:/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Assimilate/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: /Come Back Home/i })
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Password:$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Confirm Password:$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Email:$/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Submit sign up form/i })).toBeInTheDocument();
   });
 
-  it('shows validation errors when form is submitted with empty fields', async () => {
-    renderComponent();
-
-    fireEvent.click(screen.getByRole('button', { name: /Assimilate/i }));
-
+  it('validates empty fields and shows error messages on submit', async () => {
+    renderWithContext();
+    fireEvent.click(screen.getByRole('button', { name: /Submit sign up form/i }));
     await waitFor(() => {
-      expect(
-        screen.getByText(/Please enter in a username/i)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(/Please enter in a password/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Please enter in a username/i)).toBeInTheDocument();
+      expect(screen.getByText(/Please enter in a password/i)).toBeInTheDocument();
       expect(screen.getByText(/Please enter in an email/i)).toBeInTheDocument();
     });
   });
 
-  it('handles successful signup', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ message: 'Signup Successful' }),
-    });
-
-    renderComponent();
-
-    fireEvent.change(screen.getByLabelText(/Username:/i), {
-      target: { value: 'testuser' },
-    });
-    fireEvent.change(screen.getByLabelText(/Password:/i), {
-      target: { value: 'password123' },
-    });
-    fireEvent.change(screen.getByLabelText(/Email:/i), {
-      target: { value: 'test@example.com' },
-    });
-
-    const consoleLogSpy = jest
-      .spyOn(console, 'log')
-      .mockImplementation(() => {});
-
-    fireEvent.click(screen.getByRole('button', { name: /Assimilate/i }));
-
+  it('validates password mismatch and shows appropriate error', async () => {
+    renderWithContext();
+    fireEvent.change(screen.getByLabelText(/Username:/i), { target: { value: 'validUser' } });
+    fireEvent.change(screen.getByLabelText(/^Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Confirm Password:$/i), { target: { value: 'password2' } });
+    fireEvent.change(screen.getByLabelText(/^Email:$/i), { target: { value: 'user@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: /Submit sign up form/i }));
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3000/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: 'testuser',
-          email: 'test@example.com',
-          password: 'password123',
-        }),
-      });
+      expect(screen.getByText(/Passwords do not match/i)).toBeInTheDocument();
     });
-
-    expect(consoleLogSpy).toHaveBeenCalledWith('Signup Successful:', {
-      message: 'Signup Successful',
-    });
-
-    consoleLogSpy.mockRestore();
   });
 
-  it('handles signup failure', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 400,
-      statusText: 'Bad Request',
-    });
-
-    const consoleErrorSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    renderComponent();
-
-    fireEvent.change(screen.getByLabelText(/Username:/i), {
-      target: { value: 'testuser' },
-    });
-    fireEvent.change(screen.getByLabelText(/Password:/i), {
-      target: { value: 'password123' },
-    });
-    fireEvent.change(screen.getByLabelText(/Email:/i), {
-      target: { value: 'test@example.com' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: /Assimilate/i }));
-
-    await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3000/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: 'testuser',
-          email: 'test@example.com',
-          password: 'password123',
-        }),
-      });
-    });
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Signup Failed:',
-      400,
-      'Bad Request'
-    );
-
-    consoleErrorSpy.mockRestore();
-  });
-
-  it('prevents signup when validation fails', async () => {
-    renderComponent();
-
-    fireEvent.change(screen.getByLabelText(/Username:/i), {
-      target: { value: 'testuser' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: /Assimilate/i }));
-
+  it('validates invalid username format and shows error', async () => {
+    renderWithContext();
+    fireEvent.change(screen.getByLabelText(/Username:/i), { target: { value: 'invalid user!' } });
+    fireEvent.change(screen.getByLabelText(/^Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Confirm Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Email:$/i), { target: { value: 'user@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: /Submit sign up form/i }));
     await waitFor(() => {
       expect(
-        screen.getByText(/Please enter in a password/i)
+        screen.getByText(/Please enter in a valid username \(One word, can contain numbers\)/i)
       ).toBeInTheDocument();
-      expect(screen.getByText(/Please enter in an email/i)).toBeInTheDocument();
     });
-
-    expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it('has a link back to home page', () => {
-    renderComponent();
-    const homeLink = screen.getByRole('link', { name: /Come Back Home/i });
-    expect(homeLink).toHaveAttribute('href', '/');
+  it('submits valid data and shows "Welcome to the Family" on success', async () => {
+    // Stub fetch so that signup response is ok:true
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ id: 'newUser' }) });
+    renderWithContext();
+    fireEvent.change(screen.getByLabelText(/Username:/i), { target: { value: 'validUser' } });
+    fireEvent.change(screen.getByLabelText(/^Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Confirm Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Email:$/i), { target: { value: 'valid@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: /Submit sign up form/i }));
+    await waitFor(() => {
+      expect(screen.getByRole('status')).toHaveTextContent(/Welcome to the Family/i);
+    });
+  });
+
+  it('displays server error message when signup fails', async () => {
+    // Stub fetch so that signup response is ok:false with a message
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, json: async () => ({ message: 'User already exists' }) });
+    renderWithContext();
+    fireEvent.change(screen.getByLabelText(/Username:/i), { target: { value: 'validUser' } });
+    fireEvent.change(screen.getByLabelText(/^Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Confirm Password:$/i), { target: { value: 'password1' } });
+    fireEvent.change(screen.getByLabelText(/^Email:$/i), { target: { value: 'valid@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: /Submit sign up form/i }));
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent(/User already exists/i);
+    });
   });
 });
