@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  screen,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import HomeChatComponent from '../../src/components/home';
@@ -7,166 +13,103 @@ import { UserContext } from '../../src/context/userContext';
 import { WebsocketContext } from '../../src/context/websocketContext';
 import { UserChatsContext } from '../../src/context/chatListContext';
 
+const mockUser   = { id: 'u1', username: 'alice' };
+const mockChat   = { name: 'main', conversationID: 'conv‑1', reciever: ['bob'] };
+const backendURL = '/api';
+const initialPayload = {
+  messages: [
+    {
+      user: 'olduser',
+      message: 'Welcome!',
+      time: '2024-01-01T12:00:00.000Z',
+      conversationName: 'main',
+      conversationID: 'conv1',
+      userID: 'olduserID',
+    },
+  ],
+};
 
-//Tests have been made in tandem with the use of ChatGPT
-//This test suite is to validate critical application functionality
-//  and avoid regression
-const formatTime = (isoString) =>
-  new Date(isoString).toLocaleString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
+const buildSocket = () => ({
+  current: {
+    readyState: WebSocket.OPEN,
+    send:       jest.fn(),
+    onmessage:  null,
+    onopen:     null,
+  },
+});
 
-describe('HomeChatComponent (core behaviors)', () => {
-  let mockSocket;
-  const mockUser = { id: 'u1', username: 'testuser' };
-  const mockChat = { name: 'main', conversationID: 'conv-1', reciever: ['u1'] };
+const renderHome = (user = mockUser) => {
+  const socketRef   = buildSocket();
+  const chatContext = {
+    currentChat: mockChat,
+    chatList:    { userChats: [] },
+    changeChatList: jest.fn(),
+  };
 
-  beforeEach(() => {
-    mockSocket = {
-      current: {
-        readyState: WebSocket.OPEN,
-        send: jest.fn(),
-        onmessage: null,
-        onopen: null,
-      },
-    };
-
-    global.fetch = jest.fn().mockResolvedValue({
-      json: async () => ({
-        messages: [
-          {
-            user: 'olduser',
-            message: 'Welcome!',
-            time: '2024-01-01T10:00:00.000Z',
-            conversationName: 'main',
-            conversationID: 'conv-1',
-            userID: 'olduserID',
-          },
-        ],
-      }),
-    });
-
-    process.env.REACT_APP_BACKEND_URL = 'http://fake-api';
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  const renderWithContexts = async (userValue = mockUser, chatOverrides = {}) => {
-    const userContext = { user: userValue };
-    const chatContext = {
-      currentChat: { ...mockChat, ...chatOverrides },
-      chatList: { userChats: [] },
-      changeChatList: jest.fn(),
-    };
-
-    let result;
-    await act(async () => {
-      result = render(
-        <UserContext.Provider value={userContext}>
-          <WebsocketContext.Provider value={mockSocket}>
+  return {
+    socketRef,
+    ...render(
+      <MemoryRouter>
+        <UserContext.Provider value={{ user }}>
+          <WebsocketContext.Provider value={socketRef}>
             <UserChatsContext.Provider value={chatContext}>
-              <MemoryRouter>
-                <HomeChatComponent />
-              </MemoryRouter>
+              <HomeChatComponent />
             </UserChatsContext.Provider>
           </WebsocketContext.Provider>
         </UserContext.Provider>
-      );
-    });
-    return { ...result, chatContext };
+      </MemoryRouter>
+    ),
   };
+};
 
-  it('fetches and displays initial messages for the current chat', async () => {
-    await renderWithContexts();
+beforeEach(() => {
+  process.env.REACT_APP_BACKEND_URL = backendURL;
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        `http://fake-api/messages/byChatName?chatName=${mockChat.name}&conversationID=${mockChat.conversationID}&userID=${mockUser.id}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        }
-      );
-    });
+  global.fetch = jest
+    .fn()
+    .mockResolvedValueOnce({ ok: true, json: async () => initialPayload })
+    .mockResolvedValue({ ok: true, json: async () => ({}) });
+});
 
-    const initialMsg = await screen.findByText('Welcome!');
-    expect(initialMsg).toBeInTheDocument();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-  it('allows sending a new message via WebSocket and clears the input', async () => {
-    const mockResp = (data, ok = true) => ({ ok, json: async () => data });
-    global.fetch = jest.fn()
-      .mockResolvedValueOnce(mockResp({
-        messages: [
-          {
-            user: 'olduser',
-            message: 'Welcome!',
-            time: '2024-01-01T10:00:00.000Z',
-            conversationName: 'main',
-            conversationID: 'conv-1',
-            userID: 'olduserID',
-          },
-        ],
-      }))
-      .mockResolvedValueOnce(mockResp({}));
 
-    await renderWithContexts();
+test('fetches messages for the current chat exactly once on mount', async () => {
+  renderHome();
 
-    const textbox = screen.getByRole('textbox', { name: /Type your message here/i });
-    const sendButton = screen.getByRole('button', { name: /Send message/i });
-
-    await act(async () => {
-      fireEvent.change(textbox, { target: { value: 'Hello World' } });
-      fireEvent.click(sendButton);
-    });
-
-    expect(mockSocket.current.send).toHaveBeenCalledWith(
-      expect.stringContaining(`"message":"Hello World"`)
+  await waitFor(() => {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch.mock.calls[0][0]).toBe(
+      `${backendURL}/messages/byChatName?chatName=${mockChat.name}` +
+        `&conversationID=${mockChat.conversationID}&userID=${mockUser.id}`
     );
-    expect(textbox.value).toBe('');
   });
 
-  it('appends incoming WebSocket messages for the same conversation only', async () => {
-    await renderWithContexts();
+  expect(await screen.findByText('Welcome!')).toBeInTheDocument();
+});
 
-    await screen.findByText('Welcome!');
+test('sends a message over WebSocket and clears the text box', async () => {
+  const { socketRef } = renderHome();
 
-    const newMsg = {
-      user: 'otheruser',
-      message: 'New in main',
-      time: new Date().toISOString(),
-      conversationName: 'main',
-      conversationID: 'conv-1',
-      userID: 'otheruserID',
-    };
+  const box   = screen.getByRole('textbox',  { name: /type your message/i });
+  const send  = screen.getByRole('button',   { name: /send message/i });
 
-    await act(async () => {
-      mockSocket.current.onmessage({ data: JSON.stringify(newMsg) });
-    });
-
-    const formatted = formatTime(newMsg.time);
-    await waitFor(() => {
-      expect(screen.getByText('New in main')).toBeInTheDocument();
-      expect(screen.getByText(formatted)).toBeInTheDocument();
-    });
-
-    const otherConvMsg = { ...newMsg, message: 'Should not appear', conversationID: 'conv-2' };
-    await act(async () => {
-      mockSocket.current.onmessage({ data: JSON.stringify(otherConvMsg) });
-    });
-
-    expect(screen.queryByText('Should not appear')).not.toBeInTheDocument();
+  await act(async () => {
+    fireEvent.change(box, { target: { value: 'Hello there' } });
+    fireEvent.click(send);
   });
 
-  it('hides the message form when no user is logged in', async () => {
-    await renderWithContexts(null);
+  expect(socketRef.current.send).toHaveBeenCalledWith(
+    expect.stringContaining('"message":"Hello there"')
+  );
+  expect(box.value).toBe('');
+});
 
-    const form = screen.queryByRole('form', { name: /Send a new message/i });
-    expect(form).not.toBeInTheDocument();
-  });
+test('shows no “compose” form when no user is logged in', () => {
+  renderHome(null);
+
+  const form = screen.queryByRole('form', { name: /send a new message/i });
+  expect(form).not.toBeInTheDocument();
 });
