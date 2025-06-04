@@ -20,7 +20,7 @@ const renderWithCtx = (user = null) => {
   };
 };
 
-describe("SignUpComponent - unit style", () => {
+describe("SignUpComponent Unit Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     global.fetch = jest.fn().mockResolvedValue({

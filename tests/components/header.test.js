@@ -50,7 +50,7 @@ const renderHeader = (
     </MemoryRouter>
   );
 
-describe("HeaderComponent – minimal unit tests", () => {
+describe("HeaderComponent Unit Testing", () => {
   test("shows username / password inputs when no user", () => {
     const { getByLabelText } = renderHeader();
     expect(getByLabelText(/Username:/i)).toBeInTheDocument();

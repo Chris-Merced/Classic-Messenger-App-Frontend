@@ -41,7 +41,7 @@ afterAll(() => {
   global.fetch.mockRestore();
 });
 
-describe("UserProfile – minimal unit tests", () => {
+describe("UserProfile Unit Tests", () => {
   test("shows “No user logged in” when context has no user", () => {
     const { getByRole } = render(
       <MemoryRouter>
