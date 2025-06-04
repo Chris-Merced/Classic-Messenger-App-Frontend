@@ -14,7 +14,7 @@ import { WebsocketContext } from '../../src/context/websocketContext';
 import { UserChatsContext } from '../../src/context/chatListContext';
 
 const mockUser   = { id: 'u1', username: 'alice' };
-const mockChat   = { name: 'main', conversationID: 'conv‑1', reciever: ['bob'] };
+const mockChat   = { name: 'main', conversationID: 'conv1', reciever: ['bob'] };
 const backendURL = '/api';
 const initialPayload = {
   messages: [
