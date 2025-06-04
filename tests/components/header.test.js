@@ -6,12 +6,11 @@ import HeaderComponent from "../../src/components/header";
 import { UserContext } from "../../src/context/userContext";
 import { UserChatsContext } from "../../src/context/chatListContext";
 
-
 process.env.REACT_APP_BACKEND_URL = "/api";
 
 const fakeUserCtx = (user = null) => ({
   user,
-  login: jest.fn().mockResolvedValue({}), 
+  login: jest.fn().mockResolvedValue({}),
   logout: jest.fn(),
 });
 const fakeChatCtx = { resetChatList: jest.fn() };
@@ -51,7 +50,6 @@ const renderHeader = (
     </MemoryRouter>
   );
 
-
 describe("HeaderComponent – minimal unit tests", () => {
   test("shows username / password inputs when no user", () => {
     const { getByLabelText } = renderHeader();
@@ -81,17 +79,17 @@ describe("HeaderComponent – minimal unit tests", () => {
         password: "secret",
       })
     );
-    expect(getByLabelText(/Username:/i)).toHaveValue(""); 
+    expect(getByLabelText(/Username:/i)).toHaveValue("");
   });
 
   test("theme toggle adds & removes light-theme class", () => {
     const { getByLabelText } = renderHeader();
     const toggle = getByLabelText(/toggle theme/i);
 
-    fireEvent.click(toggle); 
+    fireEvent.click(toggle);
     expect(document.body).toHaveClass("light-theme");
 
-    fireEvent.click(toggle); 
+    fireEvent.click(toggle);
     expect(document.body).not.toHaveClass("light-theme");
   });
 

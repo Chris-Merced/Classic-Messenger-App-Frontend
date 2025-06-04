@@ -1,3 +1,4 @@
+// tests/components/userProfile.test.js
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -5,15 +6,14 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import UserProfile from "../../src/components/userProfile";
 import { UserContext } from "../../src/context/userContext";
 
-
-//Tests have been made in tandem with the use of ChatGPT
-//This test suite is to validate critical application functionality
-//  and avoid regression
 beforeAll(() => {
   process.env.REACT_APP_BACKEND_URL = "/api";
 
   global.fetch = jest.fn((endpoint) => {
-    if (endpoint.startsWith("/api/userProfile/publicProfile")) {
+    if (
+      typeof endpoint === "string" &&
+      endpoint.startsWith("/api/userProfile/publicProfile")
+    ) {
       return Promise.resolve({
         ok: true,
         json: () =>
@@ -27,6 +27,7 @@ beforeAll(() => {
           }),
       });
     }
+
     return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
   });
 });
@@ -40,8 +41,8 @@ afterAll(() => {
   global.fetch.mockRestore();
 });
 
-describe("UserProfile (basic unit tests)", () => {
-  it('shows "No user logged in" when the context has no user', () => {
+describe("UserProfile – minimal unit tests", () => {
+  test("shows “No user logged in” when context has no user", () => {
     const { getByRole } = render(
       <MemoryRouter>
         <UserContext.Provider value={{ user: null }}>
@@ -53,7 +54,7 @@ describe("UserProfile (basic unit tests)", () => {
     expect(getByRole("alert")).toHaveTextContent("No user logged in");
   });
 
-  it("hits /userProfile/publicProfile once when a user is logged in", async () => {
+  test("hits /userProfile/publicProfile exactly once when a user is logged in", async () => {
     const fakeUser = { id: "123", username: "currentUser" };
 
     render(

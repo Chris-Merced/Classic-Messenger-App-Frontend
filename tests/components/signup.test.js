@@ -5,7 +5,6 @@ import { MemoryRouter } from "react-router-dom";
 import SignUpComponent from "../../src/components/signup";
 import { UserContext } from "../../src/context/userContext";
 
-
 const renderWithCtx = (user = null) => {
   const ctx = { user, login: jest.fn(), logout: jest.fn() };
 
@@ -20,7 +19,6 @@ const renderWithCtx = (user = null) => {
     ),
   };
 };
-
 
 describe("SignUpComponent - unit style", () => {
   beforeEach(() => {
