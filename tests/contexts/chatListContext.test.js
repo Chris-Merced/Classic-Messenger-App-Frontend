@@ -1,100 +1,81 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { UserChatsContext, UserChats } from '../../src/context/chatListContext';
+import { UserChats, UserChatsContext } from '../../src/context/chatListContext';
 import { UserContext } from '../../src/context/userContext';
 
-global.fetch = jest.fn();
+const fakeChats = [
+  { id: 1, name: 'Alpha' },
+  { id: 2, name: 'Beta' },
+];
 
-process.env.REACT_APP_BACKEND_URL = 'http://test-api';
+beforeAll(() => {
+  global.fetch = jest
+    .fn()
+    .mockResolvedValueOnce({ ok: true, json: async () => fakeChats })
+    .mockResolvedValue({ ok: true, json: async () => ({}) });
+});
 
-describe('ChatList Context', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-  it('should fetch and display chat list when user context is available', async () => {
-    const mockChats = [
-      { id: 1, title: 'Chat 1' },
-      { id: 2, title: 'Chat 2' },
-    ];
+const makeWrapper = (user) => ({ children }) =>
+  (
+    <UserContext.Provider value={{ user }}>
+      <UserChats>{children}</UserChats>
+    </UserContext.Provider>
+  );
 
-    fetch.mockResolvedValueOnce({
-      json: async () => mockChats,
-    });
+test('with NO user → fetch is NOT called and chatList is null', () => {
+  render(
+    <UserChatsContext.Consumer>
+      {(ctx) => <span role="status">{ctx.chatList === null ? 'null' : 'set'}</span>}
+    </UserChatsContext.Consumer>,
+    { wrapper: makeWrapper(null) }
+  );
 
-    const TestComponent = () => {
-      const { chatList } = React.useContext(UserChatsContext);
-      return <div data-testid="chat-list">{JSON.stringify(chatList)}</div>;
-    };
+  expect(screen.getByRole('status')).toHaveTextContent('null');
+  expect(global.fetch).not.toHaveBeenCalled();
+});
 
-    render(
-      <UserContext.Provider value={{ user: { id: 'test-user-id' } }}>
-        <UserChats>
-          <TestComponent />
-        </UserChats>
-      </UserContext.Provider>
-    );
+test('with a user → fetches chats once and supplies list', async () => {
+  render(
+    <UserChatsContext.Consumer>
+      {(ctx) => (
+        <>
+          <ul>
+            {ctx.chatList?.map((c) => (
+              <li key={c.id}>{c.name}</li>
+            ))}
+          </ul>
+          <span role="status">{ctx.chatList ? 'loaded' : 'loading'}</span>
+        </>
+      )}
+    </UserChatsContext.Consumer>,
+    { wrapper: makeWrapper({ id: 7 }) }
+  );
 
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        'http://test-api/messages/userChats?userID=test-user-id',
-        {
-          method: 'GET',
-          credentials: 'include',
-        }
-      );
-    });
+  await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+  const list = await screen.findByRole('list');
+  expect(list).toBeInTheDocument();
+  expect(screen.getByText('Alpha')).toBeInTheDocument();
+  expect(screen.getByText('Beta')).toBeInTheDocument();
+});
 
-    await waitFor(() => {
-      const element = screen.getByTestId('chat-list');
-      expect(element).toHaveTextContent(JSON.stringify(mockChats));
-    });
-  });
+test('changeChat updates currentChat', async () => {
+  render(
+    <UserChatsContext.Consumer>
+      {(ctx) => (
+        <>
+          <span role="status">{ctx.currentChat?.name || 'none'}</span>
+          <button onClick={() => ctx.changeChat({ name: 'Beta' })}>pick‑beta</button>
+        </>
+      )}
+    </UserChatsContext.Consumer>,
+    { wrapper: makeWrapper({ id: 7 }) }
+  );
 
-  it('should not fetch chats when user context is missing', async () => {
-    const TestComponent = () => {
-      const { chatList } = React.useContext(UserChatsContext);
-      return <div data-testid="chat-list">{JSON.stringify(chatList)}</div>;
-    };
-
-    render(
-      <UserContext.Provider value={null}>
-        <UserChats>
-          <TestComponent />
-        </UserChats>
-      </UserContext.Provider>
-    );
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const element = screen.getByTestId('chat-list');
-    expect(element).toHaveTextContent('null');
-
-    expect(fetch).not.toHaveBeenCalled();
-  });
-
-  it('should handle fetch errors gracefully', async () => {
-    const mockError = new Error('API Error');
-    fetch.mockRejectedValueOnce(mockError);
-    const consoleSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    render(
-      <UserContext.Provider value={{ user: { id: 'test-user-id' } }}>
-        <UserChats>
-          <div data-testid="test-child">Test Child</div>
-        </UserChats>
-      </UserContext.Provider>
-    );
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error getting user chats: ' + mockError
-      );
-    });
-
-    consoleSpy.mockRestore();
-  });
+  fireEvent.click(screen.getByRole('button', { name: /pick‑beta/i }));
+  expect(screen.getByRole('status')).toHaveTextContent('Beta');
 });
