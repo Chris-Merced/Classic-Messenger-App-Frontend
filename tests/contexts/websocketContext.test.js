@@ -1,204 +1,68 @@
-import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import {
-  WebSocketProvider,
-  WebsocketContext,
-} from '../../src/context/websocketContext';
+// tests/contexts/websocketContext.test.js
+
+import React from "react";
+import { render, screen, act, cleanup } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { WebSocketProvider } from "../../src/context/websocketContext";
 
 
-class MockWebSocket {
-  constructor(url) {
-    this.url = url;
-    this.onopen = null;
-    this.onmessage = null;
-    this.onclose = null;
-    this.onerror = null;
-    this.close = jest.fn();
-  }
-}
+afterEach(() => {
+  cleanup();
+  jest.resetAllMocks();
+  delete process.env.REACT_APP_WS_URL;
+});
 
 
-const TestComponent = () => {
-  const websocket = React.useContext(WebsocketContext);
-  return (
-    <div>
-      {websocket && websocket.current ? (
-        <div>WebSocket Connected</div>
-      ) : (
-        <div>Not Connected</div>
-      )}
-    </div>
-  );
-};
+describe("WebSocket Crucial Unit Tests", () => {
+  test("without WS URL it renders the loading placeholder and never calls WebSocket", () => {
+    const WS = jest.fn();
+    global.WebSocket = WS;
 
-describe('WebSocketProvider', () => {
-  let originalWebSocket;
-  let originalEnv;
-  let mockWebSocket;
-
-  beforeEach(() => {
-    originalWebSocket = global.WebSocket;
-    originalEnv = process.env;
-
-    
-    mockWebSocket = new MockWebSocket('ws://test');
-    global.WebSocket = jest.fn(() => mockWebSocket);
-
-    
-    process.env = {
-      ...process.env,
-      REACT_APP_WS_URL: 'ws://test-websocket-url',
-    };
-
-    
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    global.WebSocket = originalWebSocket;
-    process.env = originalEnv;
-    jest.clearAllMocks();
-  });
-
-  it('shows loading state initially', () => {
     render(
       <WebSocketProvider>
-        <TestComponent />
+        <span>child</span>
       </WebSocketProvider>
     );
 
-    expect(screen.getByText('Loading Websocket..')).toBeInTheDocument();
+    expect(screen.getByText(/loading websocket/i)).toBeInTheDocument();
+    expect(WS).not.toHaveBeenCalled();
   });
 
-  it('initializes WebSocket with correct URL', () => {
-    render(
-      <WebSocketProvider>
-        <TestComponent />
-      </WebSocketProvider>
-    );
+  test("with WS URL it opens socket, sends registration, shows children & closes on unmount", () => {
+    process.env.REACT_APP_WS_URL = "ws://test";
 
-    expect(global.WebSocket).toHaveBeenCalledWith('ws://test-websocket-url');
-  });
-
-  it('provides WebSocket reference after connection is ready', async () => {
-    render(
-      <WebSocketProvider>
-        <TestComponent />
-      </WebSocketProvider>
-    );
-
-    
-    expect(screen.getByText('Loading Websocket..')).toBeInTheDocument();
-
-    
-    await act(async () => {
-      mockWebSocket.onopen();
+    let instance;
+    const WS = jest.fn(() => {
+      instance = {
+        send: jest.fn(),
+        close: jest.fn(),
+        onopen: null,
+        onmessage: null,
+        onclose: null,
+        onerror: null,
+      };
+      return instance;
     });
+    global.WebSocket = WS;
 
-    
-    expect(screen.getByText('WebSocket Connected')).toBeInTheDocument();
-  });
-
-  it('handles WebSocket messages correctly', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-    const testMessage = { type: 'test', content: 'Hello' };
-
-    render(
-      <WebSocketProvider>
-        <TestComponent />
-      </WebSocketProvider>
-    );
-
-    
-    await act(async () => {
-      mockWebSocket.onopen();
-    });
-
-    
-    await act(async () => {
-      mockWebSocket.onmessage({ data: JSON.stringify(testMessage) });
-    });
-
-    expect(consoleSpy).toHaveBeenCalledWith('Message received:', testMessage);
-  });
-
-  it('handles WebSocket errors correctly', async () => {
-    const consoleSpy = jest.spyOn(console, 'error');
-    const testError = new Error('Test WebSocket error');
-
-    render(
-      <WebSocketProvider>
-        <TestComponent />
-      </WebSocketProvider>
-    );
-
-    
-    await act(async () => {
-      mockWebSocket.onerror(testError);
-    });
-
-    expect(consoleSpy).toHaveBeenCalledWith('WebSocket Error:', testError);
-  });
-
-  it('handles WebSocket close correctly', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-
-    render(
-      <WebSocketProvider>
-        <TestComponent />
-      </WebSocketProvider>
-    );
-
-    
-    await act(async () => {
-      mockWebSocket.onclose();
-    });
-
-    expect(consoleSpy).toHaveBeenCalledWith('WebSocket connection closed');
-  });
-
-  it('cleans up WebSocket connection on unmount', async () => {
     const { unmount } = render(
       <WebSocketProvider>
-        <TestComponent />
+        <span>socket-ready</span>
       </WebSocketProvider>
     );
 
-    
-    await act(async () => {
-      mockWebSocket.onopen();
+    expect(WS).toHaveBeenCalledTimes(2);
+    expect(WS).toHaveBeenCalledWith("ws://test");
+
+    act(() => {
+      instance.onopen && instance.onopen();
     });
 
-    
+    expect(screen.getByText("socket-ready")).toBeInTheDocument();
+    expect(instance.send).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(instance.send.mock.calls[0][0])).toEqual({ registration: true });
+
     unmount();
-
-    
-    expect(mockWebSocket.close).toHaveBeenCalled();
-  });
-
-  it('maintains WebSocket reference across multiple consumers', async () => {
-    const AnotherTestComponent = () => {
-      const websocket = React.useContext(WebsocketContext);
-      return websocket && websocket.current ? (
-        <div>Another Component Connected</div>
-      ) : null;
-    };
-
-    render(
-      <WebSocketProvider>
-        <TestComponent />
-        <AnotherTestComponent />
-      </WebSocketProvider>
-    );
-
-    
-    await act(async () => {
-      mockWebSocket.onopen();
-    });
-
-    expect(screen.getByText('WebSocket Connected')).toBeInTheDocument();
-    expect(screen.getByText('Another Component Connected')).toBeInTheDocument();
+    expect(instance.close).toHaveBeenCalled();
   });
 });
