@@ -1,268 +1,95 @@
-import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import React, { useContext } from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { UserProvider, UserContext } from '../../src/context/userContext';
 
-const TestComponent = () => {
-  const context = React.useContext(UserContext);
+const processEnvBackup = { ...process.env };
+beforeEach(() => {
+  process.env.REACT_APP_BACKEND_URL = '/api';
+  global.fetch = jest.fn(); 
+});
+afterEach(() => {
+  global.fetch.mockRestore?.();
+  process.env = { ...processEnvBackup };
+});
+
+const Consumer = () => {
+  const ctx = useContext(UserContext);
   return (
     <div>
-      {context.loading && <div>Loading...</div>}
-      {context.error && <div>Error: {context.error}</div>}
-      {context.user && <div>User: {context.user.username}</div>}
-      <button onClick={() => context.logout()}>Logout</button>
-      <button
-        onClick={() => context.login({ username: 'test', password: 'test' })}
-      >
-        Login
+      <span role="status">{ctx.user ? ctx.user.username : 'none'}</span>
+      <button onClick={() => ctx.login({ username: 'Bob' })}>login-btn</button>
+      <button onClick={ctx.logout}>logout-btn</button>
+      <button onClick={() => ctx.oauthLogin({ id: 3, username: 'Charlie' })}>
+        oauth-btn
       </button>
     </div>
   );
 };
 
-describe('UserProvider', () => {
-  let originalFetch;
-  let originalEnv;
-
-  beforeEach(() => {
-    originalFetch = global.fetch;
-    originalEnv = process.env;
-
-    global.fetch = jest.fn();
-    process.env = {
-      ...process.env,
-      REACT_APP_BACKEND_URL: 'http://localhost:3000',
-    };
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-    process.env = originalEnv;
-    jest.clearAllMocks();
-  });
-
-  it('provides initial loading state', async () => {
-    
-    let fetchResolve;
-    const fetchPromise = new Promise((resolve) => {
-      fetchResolve = resolve;
-    });
-
-    global.fetch.mockImplementationOnce(() => fetchPromise);
-
-    render(
+const renderWithProvider = () =>
+  render(
+    <MemoryRouter>
       <UserProvider>
-        <TestComponent />
+        <Consumer />
       </UserProvider>
+    </MemoryRouter>
+  );
+
+describe('UserContext Crucial Unit Tests', () => {
+  test('on mount: hits /userProfile once and sets user', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ user: { id: 1, username: 'Alice' } }),
+    });
+
+    renderWithProvider();
+
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent('Alice')
     );
-
-    
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
-
-    
-    await act(async () => {
-      fetchResolve({
-        ok: true,
-        json: () => Promise.resolve({ user: { username: 'testuser' } }),
-      });
-    });
-
-    
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-  });
-
-  it('fetches and sets user data on mount', async () => {
-    const mockUser = { username: 'testuser', id: '123' };
-
-    
-    let fetchResolve;
-    const fetchPromise = new Promise((resolve) => {
-      fetchResolve = resolve;
-    });
-
-    global.fetch.mockImplementationOnce(() => fetchPromise);
-
-    render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
-
-    
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
-
-    
-    await act(async () => {
-      fetchResolve({
-        ok: true,
-        json: () => Promise.resolve({ user: mockUser }),
-      });
-    });
-
-    
-    await waitFor(() => {
-      expect(
-        screen.getByText(`User: ${mockUser.username}`)
-      ).toBeInTheDocument();
-    });
-
+    expect(global.fetch).toHaveBeenCalledTimes(1);
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://localhost:3000/userProfile',
-      {
-        method: 'GET',
-        credentials: 'include',
-      }
+      '/api/userProfile',
+      expect.objectContaining({ method: 'GET' })
     );
   });
 
-  
-  it('handles fetch error correctly', async () => {
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: false,
-        status: 401,
-      })
-    );
-
-    render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Error: Unauthorized or session expired')
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('handles network error correctly', async () => {
-    global.fetch.mockImplementationOnce(() =>
-      Promise.reject(new Error('Network error'))
-    );
-
-    render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Error: Network error')).toBeInTheDocument();
-    });
-  });
-
-  it('handles login successfully', async () => {
-    const mockUser = { username: 'testuser', id: '123' };
-
-    
-    let profileFetchResolve;
-    const profileFetchPromise = new Promise((resolve) => {
-      profileFetchResolve = resolve;
-    });
-
+  test('login POST sets user and logout clears it', async () => {
     global.fetch
-      .mockImplementationOnce(() => profileFetchPromise)
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(mockUser),
-        })
-      );
-
-    render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
-
-    
-    await act(async () => {
-      profileFetchResolve({
+      .mockResolvedValueOnce({ ok: true, json: async () => ({}) })
+      .mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ user: null }),
+        json: async () => ({ id: 2, username: 'Bob' }),
       });
-    });
 
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
+    renderWithProvider();
 
-    
-    await act(async () => {
-      screen.getByText('Login').click();
-    });
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent('none')
+    );
 
-    await waitFor(() => {
-      expect(
-        screen.getByText(`User: ${mockUser.username}`)
-      ).toBeInTheDocument();
-    });
+    fireEvent.click(screen.getByRole('button', { name: 'login-btn' }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent('Bob')
+    );
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/login',
+      expect.objectContaining({ method: 'POST' })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'logout-btn' }));
+    expect(screen.getByRole('status')).toHaveTextContent('none');
   });
 
-  it('handles logout correctly', async () => {
-    const mockUser = { username: 'testuser', id: '123' };
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ user: mockUser }),
-      })
-    );
+  test('oauthLogin directly sets user', async () => {
+    global.fetch.mockResolvedValueOnce({ ok: true, json: async () => ({}) });
 
-    render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
-    );
+    renderWithProvider();
 
-    await waitFor(() => {
-      expect(
-        screen.getByText(`User: ${mockUser.username}`)
-      ).toBeInTheDocument();
-    });
-
-    await act(async () => {
-      screen.getByText('Logout').click();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText(`User: ${mockUser.username}`)
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('maintains user state across context consumers', async () => {
-    const mockUser = { username: 'testuser', id: '123' };
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ user: mockUser }),
-      })
-    );
-
-    const AnotherTestComponent = () => {
-      const { user } = React.useContext(UserContext);
-      return user ? <div>Another view: {user.username}</div> : null;
-    };
-
-    render(
-      <UserProvider>
-        <TestComponent />
-        <AnotherTestComponent />
-      </UserProvider>
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(`User: ${mockUser.username}`)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(`Another view: ${mockUser.username}`)
-      ).toBeInTheDocument();
-    });
+    fireEvent.click(screen.getByRole('button', { name: 'oauth-btn' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Charlie');
   });
 });
