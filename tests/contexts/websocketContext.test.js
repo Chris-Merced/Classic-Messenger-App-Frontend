@@ -5,13 +5,11 @@ import { render, screen, act, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { WebSocketProvider } from "../../src/context/websocketContext";
 
-
 afterEach(() => {
   cleanup();
   jest.resetAllMocks();
   delete process.env.REACT_APP_WS_URL;
 });
-
 
 describe("WebSocket Crucial Unit Tests", () => {
   test("without WS URL it renders the loading placeholder and never calls WebSocket", () => {
@@ -60,7 +58,9 @@ describe("WebSocket Crucial Unit Tests", () => {
 
     expect(screen.getByText("socket-ready")).toBeInTheDocument();
     expect(instance.send).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(instance.send.mock.calls[0][0])).toEqual({ registration: true });
+    expect(JSON.parse(instance.send.mock.calls[0][0])).toEqual({
+      registration: true,
+    });
 
     unmount();
     expect(instance.close).toHaveBeenCalled();
