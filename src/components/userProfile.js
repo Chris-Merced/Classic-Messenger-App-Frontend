@@ -342,47 +342,8 @@ const UserProfile = () => {
                     alt="Default profile picture"
                   />
                 )}
-                {userContext?.user?.id == userIdentifier && editPage && (
-                  <label
-                    className="editProfilePicture"
-                    htmlFor="profile-picture-upload"
-                    aria-label="Upload your photo"
-                  >
-                    Upload Your Photo
-                    <input
-                      id="profile-picture-upload"
-                      type="file"
-                      onChange={handleProfilePictureChange}
-                      className="editProfilePicture"
-                      aria-label="Choose profile picture file"
-                    />
-                    <>
-                      <button
-                        className="changeProfilePicture"
-                        onClick={(e) =>
-                          handleProfilePicture(e.clientX, e.clientY)
-                        }
-                        aria-label="Save profile picture"
-                      >
-                        Change Picture
-                      </button>
-                      {profilePictureEditConfirm && cursorPosition && (
-                        <div
-                          className="profilePicturePopup"
-                          style={{
-                            top: `${cursorPosition.y}px`,
-                            left: `${cursorPosition.x}px`,
-                          }}
-                          role="status"
-                          aria-live="polite"
-                        >
-                          Profile Picture Saved!
-                        </div>
-                      )}
-                    </>
-                  </label>
-                )}
                 <h1>{profile.username}</h1>
+
                 {blockedByProfile ? (
                   <div role="alert">You Are Currently Blocked by This User</div>
                 ) : (
@@ -428,6 +389,47 @@ const UserProfile = () => {
                     </button>
                   ))}
               </div>
+              {userContext?.user?.id == userIdentifier && editPage && (
+                <label
+                  className="editProfilePicture"
+                  htmlFor="profile-picture-upload"
+                  aria-label="Upload your photo"
+                >
+                  Upload Your Photo
+                  <input
+                    id="profile-picture-upload"
+                    type="file"
+                    onChange={handleProfilePictureChange}
+                    className="editProfilePicture"
+                    aria-label="Choose profile picture file"
+                  />
+                  <>
+                    <button
+                      className="changeProfilePicture"
+                      onClick={(e) =>
+                        handleProfilePicture(e.clientX, e.clientY)
+                      }
+                      aria-label="Save profile picture"
+                    >
+                      Change Picture
+                    </button>
+                    {profilePictureEditConfirm && cursorPosition && (
+                      <div
+                        className="profilePicturePopup"
+                        style={{
+                          top: `${cursorPosition.y}px`,
+                          left: `${cursorPosition.x}px`,
+                        }}
+                        role="status"
+                        aria-live="polite"
+                      >
+                        Profile Picture Saved!
+                      </div>
+                    )}
+                  </>
+                </label>
+              )}
+
               <div
                 role="contentinfo"
                 aria-label={`Profile created at ${profile.created_at}`}
@@ -534,12 +536,11 @@ const UserProfile = () => {
               </div>
               <div role="region" aria-label="About Me section">
                 <div>About Me:</div>
-                profile.about_me ? (<div>{profile.about_me}</div>) : (
+                {profile.about_me ? <div>{profile.about_me}</div> : 
                 <div role="note">
-                  Oop! This user hasn't set their About Me section! How
-                  mysterious!
+                  This user has not set their about me
                 </div>
-                )
+                }
               </div>
             </div>
           )}

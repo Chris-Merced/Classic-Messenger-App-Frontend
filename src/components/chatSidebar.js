@@ -16,7 +16,7 @@ const SideBarComponent = () => {
   const [activeUsers, setActiveUsers] = useState({});
   const [sidebarSearch, setSidebarSearch] = useState(false);
   const [islight, setIsLight] = useState(null);
-  const [sideBarExtend, setSideBarExtend] = useState(false)
+  const [sideBarExtend, setSideBarExtend] = useState(false);
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
@@ -157,129 +157,135 @@ const SideBarComponent = () => {
 
   const updateSideBarExtend = (e) => {
     e.preventDefault();
-    console.log("hellow world")
+    console.log("hellow world");
     sideBarExtend ? setSideBarExtend(false) : setSideBarExtend(true);
-  }
+  };
 
   if (!listOfChats || !userContext.user) return <div aria-hidden="true"></div>;
 
   return listOfChats && userContext.user ? (
     <>
-    <div className='sideBarExtender' onClick={updateSideBarExtend}>chevron right</div>
-    <div
-      className={`sideBar ${sideBarExtend ? 'show' : 'hide'} fadeInStaggered`}
-      role="navigation"
-      aria-label="Chat navigation"
-    >
-      <ul
-        className={`chatList ${
-          sidebarSearch ? "show" : "hide"
-        }`}
-        role="list"
-      >
-        <div className="sideBarSearch" role="search">
-          <input
-            type="search"
-            className="sideBarSearch"
-            aria-label="Search chats"
-            onChange={(e) => changeDisplayedChatList(e.target.value)}
-            onBlur={(e) => {
-              setTimeout(() => {
-                setSidebarSearch("");
-                changeDisplayedChatList("");
-                e.target.value = "";
-              }, 150);
-            }}
-          ></input>
+      <div>
+        <button
+          className={`sideBarExtender ${sideBarExtend ? "show" : "hide"}`}
+          onClick={updateSideBarExtend}
+        >
           <img
-            className="sideBarSearchIcon"
-            src="searchIcon.svg"
-            role="button"
-            aria-label="Toggle search"
-            aria-hidden="true"
+            src={`${sideBarExtend ? "/ChevronLeft.svg" : "ChevronRight.svg"}`}
           ></img>
-        </div>
-        {listOfChats.map(
-          (chat, index) =>
-            chat && (
-              <li className="chat" key={index} role="listitem">
-                {!chat.name &&
-                  chat.participants.length === 1 &&
-                  chat.profilePicture && (
-                    <img
-                      onClick={() => changeChat(chat)}
-                      className="sideBarProfilePicture"
-                      src={chat.profilePicture}
-                      alt={`${chat.participants} profile picture`}
-                    ></img>
+        </button>
+      </div>
+      <div
+        className={`sideBar ${sideBarExtend ? "show" : "hide"} fadeInStaggered`}
+        role="navigation"
+        aria-label="Chat navigation"
+      >
+        <ul
+          className={`chatList ${sidebarSearch ? "show" : "hide"}`}
+          role="list"
+        >
+          <div className="sideBarSearch" role="search">
+            <input
+              type="search"
+              className="sideBarSearch"
+              aria-label="Search chats"
+              onChange={(e) => changeDisplayedChatList(e.target.value)}
+              onBlur={(e) => {
+                setTimeout(() => {
+                  setSidebarSearch("");
+                  changeDisplayedChatList("");
+                  e.target.value = "";
+                }, 150);
+              }}
+            ></input>
+            <img
+              className="sideBarSearchIcon"
+              src="searchIcon.svg"
+              role="button"
+              aria-label="Toggle search"
+              aria-hidden="true"
+            ></img>
+          </div>
+          {listOfChats.map(
+            (chat, index) =>
+              chat && (
+                <li className="chat" key={index} role="listitem">
+                  {!chat.name &&
+                    chat.participants.length === 1 &&
+                    chat.profilePicture && (
+                      <img
+                        onClick={() => changeChat(chat)}
+                        className="sideBarProfilePicture"
+                        src={chat.profilePicture}
+                        alt={`${chat.participants} profile picture`}
+                      ></img>
+                    )}
+                  {!chat.name &&
+                    chat.participants.length === 1 &&
+                    !chat.profilePicture &&
+                    !islight && (
+                      <img
+                        className="sideBarProfilePicture"
+                        src="/defaultProfileImageLight.webp"
+                        alt="User profile placeholder"
+                      ></img>
+                    )}
+                  {!chat.name &&
+                    chat.participants.length === 1 &&
+                    !chat.profilePicture &&
+                    islight && (
+                      <img
+                        className="sideBarProfilePicture"
+                        src="/defaultProfileImage.png"
+                        alt="User profile placeholder"
+                      ></img>
+                    )}
+                  <button
+                    className="chatButton"
+                    onClick={() => {
+                      changeChat(chat);
+                      updateIsRead(chat);
+                    }}
+                    aria-current={
+                      chatContext.currentChat?.conversationID ===
+                      chat.conversation_id
+                        ? "page"
+                        : undefined
+                    }
+                  >
+                    {chat.name ? chat.name : chat.participants}
+                  </button>
+                  {!chat.is_read && (
+                    <div
+                      className="messageNotification"
+                      role="status"
+                      aria-label="Unread messages"
+                    ></div>
                   )}
-                {!chat.name &&
+                  {chat.participants &&
                   chat.participants.length === 1 &&
-                  !chat.profilePicture &&
-                  !islight && (
-                    <img
-                      className="sideBarProfilePicture"
-                      src="/defaultProfileImageLight.webp"
-                      alt="User profile placeholder"
-                    ></img>
+                  activeUsers[chat.participants] ? (
+                    <div
+                      className="online"
+                      role="status"
+                      aria-label="User online"
+                    ></div>
+                  ) : (
+                    <div
+                      className="offline"
+                      role="status"
+                      aria-label="User offline"
+                    ></div>
                   )}
-                {!chat.name &&
-                  chat.participants.length === 1 &&
-                  !chat.profilePicture &&
-                  islight && (
-                    <img
-                      className="sideBarProfilePicture"
-                      src="/defaultProfileImage.png"
-                      alt="User profile placeholder"
-                    ></img>
-                  )}
-                <button
-                  className="chatButton"
-                  onClick={() => {
-                    changeChat(chat);
-                    updateIsRead(chat);
-                  }}
-                  aria-current={
-                    chatContext.currentChat?.conversationID ===
-                    chat.conversation_id
-                      ? "page"
-                      : undefined
-                  }
-                >
-                  {chat.name ? chat.name : chat.participants}
-                </button>
-                {!chat.is_read && (
-                  <div
-                    className="messageNotification"
-                    role="status"
-                    aria-label="Unread messages"
-                  ></div>
-                )}
-                {chat.participants && chat.participants.length === 1 &&
-                activeUsers[chat.participants] ? (
-                  <div
-                    className="online"
-                    role="status"
-                    aria-label="User online"
-                  ></div>
-                ) : (
-                  <div
-                    className="offline"
-                    role="status"
-                    aria-label="User offline"
-                  ></div>
-                )}
-              </li>
-            )
-        )}
-      </ul>
-    </div>
+                </li>
+              )
+          )}
+        </ul>
+      </div>
     </>
   ) : (
     <div></div>
   );
-  
 };
 
 export default SideBarComponent;
-

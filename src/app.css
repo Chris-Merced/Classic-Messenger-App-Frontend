@@ -244,7 +244,7 @@ button.sendMessageButton {
   animation: fadeSlideIn 0.8s ease-out forwards;
 }
 
-.headerHomeIcon{
+.headerHomeIcon {
   display: none;
 }
 
@@ -265,7 +265,7 @@ body.light-theme .welcomeHeader {
   animation: fadeSlideIn 0.8s ease-out forwards;
 }
 
-.headerSearchIcon{
+.headerSearchIcon {
   display: none;
 }
 
@@ -1041,9 +1041,8 @@ body.light-theme .online {
   transition: all 0.3s ease;
 }
 
-
-.sideBarExtender{
-  display: none;
+.sideBarExtender {
+  opacity: 0;
 }
 
 .sideBarSearch {
@@ -1397,43 +1396,42 @@ body.light-theme .signupHeader {
     width: 100%;
     overflow: hidden;
   }
-  
 
-  .main{
-    height:78vh;
+  .main {
+    height: 78vh;
   }
-  h1{
+  h1 {
     height: 40px;
   }
   .searchBar {
     position: relative;
-    display: inline-block;    
+    display: inline-block;
   }
 
   .searchBar input {
-    display: block;           
+    display: block;
     width: 27px;
     transition: width 0.7s ease;
   }
 
-  input#search.headerSearchInput::placeholder{
-    color:transparent
+  input#search.headerSearchInput::placeholder {
+    color: transparent;
   }
 
   .searchBar input:focus {
     width: 20vw;
   }
 
-  .headerHomeIcon{
+  .headerHomeIcon {
     display: inline-block;
     position: absolute;
-    transform: translateX(35%) translateY(25%); 
+    transform: translateX(35%) translateY(25%);
     padding-left: auto;
-    width:60px;
-    height:60px;
+    width: 60px;
+    height: 60px;
   }
 
-  .headerTitle{
+  .headerTitle {
     display: none;
   }
 
@@ -1449,20 +1447,20 @@ body.light-theme .signupHeader {
   }
 
   .mainChat {
-    height:100vh;
+    height: 100vh;
     max-height: 100vh;
   }
-  
-  li.message{
-    width:100%;
+
+  li.message {
+    width: 100%;
   }
 
-  .messageText{
+  .messageText {
     width: 80vw;
   }
 
-  .timeElapsed{
-    width:80px;
+  .timeElapsed {
+    width: 80px;
   }
 
   .chatList {
@@ -1472,7 +1470,7 @@ body.light-theme .signupHeader {
     order: 1;
   }
 
-  body.light-theme .chatList{
+  body.light-theme .chatList {
     background-color: rgb(155, 155, 155);
   }
 
@@ -1484,21 +1482,37 @@ body.light-theme .signupHeader {
     z-index: 200;
   }
 
-.sideBar.show{
-  transform: translateX(320px);
+  .sideBar.show {
+    transform: translateX(320px) translateY(-80px);
+  }
 
+  button.sideBarExtender {
+    all:unset;
+    opacity: 1;
+  transform: translateX();             
+  transition: transform 0.3s ease-in;
+  display: inline-block;                
+  position: absolute;
+}
+.sideBarExtender.show {
+  transform: translateX(260px);
+  z-index: 201;         
+}
+.sideBarExtender.hide {
+  transform: translateX(0);             
 }
 
-  .sideBarExtender{
-    display: inline-block;
-    position:absolute
+.userProfilePage{
+  transform: translateX(-20px);
+}
 
-  }
+.userHeader{
+  width: 200px;
+}
 
-  .sendMessage{
+  .sendMessage {
     padding-top: auto;
   }
-
 }
 
 @keyframes slideIn {
