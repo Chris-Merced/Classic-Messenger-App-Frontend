@@ -342,7 +342,8 @@ const UserProfile = () => {
                     alt="Default profile picture"
                   />
                 )}
-                <h1>{profile.username}</h1>
+                
+                <h3>{profile.username}</h3>
 
                 {blockedByProfile ? (
                   <div role="alert">You Are Currently Blocked by This User</div>

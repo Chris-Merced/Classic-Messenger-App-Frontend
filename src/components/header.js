@@ -259,7 +259,7 @@ const HeaderComponent = () => {
                 </button>
 
                 <div
-                  id="user-menu"
+                  id="userMenu"
                   className={`Menu ${dropDown ? "show" : "hide"}`}
                   role="menu"
                   aria-labelledby="dropdown-button"

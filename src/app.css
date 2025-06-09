@@ -1507,12 +1507,23 @@ body.light-theme .signupHeader {
 }
 
 .userHeader{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 200px;
-}
+transform: translateX(40px);}
 
   .sendMessage {
     padding-top: auto;
   }
+
+#userMenu.Menu{
+  background-color: rgba(122, 122, 122, 0.95);
+}
+
+body.light-theme #userMenu.Menu{
+  background-color: rgb(180, 179, 179, 0.95);
+}
 }
 
 @keyframes slideIn {

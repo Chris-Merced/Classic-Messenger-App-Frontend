@@ -28,12 +28,12 @@ const signUpComponent = () => {
   };
 
   const validateUsername = (username) => {
-    const regex = /^[a-zA-Z0-9]+$/;
+    const regex = /^[a-zA-Z0-9]{1,16}$/;
     if (username === "") {
       return "Please enter in a username";
     }
     if (!regex.test(username)) {
-      return "Please enter in a valid username (One word, can contain numbers)";
+      return "Please enter in a valid username (One word, can contain numbers, up to 16 characters)";
     }
     return "";
   };
@@ -90,8 +90,8 @@ const signUpComponent = () => {
     }
   };
 
-  console.log("USER STATUS")
-  console.log(user)
+  console.log("USER STATUS");
+  console.log(user);
 
   return (
     <>
