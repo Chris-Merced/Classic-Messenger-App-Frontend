@@ -1403,6 +1403,10 @@ body.light-theme .signupHeader {
   h1 {
     height: 40px;
   }
+  h3{
+    padding-top: -20px;
+    margin-bottom: 0px;
+  }
   .searchBar {
     position: relative;
     display: inline-block;
@@ -1411,7 +1415,7 @@ body.light-theme .signupHeader {
   .searchBar input {
     display: block;
     width: 27px;
-    transition: width 0.7s ease;
+    transition: width 0.7s ease color .1s ease;
   }
 
   input#search.headerSearchInput::placeholder {
@@ -1471,7 +1475,7 @@ body.light-theme .signupHeader {
   }
 
   body.light-theme .chatList {
-    background-color: rgb(155, 155, 155);
+    background-color: rgb(177, 177, 177);
   }
 
   .sideBar {
@@ -1511,8 +1515,16 @@ body.light-theme .signupHeader {
   flex-direction: column;
   justify-content: center;
   width: 200px;
-transform: translateX(40px);}
+transform: translateX(40px);
+margin-bottom: 40px;}
 
+.aboutMeSection{
+  margin-top: 0px;
+}
+
+.friendsContent{
+  transform: translateX(-30px);
+}
   .sendMessage {
     padding-top: auto;
   }

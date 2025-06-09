@@ -502,7 +502,7 @@ const UserProfile = () => {
                   src="/defaultProfileImage.png"
                   alt="Default profile picture"
                 />
-                <div>{profile.username}</div>
+                <h3>{profile.username}</h3>
                 {isBlocked === false ? (
                   <button
                     className="block"
