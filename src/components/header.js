@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
@@ -16,12 +16,15 @@ const HeaderComponent = () => {
   const [searchInput, setSearchInput] = useState("");
   const [friendRequests, setFriendRequests] = useState("");
   const [isLightTheme, setIsLightTheme] = useState(false);
+  const windowWidth = useRef()
 
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
   const userData = context.user;
   const location = useLocation();
   const navigate = useNavigate();
+
+  windowWidth.current = window.innerWidth;
 
   useEffect(() => {
     if(userData){setUser(userData);}
@@ -149,13 +152,18 @@ const HeaderComponent = () => {
 
   };
 
+  console.log(windowWidth)
+
+  console.log("viewport width: " + window.innerWidth)
+  console.log(windowWidth)
   return (
     <>
       <header className="websiteHeader" role="banner" aria-label="Site header">
         <Link to="/" className="homepageLink">
-          <h1 className="welcomeHeader">
-            <span>Welcome</span> <strong>Home</strong>
+            <img className="headerHomeIcon" src="/house.ico"></img><h1 className="welcomeHeader">
+            <span className="headerTitle">Welcome</span> <strong className="headerTitle">Home</strong>
           </h1>
+          
         </Link>
 
         {user && (
@@ -166,8 +174,10 @@ const HeaderComponent = () => {
               aria-label="Search users"
             >
               <div className="searchBar">
+                <img className="headerSearchIcon" src="/searchIcon.svg"/>
                 <form onSubmit={searchDB} role="search">
                   <input
+                    className="headerSearchInput"
                     type="text"
                     name="search"
                     id="search"

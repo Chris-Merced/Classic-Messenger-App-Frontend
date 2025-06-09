@@ -228,6 +228,7 @@ button.sendMessageButton {
 }
 
 .welcomeHeader {
+  display: inline-block;
   font-family: "Poppins", sans-serif;
   font-size: 2.2rem;
   font-weight: 400;
@@ -241,6 +242,10 @@ button.sendMessageButton {
   opacity: 0;
   transform: translateY(-3px);
   animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+.headerHomeIcon{
+  display: none;
 }
 
 body.light-theme .welcomeHeader {
@@ -258,6 +263,10 @@ body.light-theme .welcomeHeader {
   opacity: 0;
   transform: translateY(-3px);
   animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+.headerSearchIcon{
+  display: none;
 }
 
 .userProfile {
@@ -991,6 +1000,7 @@ body.light-theme .online {
   padding-right: 30vw;
   padding-left: 13vw;
   margin-left: auto;
+  height: 80vh;
 }
 
 .timeElapsed {
@@ -1026,6 +1036,7 @@ body.light-theme .online {
 
 .sideBar {
   margin-left: -75px;
+  margin-top: 80px;
   transform: translateY(20px);
   transition: width 0.3s ease;
 }
@@ -1382,17 +1393,57 @@ body.light-theme .signupHeader {
     overflow: hidden;
   }
   
+
   .main{
     height:78vh;
   }
   h1{
     height: 40px;
   }
+  .searchBar {
+    position: relative;
+    display: inline-block;    
+  }
+
+  .searchBar input {
+    display: block;           
+    width: 7vw;
+    transition: width 0.7s ease;
+    padding-left: 40px;
+  }
+  .searchBar input:focus {
+    width: 20vw;
+  }
+
+  .headerHomeIcon{
+    display: inline-block;
+    position: absolute;
+    transform: translateX(35%) translateY(25%); 
+    padding-left: auto;
+    width:60px;
+    height:60px;
+  }
+
+  .headerTitle{
+    display: none;
+  }
+
+  .headerSearchIcon {
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+  }
+
   .mainChat {
     height:100vh;
     max-height: 100vh;
   }
- 
+  
   li.message{
     width:100%;
   }
