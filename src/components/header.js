@@ -152,10 +152,7 @@ const HeaderComponent = () => {
 
   };
 
-  console.log(windowWidth)
 
-  console.log("viewport width: " + window.innerWidth)
-  console.log(windowWidth)
   return (
     <>
       <header className="websiteHeader" role="banner" aria-label="Site header">
