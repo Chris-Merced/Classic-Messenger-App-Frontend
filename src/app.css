@@ -1381,23 +1381,42 @@ body.light-theme .signupHeader {
     width: 100%;
     overflow: hidden;
   }
+  
+  .main{
+    height:78vh;
+  }
+  h1{
+    height: 40px;
+  }
+  .mainChat {
+    height:100vh;
+    max-height: 100vh;
+  }
  
   li.message{
     width:100%;
   }
+
   .messageText{
     width: 80vw;
   }
+
   .timeElapsed{
     width:80px;
   }
+
   .chatList {
     width: 100%;
     margin: 0;
     order: 1;
   }
+
   .sideBar {
     display: none;
+  }
+
+  .sendMessage{
+    padding-top: auto;
   }
 
 }
