@@ -1038,7 +1038,12 @@ body.light-theme .online {
   margin-left: -75px;
   margin-top: 80px;
   transform: translateY(20px);
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+
+.sideBarExtender{
+  display: none;
 }
 
 .sideBarSearch {
@@ -1407,10 +1412,14 @@ body.light-theme .signupHeader {
 
   .searchBar input {
     display: block;           
-    width: 7vw;
+    width: 27px;
     transition: width 0.7s ease;
-    padding-left: 40px;
   }
+
+  input#search.headerSearchInput::placeholder{
+    color:transparent
+  }
+
   .searchBar input:focus {
     width: 20vw;
   }
@@ -1459,11 +1468,31 @@ body.light-theme .signupHeader {
   .chatList {
     width: 100%;
     margin: 0;
+    background-color: rgb(80, 80, 80);
     order: 1;
   }
 
+  body.light-theme .chatList{
+    background-color: rgb(155, 155, 155);
+  }
+
   .sideBar {
-    display: none;
+    position: absolute;
+    left: -230px;
+    animation: translate ease-in 2s;
+    opacity: 1;
+    z-index: 200;
+  }
+
+.sideBar.show{
+  transform: translateX(320px);
+
+}
+
+  .sideBarExtender{
+    display: inline-block;
+    position:absolute
+
   }
 
   .sendMessage{

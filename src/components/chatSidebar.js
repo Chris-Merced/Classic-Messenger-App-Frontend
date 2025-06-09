@@ -16,6 +16,7 @@ const SideBarComponent = () => {
   const [activeUsers, setActiveUsers] = useState({});
   const [sidebarSearch, setSidebarSearch] = useState(false);
   const [islight, setIsLight] = useState(null);
+  const [sideBarExtend, setSideBarExtend] = useState(false)
 
   useEffect(() => {
     if (chatContext?.chatList?.userChats) {
@@ -154,11 +155,19 @@ const SideBarComponent = () => {
     });
   };
 
+  const updateSideBarExtend = (e) => {
+    e.preventDefault();
+    console.log("hellow world")
+    sideBarExtend ? setSideBarExtend(false) : setSideBarExtend(true);
+  }
+
   if (!listOfChats || !userContext.user) return <div aria-hidden="true"></div>;
 
   return listOfChats && userContext.user ? (
+    <>
+    <div className='sideBarExtender' onClick={updateSideBarExtend}>chevron right</div>
     <div
-      className="sideBar fadeInStaggered"
+      className={`sideBar ${sideBarExtend ? 'show' : 'hide'} fadeInStaggered`}
       role="navigation"
       aria-label="Chat navigation"
     >
@@ -265,9 +274,11 @@ const SideBarComponent = () => {
         )}
       </ul>
     </div>
+    </>
   ) : (
     <div></div>
   );
+  
 };
 
 export default SideBarComponent;
