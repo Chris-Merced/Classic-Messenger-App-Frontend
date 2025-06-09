@@ -334,7 +334,6 @@ textarea.aboutMeInput::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: content-box;
-
 }
 
 textarea.aboutMeInput:hover::-webkit-scrollbar-thumb {
@@ -345,16 +344,14 @@ form.editAboutMe button.aboutMeSubmit {
   width: 40%;
 }
 
-
-
 .userProfileMod {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.userProfileMod button.editProfile{
-  width:100px;
+.userProfileMod button.editProfile {
+  width: 100px;
 }
 
 .DropDown {
@@ -388,14 +385,13 @@ button.profileButton div {
   margin-bottom: 30px;
 }
 
-
 .aboutMeHeader {
   font-weight: bolder;
   border-bottom: 1px solid;
   width: 30%;
 }
 
-.aboutMeData{
+.aboutMeData {
   white-space: pre-wrap;
 }
 
@@ -1009,7 +1005,7 @@ body.light-theme .online {
 .mainChat {
   width: 100%;
   margin: 0 auto;
-  max-height: 1000px;
+  max-height: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -1362,6 +1358,48 @@ body.light-theme .signupHeader {
   transform: translateY(-10px);
   animation: fadeSlideIn 0.8s ease-out forwards;
   animation-delay: 0.9s;
+}
+
+@media (max-width: 1024px) {
+  .main {
+    padding: 0 2vw;
+  }
+  .chatList {
+    width: 150px;
+  }
+  .sendMessageInput {
+    width: 50vw;
+  }
+}
+
+@media (max-width: 767px) {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+ 
+  li.message{
+    width:100%;
+  }
+  .messageText{
+    width: 80vw;
+  }
+  .timeElapsed{
+    width:80px;
+  }
+  .chatList {
+    width: 100%;
+    margin: 0;
+    order: 1;
+  }
+  .sideBar {
+    display: none;
+  }
+
 }
 
 @keyframes slideIn {
