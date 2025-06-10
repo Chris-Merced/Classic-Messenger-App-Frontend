@@ -1018,7 +1018,6 @@ body.light-theme .online {
   max-height: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-behavior: smooth;
   position: relative;
   z-index: 0;
 }

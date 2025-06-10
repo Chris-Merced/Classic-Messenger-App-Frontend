@@ -15,12 +15,40 @@ const HomeChatComponent = () => {
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
   const spanRef = useRef(null);
+  const pageRef = useRef(0);
+  const scrollBottomRef = useRef(true);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
   const userData = context.user;
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
+
+  useEffect(() => {
+    const container = mainChatRef.current;
+    if (!container) return;
+    pageRef.current = 0
+    setMessages([]);
+    scrollBottomRef.current = true;
+    const handleScroll = async () => {
+      scrollBottomRef.current = false;
+      const previousHeight = container.scrollHeight;
+
+      if (container.scrollTop === 0) {
+        pageRef.current += 1;
+        const res = await getMessages();
+        if(res){
+          requestAnimationFrame(() => {
+         container.scrollTop = container.scrollHeight - previousHeight;
+       });
+        }
+      }
+
+      
+    };
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [chat]);
 
   useEffect(() => {
     if (context?.user?.id) {
@@ -33,10 +61,12 @@ const HomeChatComponent = () => {
   }, [currentChat]);
 
   useEffect(() => {
-    if (mainChatRef.current) {
-      mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight;
+    console.log(scrollBottomRef.current)
+    if (mainChatRef.current && pageRef.current === 0) {
+      console.log("activint")
+      setTimeout(()=>{mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight}, 50);
     }
-  }, [messages]);
+  }, [messages, chat]);
 
   useEffect(() => {
     if (spanRef.current && inputRef.current) {
@@ -64,6 +94,8 @@ const HomeChatComponent = () => {
 
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
+          mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight +100;
+
 
           if (
             message.conversationID != 1 &&
@@ -144,38 +176,45 @@ const HomeChatComponent = () => {
     }
   }, [chat, socketRef.current]);
 
+  const getMessages = async (container=null) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
+        chat.name
+      }&conversationID=${chat.conversationID}&userID=${
+        user ? user.id : ""
+      }&page=${pageRef.current}&limit=20`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    if (data.messages) {
+      const timeFormattedArray = data.messages.map((message) => {
+        const dateObj = new Date(message.time);
+        return {
+          ...message,
+          time: new Date(message.time).toLocaleString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          dateObj,
+        };
+      });
+
+      setMessages((prev) => [...timeFormattedArray, ...prev]);
+      if(!mainChatRef.current){
+        return null
+      }else{
+        return true
+      }
+    }
+  };
+
   useEffect(() => {
     if (!chat || !chat.conversationID) return;
-
-    const getMessages = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
-          chat.name
-        }&conversationID=${chat.conversationID}&userID=${user ? user.id : ""}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        }
-      );
-      const data = await response.json();
-      if (data.messages) {
-        const timeFormattedArray = data.messages.map((message) => {
-          const dateObj = new Date(message.time);
-          return {
-            ...message,
-            time: new Date(message.time).toLocaleString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            }),
-            dateObj,
-          };
-        });
-
-        setMessages(timeFormattedArray);
-      }
-    };
 
     const checkIfBlocked = async () => {
       if (!chat.name) {
@@ -351,7 +390,7 @@ const HomeChatComponent = () => {
         <div className="sendMessage" role="region" aria-label="Compose message">
           {isBlocked ? (
             <div role="alert">You've been Blocked by this user</div>
-          ) : (
+          ) : ( 
             <form
               className="sendMessageForm fadeInStaggered"
               role="form"
