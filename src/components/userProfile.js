@@ -342,7 +342,7 @@ const UserProfile = () => {
                     alt="Default profile picture"
                   />
                 )}
-                
+
                 <h3>{profile.username}</h3>
 
                 {blockedByProfile ? (
@@ -537,11 +537,11 @@ const UserProfile = () => {
               </div>
               <div role="region" aria-label="About Me section">
                 <div>About Me:</div>
-                {profile.about_me ? <div>{profile.about_me}</div> : 
-                <div role="note">
-                  This user has not set their about me
-                </div>
-                }
+                {profile.about_me ? (
+                  <div>{profile.about_me}</div>
+                ) : (
+                  <div role="note">This user has not set their about me</div>
+                )}
               </div>
             </div>
           )}

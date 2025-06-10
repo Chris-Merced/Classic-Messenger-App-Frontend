@@ -13,8 +13,6 @@ export const UserChats = ({ children }) => {
   const [location, setLocation] = useState("");
   const [currentChat, setCurrentChat] = useState();
 
-  
-
   useEffect(() => {
     const getChats = async () => {
       if (!userContext?.user?.id) {
@@ -43,16 +41,15 @@ export const UserChats = ({ children }) => {
 
   const changeChat = (chat) => {
     setCurrentChat(chat);
-    
   };
 
   const resetChatList = () => {
     setChatList("");
   };
 
-  const changeChatList= (data) =>{
+  const changeChatList = (data) => {
     setChatList(data);
-  }
+  };
 
   const changeLocation = (location) => {
     setLocation(location);
@@ -66,7 +63,7 @@ export const UserChats = ({ children }) => {
         changeChat,
         resetChatList,
         changeLocation,
-        changeChatList
+        changeChatList,
       }}
     >
       {children}

@@ -1403,7 +1403,7 @@ body.light-theme .signupHeader {
   h1 {
     height: 40px;
   }
-  h3{
+  h3 {
     padding-top: -20px;
     margin-bottom: 0px;
   }
@@ -1415,7 +1415,7 @@ body.light-theme .signupHeader {
   .searchBar input {
     display: block;
     width: 27px;
-    transition: width 0.7s ease color .1s ease;
+    transition: width 0.7s ease color 0.1s ease;
   }
 
   input#search.headerSearchInput::placeholder {
@@ -1491,51 +1491,52 @@ body.light-theme .signupHeader {
   }
 
   button.sideBarExtender {
-    all:unset;
+    all: unset;
     opacity: 1;
-  transform: translateX();             
-  transition: transform 0.3s ease-in;
-  display: inline-block;                
-  position: absolute;
-}
-.sideBarExtender.show {
-  transform: translateX(260px);
-  z-index: 201;         
-}
-.sideBarExtender.hide {
-  transform: translateX(0);             
-}
+    transform: translateX();
+    transition: transform 0.3s ease-in;
+    display: inline-block;
+    position: absolute;
+  }
+  .sideBarExtender.show {
+    transform: translateX(260px);
+    z-index: 201;
+  }
+  .sideBarExtender.hide {
+    transform: translateX(0);
+  }
 
-.userProfilePage{
-  transform: translateX(-20px);
-}
+  .userProfilePage {
+    transform: translateX(-20px);
+  }
 
-.userHeader{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 200px;
-transform: translateX(40px);
-margin-bottom: 40px;}
+  .userHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 200px;
+    transform: translateX(40px);
+    margin-bottom: 40px;
+  }
 
-.aboutMeSection{
-  margin-top: 0px;
-}
+  .aboutMeSection {
+    margin-top: 0px;
+  }
 
-.friendsContent{
-  transform: translateX(-30px);
-}
+  .friendsContent {
+    transform: translateX(-30px);
+  }
   .sendMessage {
     padding-top: auto;
   }
 
-#userMenu.Menu{
-  background-color: rgba(122, 122, 122, 0.95);
-}
+  #userMenu.Menu {
+    background-color: rgba(122, 122, 122, 0.95);
+  }
 
-body.light-theme #userMenu.Menu{
-  background-color: rgb(180, 179, 179, 0.95);
-}
+  body.light-theme #userMenu.Menu {
+    background-color: rgb(180, 179, 179, 0.95);
+  }
 }
 
 @keyframes slideIn {

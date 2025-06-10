@@ -4,8 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { Link, useLocation } from "react-router-dom";
-import {v4 as uuidv4} from 'uuid';
-
+import { v4 as uuidv4 } from "uuid";
 
 const HeaderComponent = () => {
   const [username, setUsername] = useState("");
@@ -16,7 +15,7 @@ const HeaderComponent = () => {
   const [searchInput, setSearchInput] = useState("");
   const [friendRequests, setFriendRequests] = useState("");
   const [isLightTheme, setIsLightTheme] = useState(false);
-  const windowWidth = useRef()
+  const windowWidth = useRef();
 
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -27,7 +26,9 @@ const HeaderComponent = () => {
   windowWidth.current = window.innerWidth;
 
   useEffect(() => {
-    if(userData){setUser(userData);}
+    if (userData) {
+      setUser(userData);
+    }
 
     const getUserFriendRequests = async () => {
       const response = await fetch(
@@ -136,31 +137,30 @@ const HeaderComponent = () => {
   };
 
   const initiateOauth = () => {
-    const rootURL = "https://accounts.google.com/o/oauth2/v2/auth"
+    const rootURL = "https://accounts.google.com/o/oauth2/v2/auth";
     const state = uuidv4();
     document.cookie = `oauth_state=${state}; SameSite=Strict; path=/`;
     const options = {
       client_id: process.env.REACT_APP_OAUTH_CLIENTID,
       redirect_uri: `${process.env.REACT_APP_FRONTEND_URL}/oauth`,
-      response_type: 'code',
-      scope: 'openid email profile',
+      response_type: "code",
+      scope: "openid email profile",
       state,
-    }
+    };
 
-    const params=new URLSearchParams(options)
+    const params = new URLSearchParams(options);
     window.location.href = `${rootURL}?${params.toString()}`;
-
   };
-
 
   return (
     <>
       <header className="websiteHeader" role="banner" aria-label="Site header">
         <Link to="/" className="homepageLink">
-            <img className="headerHomeIcon" src="/house.ico"></img><h1 className="welcomeHeader">
-            <span className="headerTitle">Welcome</span> <strong className="headerTitle">Home</strong>
+          <img className="headerHomeIcon" src="/house.ico"></img>
+          <h1 className="welcomeHeader">
+            <span className="headerTitle">Welcome</span>{" "}
+            <strong className="headerTitle">Home</strong>
           </h1>
-          
         </Link>
 
         {user && (
@@ -171,7 +171,7 @@ const HeaderComponent = () => {
               aria-label="Search users"
             >
               <div className="searchBar">
-                <img className="headerSearchIcon" src="/searchIcon.svg"/>
+                <img className="headerSearchIcon" src="/searchIcon.svg" />
                 <form onSubmit={searchDB} role="search">
                   <input
                     className="headerSearchInput"

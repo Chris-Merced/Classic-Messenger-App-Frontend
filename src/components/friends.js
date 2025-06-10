@@ -98,7 +98,6 @@ const FriendRequests = () => {
   };
 
   const removeFriend = async (friendID) => {
-
     const body = { userID: user.id, friendID: friendID };
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/userProfile/removeFriend`,
@@ -114,9 +113,9 @@ const FriendRequests = () => {
     console.log(data);
   };
 
-  const changeIsFriendsList = () =>{
-    setIsFriendsList((prev)=>(!prev))
-  }
+  const changeIsFriendsList = () => {
+    setIsFriendsList((prev) => !prev);
+  };
 
   const changeIsFriendRequest = () => {
     setIsFriendRequests((prev) => !prev);
@@ -125,8 +124,11 @@ const FriendRequests = () => {
 
   return friendRequests && userContext ? (
     <div className="friendsContent" role="region" aria-label="Friends overview">
-
-      <div className="friendsListComponent" role="region" aria-labelledby="friends-list-heading">
+      <div
+        className="friendsListComponent"
+        role="region"
+        aria-labelledby="friends-list-heading"
+      >
         {isFriendsList ? (
           <button
             id="friends-list-heading"
@@ -136,7 +138,12 @@ const FriendRequests = () => {
             aria-controls="friends-list"
           >
             <h1>
-              Friends <img className="chevron" src="/chevronDownGrey.svg" alt="Toggle friends list" />
+              Friends{" "}
+              <img
+                className="chevron"
+                src="/chevronDownGrey.svg"
+                alt="Toggle friends list"
+              />
             </h1>
           </button>
         ) : (
@@ -148,19 +155,33 @@ const FriendRequests = () => {
             aria-controls="friends-list"
           >
             <h1>
-              Friends <img className="chevron" src="/chevronUpGrey.png" alt="Toggle friends list" />
+              Friends{" "}
+              <img
+                className="chevron"
+                src="/chevronUpGrey.png"
+                alt="Toggle friends list"
+              />
             </h1>
           </button>
         )}
 
         {friends && (
-          <ul id="friends-list" className={`friendsList ${isFriendsList ? "show" : "hide"}`} role="list">
+          <ul
+            id="friends-list"
+            className={`friendsList ${isFriendsList ? "show" : "hide"}`}
+            role="list"
+          >
             {friends.length === 0 ? (
               <li role="status">You have no friends, sad</li>
             ) : (
               friends.map((friend, index) => (
                 <li className="friend" key={index} role="listitem">
-                  <Link to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}> {friend.username} </Link>
+                  <Link
+                    to={`${process.env.REACT_APP_FRONTEND_URL}/userProfile/${friend.id}`}
+                  >
+                    {" "}
+                    {friend.username}{" "}
+                  </Link>
                   <button
                     className="friendsListItemButton"
                     onClick={() => removeFriend(friend.id)}
@@ -175,7 +196,11 @@ const FriendRequests = () => {
         )}
       </div>
 
-      <div className="friendRequests" role="region" aria-labelledby="friend-requests-heading">
+      <div
+        className="friendRequests"
+        role="region"
+        aria-labelledby="friend-requests-heading"
+      >
         <button
           id="friend-requests-heading"
           className="friendRequestsListButton"
@@ -184,25 +209,56 @@ const FriendRequests = () => {
           aria-controls="friend-requests-list"
         >
           <h1>
-            Friend Requests <img className="chevron" src={isFriendRequests ? "/chevronDownGrey.svg" : "/chevronUpGrey.png"} alt="Toggle friend requests list" />
+            Friend Requests{" "}
+            <img
+              className="chevron"
+              src={
+                isFriendRequests ? "/chevronDownGrey.svg" : "/chevronUpGrey.png"
+              }
+              alt="Toggle friend requests list"
+            />
           </h1>
         </button>
 
         {friendRequests.length !== 0 ? (
-          <ul id="friend-requests-list" className={`friendRequestList ${isFriendRequests ? "show" : "hide"}`} role="list">
+          <ul
+            id="friend-requests-list"
+            className={`friendRequestList ${
+              isFriendRequests ? "show" : "hide"
+            }`}
+            role="list"
+          >
             {friendRequests.map((request, index) => (
-              <li className="friendRequestListItem" key={index} ref={el => (itemRef.current[index] = el)} role="listitem">
+              <li
+                className="friendRequestListItem"
+                key={index}
+                ref={(el) => (itemRef.current[index] = el)}
+                role="listitem"
+              >
                 <span>{request.username}</span>
-                <button onClick={() => addFriend(request.id, index)} aria-label={`Accept friend request from ${request.username}`}>Accept</button>
-                <button onClick={() => denyFriend(request.id, index)} aria-label={`Deny friend request from ${request.username}`}>Deny</button>
+                <button
+                  onClick={() => addFriend(request.id, index)}
+                  aria-label={`Accept friend request from ${request.username}`}
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() => denyFriend(request.id, index)}
+                  aria-label={`Deny friend request from ${request.username}`}
+                >
+                  Deny
+                </button>
               </li>
             ))}
           </ul>
         ) : (
-          <div className="noFriendsDisplay" role="status" aria-label="No friend requests" />
+          <div
+            className="noFriendsDisplay"
+            role="status"
+            aria-label="No friend requests"
+          />
         )}
       </div>
-
     </div>
   ) : (
     <div role="alert">You need to log in to view friends</div>

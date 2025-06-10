@@ -22,9 +22,8 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
-
   useEffect(() => {
-    if(context?.user?.id){
+    if (context?.user?.id) {
       setUser(userData);
     }
   }, [context?.user]);
