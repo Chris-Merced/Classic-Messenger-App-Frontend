@@ -5,6 +5,11 @@ import { UserContext } from "../context/userContext";
 import { WebsocketContext } from "../context/websocketContext";
 import { UserChatsContext } from "../context/chatListContext";
 
+
+//TODO:
+// Smooth out buggy scrollbar behavior on chat change
+// Smooth out scrollbar behavior on pagination
+
 const HomeChatComponent = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -61,9 +66,7 @@ const HomeChatComponent = () => {
   }, [currentChat]);
 
   useEffect(() => {
-    console.log(scrollBottomRef.current)
     if (mainChatRef.current && pageRef.current === 0) {
-      console.log("activint")
       setTimeout(()=>{mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight}, 50);
     }
   }, [messages, chat]);
