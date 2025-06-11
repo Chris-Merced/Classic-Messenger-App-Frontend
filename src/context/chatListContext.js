@@ -13,27 +13,34 @@ export const UserChats = ({ children }) => {
   const [location, setLocation] = useState("");
   const [currentChat, setCurrentChat] = useState();
 
-  useEffect(() => {
-    const getChats = async () => {
-      if (!userContext?.user?.id) {
-        return;
-      }
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/messages/userChats?userID=${userContext.user.id}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+  const getChats = async () => {
+    if (!userContext?.user?.id) {
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/messages/userChats?userID=${userContext.user.id}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
 
-        const data = await response.json();
+      const data = await response.json();
+      console.log(data);
+      if (!chatList) {
         setChatList(data);
-      } catch (err) {
-        console.error("Error getting user chats: " + err);
+      } else {
+        setChatList((prev) => {const newChatList = [...prev.userChats, ...data.userChats]
+          return newChatList
+        });
       }
-    };
+    } catch (err) {
+      console.error("Error getting user chats: " + err);
+    }
+  };
 
+  useEffect(() => {
     if (userContext && userContext.user && userContext.user.id) {
       getChats();
     }

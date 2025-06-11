@@ -11,6 +11,7 @@ const SideBarComponent = () => {
   const location = useLocation();
   const intervalRef = useRef(null);
   const unmodifiedChatList = useRef(null);
+  const pageRef = useRef(0)
 
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
