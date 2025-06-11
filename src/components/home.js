@@ -1,10 +1,9 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 import { WebsocketContext } from "../context/websocketContext";
 import { UserChatsContext } from "../context/chatListContext";
-
 
 //TODO:
 // Smooth out buggy scrollbar behavior on chat change
@@ -22,6 +21,7 @@ const HomeChatComponent = () => {
   const spanRef = useRef(null);
   const pageRef = useRef(0);
   const scrollBottomRef = useRef(true);
+  const previousHeightRef = useRef(0);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -32,28 +32,29 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const container = mainChatRef.current;
     if (!container) return;
-    pageRef.current = 0
+    pageRef.current = 0;
     setMessages([]);
     scrollBottomRef.current = true;
     const handleScroll = async () => {
       scrollBottomRef.current = false;
-      const previousHeight = container.scrollHeight;
-
+      previousHeightRef.current = mainChatRef.current.scrollHeight;
       if (container.scrollTop === 0) {
         pageRef.current += 1;
-        const res = await getMessages();
-        if(res){
-          requestAnimationFrame(() => {
-         container.scrollTop = container.scrollHeight - previousHeight;
-       });
-        }
+        getMessages();
       }
-
-      
     };
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, [chat]);
+
+  useLayoutEffect(() => {
+    const container = mainChatRef.current;
+    if (!container || pageRef.current === 0) return;
+
+    const newHeight = container.scrollHeight;
+    const heightDifference = newHeight - previousHeightRef.current;
+    container.scrollTop = heightDifference;
+  }, [messages]);
 
   useEffect(() => {
     if (context?.user?.id) {
@@ -67,7 +68,9 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     if (mainChatRef.current && pageRef.current === 0) {
-      setTimeout(()=>{mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight}, 50);
+      setTimeout(() => {
+        mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight;
+      }, 50);
     }
   }, [messages, chat]);
 
@@ -97,8 +100,8 @@ const HomeChatComponent = () => {
 
         if (message.conversationID === chat.conversationID) {
           setMessages((prevMessages) => [...prevMessages, message]);
-          mainChatRef.current.scrollTop = mainChatRef.current.scrollHeight +100;
-
+          mainChatRef.current.scrollTop =
+            mainChatRef.current.scrollHeight + 100;
 
           if (
             message.conversationID != 1 &&
@@ -179,7 +182,7 @@ const HomeChatComponent = () => {
     }
   }, [chat, socketRef.current]);
 
-  const getMessages = async (container=null) => {
+  const getMessages = async (container = null) => {
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
         chat.name
@@ -208,10 +211,10 @@ const HomeChatComponent = () => {
       });
 
       setMessages((prev) => [...timeFormattedArray, ...prev]);
-      if(!mainChatRef.current){
-        return null
-      }else{
-        return true
+      if (!mainChatRef.current) {
+        return null;
+      } else {
+        return true;
       }
     }
   };
@@ -393,7 +396,7 @@ const HomeChatComponent = () => {
         <div className="sendMessage" role="region" aria-label="Compose message">
           {isBlocked ? (
             <div role="alert">You've been Blocked by this user</div>
-          ) : ( 
+          ) : (
             <form
               className="sendMessageForm fadeInStaggered"
               role="form"

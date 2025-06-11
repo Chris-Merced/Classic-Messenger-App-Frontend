@@ -630,7 +630,7 @@ a.signup {
 .chatList {
   width: 200px;
   padding: 15px;
-  height: 70vh;
+  max-height: 70vh;
   border: 2px solid;
   border-color: var(--border-color-dark);
   background-color: rgba(129, 129, 129, 0.3);
