@@ -1,12 +1,12 @@
 import React from "react";
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef, useLayoutEffect } from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 //TODO: Modify the width behavior of the chat sidebar to accomodate
 //        the notification bubbles
+//Make chatlist scrollbar only visible on hover
 
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
@@ -15,7 +15,8 @@ const SideBarComponent = () => {
   const location = useLocation();
   const intervalRef = useRef(null);
   const unmodifiedChatList = useRef(null);
-  const pageRef = useRef(0)
+  const pageRef = useRef(0);
+  const chatListRef = useRef(null);
 
   const [listOfChats, setListOfChats] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
@@ -33,6 +34,24 @@ const SideBarComponent = () => {
   useEffect(() => {
     setIsLight(document.body.classList.contains("light-theme"));
   }, []);
+
+  useLayoutEffect(() => {
+    if (!chatListRef.current) {
+      return;
+    }
+    const container = chatListRef.current;
+    const scrollHandle = () => {
+      if (
+        container.scrollTop + container.clientHeight >=
+        container.scrollHeight
+      ) {
+        pageRef.current +=1
+        chatContext.getChats(pageRef.current)
+      }
+    };
+    container.addEventListener("scroll", scrollHandle);
+    return () => container.removeEventListener("scroll", scrollHandle)
+  }, [chatListRef.current]);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -186,8 +205,11 @@ const SideBarComponent = () => {
         aria-label="Chat navigation"
       >
         <ul
-          className={`chatList ${sidebarSearch ? "show" : "hide"} scroll-container`}
+          className={`chatList ${
+            sidebarSearch ? "show" : "hide"
+          } scroll-container`}
           role="list"
+          ref={chatListRef}
         >
           <div className="sideBarSearch" role="search">
             <input

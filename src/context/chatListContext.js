@@ -13,7 +13,7 @@ export const UserChats = ({ children }) => {
   const [location, setLocation] = useState("");
   const [currentChat, setCurrentChat] = useState();
 
-  const getChats = async (page=0) => {
+  const getChats = async (page = 0) => {
     if (!userContext?.user?.id) {
       return;
     }
@@ -25,14 +25,16 @@ export const UserChats = ({ children }) => {
           credentials: "include",
         }
       );
-
+      console.log("PAGE: " + page);
       const data = await response.json();
-      console.log(data);
       if (!chatList) {
         setChatList(data);
+      } else if (page === 0) {
+        //donothing
       } else {
-        setChatList((prev) => {const newChatList = [...prev.userChats, ...data.userChats]
-          return newChatList
+        setChatList((prev) => {
+          const newChatList = [...prev.userChats, ...data.userChats];
+          return { userChats: newChatList };
         });
       }
     } catch (err) {
@@ -62,6 +64,10 @@ export const UserChats = ({ children }) => {
     setLocation(location);
   };
 
+  const paginate = (page) => {
+    getChats(page);
+  };
+
   return (
     <UserChatsContext.Provider
       value={{
@@ -71,6 +77,7 @@ export const UserChats = ({ children }) => {
         resetChatList,
         changeLocation,
         changeChatList,
+        getChats,
       }}
     >
       {children}
