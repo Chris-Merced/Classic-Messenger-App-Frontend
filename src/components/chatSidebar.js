@@ -181,7 +181,7 @@ const SideBarComponent = () => {
         aria-label="Chat navigation"
       >
         <ul
-          className={`chatList ${sidebarSearch ? "show" : "hide"}`}
+          className={`chatList ${sidebarSearch ? "show" : "hide"} scroll-container`}
           role="list"
         >
           <div className="sideBarSearch" role="search">

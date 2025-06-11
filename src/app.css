@@ -630,11 +630,14 @@ a.signup {
 .chatList {
   width: 200px;
   padding: 15px;
+  height: 70vh;
   border: 2px solid;
   border-color: var(--border-color-dark);
   background-color: rgba(129, 129, 129, 0.3);
   border-radius: 10px;
   display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
   flex-direction: column;
   margin-left: 4vw;
   box-shadow: 4px 4px 10px rgb(10, 10, 10);
