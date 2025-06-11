@@ -13,13 +13,13 @@ export const UserChats = ({ children }) => {
   const [location, setLocation] = useState("");
   const [currentChat, setCurrentChat] = useState();
 
-  const getChats = async () => {
+  const getChats = async (page=0) => {
     if (!userContext?.user?.id) {
       return;
     }
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/messages/userChats?userID=${userContext.user.id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/messages/userChats?userID=${userContext.user.id}&page=${page}&limit=16`,
         {
           method: "GET",
           credentials: "include",

@@ -4,6 +4,10 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
+
+//TODO: Modify the width behavior of the chat sidebar to accomodate
+//        the notification bubbles
+
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userContext = useContext(UserContext);
