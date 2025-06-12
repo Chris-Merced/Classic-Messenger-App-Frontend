@@ -756,6 +756,9 @@ body.light-theme .searchBar:hover {
 .searchResults {
   position: absolute;
   width: 18vw;
+  height: 10vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;

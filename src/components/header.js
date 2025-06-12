@@ -16,6 +16,7 @@ const HeaderComponent = () => {
   const [friendRequests, setFriendRequests] = useState("");
   const [isLightTheme, setIsLightTheme] = useState(false);
   const windowWidth = useRef();
+  const pageRef = useRef(null)
 
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -112,7 +113,7 @@ const HeaderComponent = () => {
     e.preventDefault();
     if (username !== "") {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${username}`,
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${username}&page=${pageRef}&limit=7`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -120,7 +121,7 @@ const HeaderComponent = () => {
       );
       const data = await response.json();
       const users = data.users;
-      setUsers(users);
+      setUsers((prev) => [...prev, ...users]);
     }
     if (username === "") {
       setUsers([]);
@@ -202,7 +203,8 @@ const HeaderComponent = () => {
               </div>
               {searchInput && (
                 <ul
-                  className="searchResults"
+                  className="searchResults scroll-container"
+                  ref={pageRef}
                   role="list"
                   aria-label="Search results"
                 >
