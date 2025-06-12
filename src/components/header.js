@@ -1,5 +1,11 @@
 import React from "react";
-import { useEffect, useState, useContext, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
@@ -16,7 +22,8 @@ const HeaderComponent = () => {
   const [friendRequests, setFriendRequests] = useState("");
   const [isLightTheme, setIsLightTheme] = useState(false);
   const windowWidth = useRef();
-  const pageRef = useRef(null)
+  const pageRef = useRef(0);
+  const searchRef = useRef(null);
 
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -59,6 +66,28 @@ const HeaderComponent = () => {
       setIsLightTheme(true);
     }
   }, []);
+
+  useLayoutEffect(() => {
+    if (!searchRef.current) {
+      return;
+    }
+
+    const container = searchRef.current;
+
+    const scrollHandle = async () => {
+      const previousHeight = container.scrollTop;
+      if (container.scrollTop + container.clientHeight >=
+        container.scrollHeight) {
+        console.log("WOWEW");
+
+        pageRef.current += 1;
+        searchDB(null, searchInput, true); //onScroll true
+      }
+    };
+
+    container.addEventListener("scroll", scrollHandle);
+    return () => container.removeEventListener("scroll", scrollHandle);
+  }, [searchRef.current]);
 
   const toggleTheme = () => {
     const newTheme = isLightTheme ? "dark" : "light";
@@ -109,11 +138,16 @@ const HeaderComponent = () => {
     //window.location.reload();
   };
 
-  const searchDB = async (e, username) => {
+  const searchDB = async (e, search, onScroll = false) => {
+    if(e){
     e.preventDefault();
-    if (username !== "") {
+    }
+    if (search !== "") {
+      if(!onScroll){
+        setUsers([])
+      }
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${username}&page=${pageRef}&limit=7`,
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${search}&page=${pageRef.current}&limit=7`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -121,10 +155,17 @@ const HeaderComponent = () => {
       );
       const data = await response.json();
       const users = data.users;
-      setUsers((prev) => [...prev, ...users]);
+      console.log("DISPLAYING USERS")
+      console.log(users);
+      if (!users) {
+        setUsers(users);
+      } else {
+        setUsers((prev) => [...prev, ...users]);
+      }
     }
-    if (username === "") {
-      setUsers([]);
+    if (search === "") {
+      setUsers([])
+      pageRef.current=0;
     }
   };
 
@@ -189,6 +230,7 @@ const HeaderComponent = () => {
                     onBlur={(e) => {
                       setTimeout(() => {
                         setSearchInput("");
+                        pageRef.current=0;
                         searchDB(e, e.target.value);
                       }, 150);
                     }}
@@ -204,7 +246,7 @@ const HeaderComponent = () => {
               {searchInput && (
                 <ul
                   className="searchResults scroll-container"
-                  ref={pageRef}
+                  ref={searchRef}
                   role="list"
                   aria-label="Search results"
                 >
