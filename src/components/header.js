@@ -75,13 +75,13 @@ const HeaderComponent = () => {
     const container = searchRef.current;
 
     const scrollHandle = async () => {
-      const previousHeight = container.scrollTop;
-      if (container.scrollTop + container.clientHeight >=
-        container.scrollHeight) {
-        console.log("WOWEW");
-
+      if (
+        container.scrollTop + container.clientHeight >=
+        container.scrollHeight
+      ) {
         pageRef.current += 1;
-        searchDB(null, searchInput, true); //onScroll true
+        const onScroll = true;
+        searchDB(null, searchInput, onScroll); 
       }
     };
 
@@ -139,12 +139,12 @@ const HeaderComponent = () => {
   };
 
   const searchDB = async (e, search, onScroll = false) => {
-    if(e){
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
     }
     if (search !== "") {
-      if(!onScroll){
-        setUsers([])
+      if (!onScroll) {
+        setUsers([]);
       }
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${search}&page=${pageRef.current}&limit=7`,
@@ -155,8 +155,6 @@ const HeaderComponent = () => {
       );
       const data = await response.json();
       const users = data.users;
-      console.log("DISPLAYING USERS")
-      console.log(users);
       if (!users) {
         setUsers(users);
       } else {
@@ -164,8 +162,8 @@ const HeaderComponent = () => {
       }
     }
     if (search === "") {
-      setUsers([])
-      pageRef.current=0;
+      setUsers([]);
+      pageRef.current = 0;
     }
   };
 
@@ -230,7 +228,7 @@ const HeaderComponent = () => {
                     onBlur={(e) => {
                       setTimeout(() => {
                         setSearchInput("");
-                        pageRef.current=0;
+                        pageRef.current = 0;
                         searchDB(e, e.target.value);
                       }, 150);
                     }}
