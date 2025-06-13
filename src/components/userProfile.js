@@ -145,12 +145,13 @@ const UserProfile = () => {
 
   useEffect(()=>{
     const getMutualFriends = async () =>{
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/getMutuals?userID=${userContext.user.id}&profileID=${userIdentifier}`)
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`)
         const data = await response.json()
         
         console.log(data)
 
     }
+    getMutualFriends()
   })
 
   const sendDirectMessage = async () => {
