@@ -1,5 +1,11 @@
 import React from "react";
-import { useContext, useState, useEffect, useRef, useLayoutEffect } from "react";
+import {
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -8,6 +14,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 //        the notification bubbles
 //Make chatlist scrollbar only visible on hover
 //default chats profile pictures on the side do not have proper links to profile
+
+//friend request notifications do not seem to dynamically go away upon accept/deny
+
+
 
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
@@ -46,12 +56,12 @@ const SideBarComponent = () => {
         container.scrollTop + container.clientHeight >=
         container.scrollHeight
       ) {
-        pageRef.current +=1
-        chatContext.getChats(pageRef.current)
+        pageRef.current += 1;
+        chatContext.getChats(pageRef.current);
       }
     };
     container.addEventListener("scroll", scrollHandle);
-    return () => container.removeEventListener("scroll", scrollHandle)
+    return () => container.removeEventListener("scroll", scrollHandle);
   }, [chatListRef.current]);
 
   useEffect(() => {
