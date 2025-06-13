@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState, useContext, useRef } from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
@@ -143,19 +143,18 @@ const UserProfile = () => {
   }, [userIdentifier]);
 
   useEffect(() => {
-    if (userContext?.user?.id) {
+    if (userContext?.user?.id && userContext.user.id != userIdentifier) {
       const getMutualFriends = async () => {
         console.log(userContext.user.id);
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
         );
         const data = await response.json();
-
-        console.log(data);
+        setMutualFriends(data);
       };
       getMutualFriends();
     }
-  }, []);
+  }, [userIdentifier]);
 
   const sendDirectMessage = async () => {
     if (userContext?.user?.id) {
@@ -505,10 +504,17 @@ const UserProfile = () => {
                 )}
               </div>
               <div className="mutualFriends">
-                <ul className="MutualFriendsList">
+                <h3 className="mutualFriendsHeader">Mutual Friends</h3>
+                <ul className="mutualFriendsList scroll-container">
                   {mutualFriends &&
                     mutualFriends.map((friend, index) => (
-                      <li key={index}>hi</li>
+                      
+                      <li className="mutualFriendListItem" key={index}>
+                          <Link className="mutualFriendLink" to={`/userProfile/${friend.id}`}>
+                            <img src={friend.profile_picture ? friend.profile_picture : '/defaultProfileImage.png'}></img>
+                            {friend.username}
+                          </Link>
+                      </li>
                     ))}
                 </ul>
               </div>

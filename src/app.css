@@ -363,6 +363,47 @@ form.editAboutMe button.aboutMeSubmit {
   width: 100px;
 }
 
+.mutualFriendsHeader {
+  border-bottom: 1px solid;
+  width: 30%;
+}
+
+.mutualFriendsList {
+  display: flex;
+  gap: 10px;
+  width: 60vw;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.mutualFriendLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+
+.mutualFriendListItem {
+  list-style: none;
+}
+
+.mutualFriendListItem a {
+  text-decoration: none;
+  color: white;
+}
+
+.mutualFriendListItem img {
+  width: 100px;
+  border-radius: 40px;
+}
+
+.mutualFriendListItemContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .DropDown {
   border: 2px solid;
   border-color: var(--border-color-dark);
@@ -1342,7 +1383,7 @@ body.light-theme .signupHeader {
   scrollbar-color: #888 rgba(139, 139, 139, 0.05);
 }
 
-.scroll-container:hover{
+.scroll-container:hover {
   scrollbar-width: thin;
 }
 .scroll-container::-webkit-scrollbar {
@@ -1351,9 +1392,9 @@ body.light-theme .signupHeader {
   transition: all 2s ease;
 }
 
-.scroll-container:hover::-webkit-scrollbar{
+.scroll-container:hover::-webkit-scrollbar {
   width: 8px;
-  height: 8px
+  height: 8px;
 }
 
 .scroll-container::-webkit-scrollbar:onclick {
