@@ -19,7 +19,7 @@ const UserProfile = () => {
   const [profilePictureEdit, setProfilePictureEdit] = useState(null);
   const [profilePictureEditConfirm, setProfilePictureEditConfirm] =
     useState(false);
-  const [mutualFriends, setMutualFriends] = useState([])
+  const [mutualFriends, setMutualFriends] = useState([]);
 
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
@@ -74,7 +74,6 @@ const UserProfile = () => {
         }
       }
     };
-    console.log("CHECKING HOW MANY TIMES THIS IS CALLED ");
     if (userContext?.user?.id) {
       getUserProfile();
       checkIfBlocked();
@@ -143,16 +142,20 @@ const UserProfile = () => {
     }
   }, [userIdentifier]);
 
-  useEffect(()=>{
-    const getMutualFriends = async () =>{
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`)
-        const data = await response.json()
-        
-        console.log(data)
+  useEffect(() => {
+    if (userContext?.user?.id) {
+      const getMutualFriends = async () => {
+        console.log(userContext.user.id);
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
+        );
+        const data = await response.json();
 
+        console.log(data);
+      };
+      getMutualFriends();
     }
-    getMutualFriends()
-  })
+  }, []);
 
   const sendDirectMessage = async () => {
     if (userContext?.user?.id) {
@@ -503,7 +506,10 @@ const UserProfile = () => {
               </div>
               <div className="mutualFriends">
                 <ul className="MutualFriendsList">
-                  {mutualFriends && (mutualFriends.map((friend, index)=><li key={index}>hi</li>))}
+                  {mutualFriends &&
+                    mutualFriends.map((friend, index) => (
+                      <li key={index}>hi</li>
+                    ))}
                 </ul>
               </div>
             </div>
