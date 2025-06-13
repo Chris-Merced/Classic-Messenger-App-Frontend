@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 //TODO: Modify the width behavior of the chat sidebar to accomodate
 //        the notification bubbles
 //Make chatlist scrollbar only visible on hover
+//default chats profile pictures on the side do not have proper links to profile
 
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);

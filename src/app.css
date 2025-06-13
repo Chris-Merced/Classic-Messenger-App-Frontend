@@ -1338,11 +1338,22 @@ body.light-theme .signupHeader {
 }
 
 .scroll-container {
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scrollbar-color: #888 rgba(139, 139, 139, 0.05);
 }
+
+.scroll-container:hover{
+  scrollbar-width: thin;
+}
 .scroll-container::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  transition: all 2s ease;
+}
+
+.scroll-container:hover::-webkit-scrollbar{
   width: 8px;
+  height: 8px
 }
 
 .scroll-container::-webkit-scrollbar:onclick {
@@ -1350,12 +1361,12 @@ body.light-theme .signupHeader {
 }
 
 .scroll-container::-webkit-scrollbar-track {
-  background: rgba(139, 139, 139, 0.05);
+  background: rgba(255, 0, 0, 0.774);
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
   background: #888;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .sendMessageInput:focus {
