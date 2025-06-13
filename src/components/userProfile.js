@@ -19,6 +19,7 @@ const UserProfile = () => {
   const [profilePictureEdit, setProfilePictureEdit] = useState(null);
   const [profilePictureEditConfirm, setProfilePictureEditConfirm] =
     useState(false);
+  const [mutualFriends, setMutualFriends] = useState([])
 
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
@@ -141,6 +142,16 @@ const UserProfile = () => {
       checkIfBlockedByProfile();
     }
   }, [userIdentifier]);
+
+  useEffect(()=>{
+    const getMutualFriends = async () =>{
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userProfile/getMutuals?userID=${userContext.user.id}&profileID=${userIdentifier}`)
+        const data = await response.json()
+        
+        console.log(data)
+
+    }
+  })
 
   const sendDirectMessage = async () => {
     if (userContext?.user?.id) {
@@ -488,6 +499,11 @@ const UserProfile = () => {
                     )}
                   </>
                 )}
+              </div>
+              <div className="mutualFriends">
+                <ul className="MutualFriendsList">
+                  {mutualFriends && (mutualFriends.map((friend, index)=><li key={index}>hi</li>))}
+                </ul>
               </div>
             </div>
           ) : (
