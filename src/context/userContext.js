@@ -37,18 +37,29 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const login = async (data) => {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+          credentials: "include",
+        }
+      );
 
-    const newData = await response.json();
+      const newData = await response.json();
+      console.log(response);
+      if (response.ok) {
+        setUser(newData);
+      } else {
+        console.log(newData.message);
+      }
 
-    setUser(newData);
-
-    return response;
+      return response;
+    } catch (err) {
+      console.log("Error while attempting to log in user: \n" + err);
+    }
   };
 
   const oauthLogin = async (data) => {

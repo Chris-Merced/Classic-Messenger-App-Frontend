@@ -425,6 +425,7 @@ const HeaderComponent = () => {
                 <label className="passwordFormLabel" htmlFor="password">Password:</label>
                 <input
                   className="passwordInput"
+                  value={password}
                   name="password"
                   id="password"
                   type="password"
@@ -442,7 +443,7 @@ const HeaderComponent = () => {
               Signup
             </Link>
           </section>
-          <input className="test"></input>
+          <input className="makesLoginFormClickable"></input>
           </>
         )}
     </>
