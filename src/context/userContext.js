@@ -49,7 +49,7 @@ export const UserProvider = ({ children }) => {
       );
 
       const newData = await response.json();
-      console.log(response);
+      
       if (response.ok) {
         setUser(newData);
       } else {
