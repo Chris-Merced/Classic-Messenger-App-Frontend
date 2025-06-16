@@ -52,7 +52,7 @@ body.light-theme {
   gap: 20px;
 }
 
-section.loginHeader{
+section.loginHeader {
   margin-top: -150px;
 }
 
@@ -66,7 +66,7 @@ section.loginHeader{
   z-index: 201;
 }
 
-.loginError{
+.loginError {
   color: rgb(180, 90, 90);
 }
 
@@ -140,7 +140,6 @@ button.OAuthButton {
   border: 2px solid;
   border-color: #808080;
   background-color: rgba(168, 168, 168, 0.5);
-  transition: all ease 0.7s;
   width: 240px;
   margin-left: auto;
   margin-top: 20px;
@@ -185,6 +184,7 @@ body.light-theme button.loginButton:hover {
 .username {
   font-weight: 600;
   border-bottom: 1px solid;
+
 }
 
 .sendMessageInput {
@@ -483,7 +483,6 @@ body.light-theme .DropDown button {
 .usernameForm {
   display: flex;
   gap: 10px;
-  align-items: center;
 }
 
 .passwordForm {
@@ -1487,20 +1486,32 @@ body.light-theme .signupHeader {
   input#search.headerSearchInput::placeholder {
     color: transparent;
   }
+  
+  section.loginHeader{
+    position: relative;
+    max-width: 406px;
+  }
 
-  div.usernameForm{
+  div.usernameForm {
     display: flex;
     flex-direction: column;
   }
-  div.passwordForm{
+
+  div.passwordForm {
     display: flex;
-  flex-direction: column;
+    flex-direction: column;
   }
 
-  label{
-
+  button.OAuthButton {
+    position: absolute;
+    transform: translateX(45px) translateY(200px);
   }
 
+  .signup {
+    margin-right: 120px;
+    position: absolute;
+    transform: translateY(260px) translateX(180px);
+  }
   .searchBar input:focus {
     width: 20vw;
   }
