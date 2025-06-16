@@ -608,7 +608,7 @@ const UserProfile = () => {
           )}
         </div>
       ) : (
-        <div role="alert">No user logged in</div>
+        <div role="alert"></div>
       )}
     </div>
   );

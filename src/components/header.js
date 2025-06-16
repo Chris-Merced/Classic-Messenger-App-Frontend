@@ -21,6 +21,7 @@ const HeaderComponent = () => {
   const [searchInput, setSearchInput] = useState("");
   const [friendRequests, setFriendRequests] = useState("");
   const [isLightTheme, setIsLightTheme] = useState(false);
+  const [loginError, setLoginError] = useState(null);
   const windowWidth = useRef();
   const pageRef = useRef(0);
   const searchRef = useRef(null);
@@ -81,7 +82,7 @@ const HeaderComponent = () => {
       ) {
         pageRef.current += 1;
         const onScroll = true;
-        searchDB(null, searchInput, onScroll); 
+        searchDB(null, searchInput, onScroll);
       }
     };
 
@@ -126,6 +127,21 @@ const HeaderComponent = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
 
+    if (!username && !password) {
+      console.log("No username or password submitted");
+      setLoginError("Please provide a value for username and password");
+      return;
+    }
+    if (!username) {
+      console.log("No username submitted");
+      setLoginError("Please provide a value for username");
+      return;
+    }
+    if (!password) {
+      console.log("No password submitted");
+      setLoginError("Please provide a value for password");
+      return;
+    }
     const data = {
       username: username,
       password: password,
@@ -376,6 +392,11 @@ const HeaderComponent = () => {
             role="region"
             aria-label="Login form"
           >
+            {loginError && (
+              <div className="loginError" aria-label="Login Error">
+                {loginError}
+              </div>
+            )}
             <form
               className="loginForm"
               onSubmit={loginHandler}
