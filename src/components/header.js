@@ -385,8 +385,13 @@ const HeaderComponent = () => {
       </header>
 
       {!user &&
+
         location.pathname !== "/signup" &&
         location.pathname !== "/oauth" && (
+                <>
+                
+
+          
           <section
             className="loginHeader"
             role="region"
@@ -437,6 +442,8 @@ const HeaderComponent = () => {
               Signup
             </Link>
           </section>
+          <input className="test"></input>
+          </>
         )}
     </>
   );
