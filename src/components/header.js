@@ -407,7 +407,7 @@ const HeaderComponent = () => {
                 Log In
               </h2>
               <div className="usernameForm">
-                <label htmlFor="username">Username:</label>
+                <label className="usernameFormLabel" htmlFor="username">Username:</label>
                 <input
                   className="usernameInput"
                   name="username"
@@ -417,7 +417,7 @@ const HeaderComponent = () => {
                 />
               </div>
               <div className="passwordForm">
-                <label htmlFor="password">Password:</label>
+                <label className="passwordFormLabel" htmlFor="password">Password:</label>
                 <input
                   className="passwordInput"
                   name="password"

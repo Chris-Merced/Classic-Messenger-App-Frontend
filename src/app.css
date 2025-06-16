@@ -52,13 +52,18 @@ body.light-theme {
   gap: 20px;
 }
 
+section.loginHeader{
+  margin-top: -150px;
+}
+
 .loginHeader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateY(80%);
+  transform: translateY(40vh);
   padding-left: 25%;
   padding-right: 25%;
+  z-index: 201;
 }
 
 .loginError{
@@ -1481,6 +1486,19 @@ body.light-theme .signupHeader {
 
   input#search.headerSearchInput::placeholder {
     color: transparent;
+  }
+
+  div.usernameForm{
+    display: flex;
+    flex-direction: column;
+  }
+  div.passwordForm{
+    display: flex;
+  flex-direction: column;
+  }
+
+  label{
+
   }
 
   .searchBar input:focus {
