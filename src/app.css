@@ -78,7 +78,6 @@ height: 0px;
   position: absolute;
   transform: translateY(-45px);
 }
-
 .usernameInput {
   all: unset;
   border-radius: 15px;
@@ -704,6 +703,12 @@ a.signup {
 
 .chatList.show {
   width: 200px;
+}
+
+.chatButton{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chatButton .show {

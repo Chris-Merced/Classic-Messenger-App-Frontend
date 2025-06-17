@@ -17,6 +17,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 //friend request notifications do not seem to dynamically go away upon accept/deny
 
+//Figure out friends list request not working as intended
+
+//chat list red bubble notification is appearing on refresh but not on message
+
 
 
 const SideBarComponent = () => {
@@ -41,6 +45,11 @@ const SideBarComponent = () => {
       unmodifiedChatList.current = chatContext.chatList.userChats;
     }
   }, [chatContext.chatList]);
+
+
+  if(chatContext.chatList){
+    console.log(chatContext.chatList)
+  }
 
   useEffect(() => {
     setIsLight(document.body.classList.contains("light-theme"));
