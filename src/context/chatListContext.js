@@ -25,7 +25,7 @@ export const UserChats = ({ children }) => {
           credentials: "include",
         }
       );
-      console.log("PAGE: " + page);
+
       const data = await response.json();
       if (!chatList) {
         setChatList(data);

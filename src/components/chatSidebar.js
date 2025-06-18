@@ -47,10 +47,6 @@ const SideBarComponent = () => {
   }, [chatContext.chatList]);
 
 
-  if(chatContext.chatList){
-    console.log(chatContext.chatList)
-  }
-
   useEffect(() => {
     setIsLight(document.body.classList.contains("light-theme"));
   }, []);

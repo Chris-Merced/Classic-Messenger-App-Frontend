@@ -93,15 +93,13 @@ const UserProfile = () => {
           headers: { "Content-Type": "application/json" },
           credentials: "include",
         }
-
-
       );
-        const data = await response.json();
-      
-        console.log(data)
+      const data = await response.json();
+
+      console.log(data);
     };
-  
-    checkFriendRequest()
+
+    checkFriendRequest();
     setRequestSent(null);
   }, []);
 
@@ -166,7 +164,6 @@ const UserProfile = () => {
   useEffect(() => {
     if (userContext?.user?.id && userContext.user.id != userIdentifier) {
       const getMutualFriends = async () => {
-        console.log(userContext.user.id);
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
         );
