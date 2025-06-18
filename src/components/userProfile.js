@@ -95,8 +95,7 @@ const UserProfile = () => {
         }
       );
       const data = await response.json();
-
-      console.log(data);
+      setRequestSent(data)
     };
 
     checkFriendRequest();
