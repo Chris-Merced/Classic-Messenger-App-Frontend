@@ -85,6 +85,27 @@ const UserProfile = () => {
   }, [userIdentifier]);
 
   useEffect(() => {
+    const checkFriendRequest = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequestSent?userID=${userContext.user.id}&profileID=${userIdentifier}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+
+
+      );
+        const data = await response.json();
+      
+        console.log(data)
+    };
+  
+    checkFriendRequest()
+    setRequestSent(null);
+  }, []);
+
+  useEffect(() => {
     const getUserProfile = async () => {
       try {
         const response = await fetch(
@@ -508,12 +529,20 @@ const UserProfile = () => {
                 <ul className="mutualFriendsList scroll-container">
                   {mutualFriends &&
                     mutualFriends.map((friend, index) => (
-                      
                       <li className="mutualFriendListItem" key={index}>
-                          <Link className="mutualFriendLink" to={`/userProfile/${friend.id}`}>
-                            <img src={friend.profile_picture ? friend.profile_picture : '/defaultProfileImage.png'}></img>
-                            {friend.username}
-                          </Link>
+                        <Link
+                          className="mutualFriendLink"
+                          to={`/userProfile/${friend.id}`}
+                        >
+                          <img
+                            src={
+                              friend.profile_picture
+                                ? friend.profile_picture
+                                : "/defaultProfileImage.png"
+                            }
+                          ></img>
+                          {friend.username}
+                        </Link>
                       </li>
                     ))}
                 </ul>
