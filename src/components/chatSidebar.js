@@ -15,8 +15,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 //Make chatlist scrollbar only visible on hover
 //default chats profile pictures on the side do not have proper links to profile
 
-//friend request notifications do not seem to dynamically go away upon accept/deny
-
 //chat list red bubble notification is appearing on refresh but not on message
 
   
