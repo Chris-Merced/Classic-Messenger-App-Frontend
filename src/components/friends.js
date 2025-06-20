@@ -33,53 +33,24 @@ const FriendRequests = () => {
     }
   }, [user.friendRequests]);
 
-
   const addFriend = async (requestID) => {
-    const data = {
-      userID: user.id,
-      requestID: requestID,
-    };
+    try {
+      const data = {
+        userID: user.id,
+        requestID: requestID,
+      };
 
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/addFriend`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    );
-
-    if (response.ok) {
-      if (itemRef.current[requestID]) {
-        for (let i = 0; i < user.friendRequests.length; i++) {
-          if (user.friendRequests[i].id === requestID) {
-            user.friendRequests.splice(i, 1);
-          }
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/addFriend`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
         }
-      }
-    }
+      );
 
-  };
-
-  const denyFriend = async (requestID) => {
-    const data = {
-      userID: user.id,
-      requestID: requestID,
-    };
-
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/denyFriend`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    );
-
-    if (response.ok) {
-      if (itemRef.current[requestID]) {
+      if (response.ok) {
         if (itemRef.current[requestID]) {
           for (let i = 0; i < user.friendRequests.length; i++) {
             if (user.friendRequests[i].id === requestID) {
@@ -88,6 +59,41 @@ const FriendRequests = () => {
           }
         }
       }
+    } catch (err) {
+      console.log("Error adding friend: \n" + err.message);
+    }
+  };
+
+  const denyFriend = async (requestID) => {
+    try {
+      const data = {
+        userID: user.id,
+        requestID: requestID,
+      };
+
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/denyFriend`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        if (itemRef.current[requestID]) {
+          if (itemRef.current[requestID]) {
+            for (let i = 0; i < user.friendRequests.length; i++) {
+              if (user.friendRequests[i].id === requestID) {
+                user.friendRequests.splice(i, 1);
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.log("Error denying friend request: \n" + err.message);
     }
   };
 
