@@ -19,7 +19,7 @@ const HeaderComponent = () => {
   const [user, setUser] = useState("");
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [friendRequests, setFriendRequests] = useState("");
+  const [friendRequests, setFriendRequests] = useState([]);
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [loginError, setLoginError] = useState(null);
   const windowWidth = useRef();
@@ -39,26 +39,13 @@ const HeaderComponent = () => {
       setUser(userData);
     }
 
-    const getUserFriendRequests = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${context.user.id}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      const friendRequestData = await response.json();
-      const friendRequestsJSON = JSON.stringify(
-        friendRequestData.friendRequests
-      );
-
-      setFriendRequests(friendRequestData.friendRequests);
-    };
-    if (userData) {
-      getUserFriendRequests();
-    }
   }, [userData]);
+
+  useEffect(()=>{
+    if(userData){
+      setFriendRequests(userData.friendRequests)
+    }
+ }, [userData?.friendRequests])
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -285,12 +272,12 @@ const HeaderComponent = () => {
                 className="profileName"
                 role="status"
                 aria-label={
-                  friendRequests.length
+                  userData.friendRequests.length
                     ? `You have ${friendRequests.length} new friend requests`
                     : "No new friend requests"
                 }
               >
-                {friendRequests.length !== 0 ? (
+                {userData.friendRequests.length !== 0 ? (
                   <div className="notifications" aria-hidden="true">
                     !
                   </div>
@@ -341,13 +328,13 @@ const HeaderComponent = () => {
                         Friends
                       </button>
                     </Link>
-                    {friendRequests.length !== 0 && (
+                    {userData.friendRequests.length !== 0 && (
                       <div
                         className="notifications friendRequestNotifications"
                         role="status"
-                        aria-label={`You have ${friendRequests.length} pending friend requests`}
+                        aria-label={`You have ${userData.friendRequests.length} pending friend requests`}
                       >
-                        {friendRequests.length}
+                        {userData.friendRequests.length}
                       </div>
                     )}
                   </div>

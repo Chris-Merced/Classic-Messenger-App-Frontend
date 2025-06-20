@@ -12,6 +12,9 @@ const FriendRequests = () => {
   const [isFriendsList, setIsFriendsList] = useState(true);
   const itemRef = useRef([]);
 
+  //TODO: friends removal not working as intended
+  //      if user is added and then removed, removal does not occur in database
+
   useEffect(() => {
     const getFriends = async () => {
       const response = await fetch(
@@ -31,6 +34,9 @@ const FriendRequests = () => {
     if (user) {
       setFriendRequests(user.friendRequests);
     }
+    console.log("triggered friend requests");
+    console.log(user.friendRequests);
+    console.log(user);
   }, [user.friendRequests]);
 
   const addFriend = async (requestID) => {
@@ -55,9 +61,15 @@ const FriendRequests = () => {
           for (let i = 0; i < user.friendRequests.length; i++) {
             if (user.friendRequests[i].id === requestID) {
               user.friendRequests.splice(i, 1);
+              console.log(user.friendRequests);
+              user.friendRequests = [...user.friendRequests]
             }
           }
         }
+
+        userContext.modifyUser({...user})
+
+
       }
     } catch (err) {
       console.log("Error adding friend: \n" + err.message);

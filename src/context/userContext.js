@@ -36,6 +36,11 @@ export const UserProvider = ({ children }) => {
     fetchUserData();
   }, []);
 
+  const modifyUser = (user) =>{
+    console.log("hello")
+    setUser(user)
+  }
+
   const login = async (data) => {
     try {
       const response = await fetch(
@@ -80,6 +85,7 @@ export const UserProvider = ({ children }) => {
         logout,
         login,
         oauthLogin,
+        modifyUser,
       }}
     >
       {children}
