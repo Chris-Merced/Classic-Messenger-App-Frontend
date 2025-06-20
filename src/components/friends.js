@@ -34,9 +34,6 @@ const FriendRequests = () => {
     if (user) {
       setFriendRequests(user.friendRequests);
     }
-    console.log("triggered friend requests");
-    console.log(user.friendRequests);
-    console.log(user);
   }, [user.friendRequests]);
 
   const addFriend = async (requestID) => {
