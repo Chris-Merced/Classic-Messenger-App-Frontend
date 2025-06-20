@@ -19,9 +19,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 //chat list red bubble notification is appearing on refresh but not on message
 
-//User now is sent to the front end with friend requests array added to object
-//    on initial log in the user does not seem to be retrieved (in console)
-//    on refresh the context user object is completely inhabited
   
 
 const SideBarComponent = () => {

@@ -273,9 +273,6 @@ const HomeChatComponent = () => {
     }
   };
 
-  if(context?.user){
-    console.log(context.user)
-  }
 
   return (
     <div
