@@ -6,7 +6,6 @@ import { UserContext } from "../context/userContext";
 const FriendRequests = () => {
   const userContext = useContext(UserContext);
   const user = userContext.user;
-  const [friendRequestsLength, setFriendRequestsLength] = useState(0);
   const [friendRequests, setFriendRequests] = useState("");
   const [friends, setFriends] = useState([]);
   const [isFriendRequests, setIsFriendRequests] = useState(true);
@@ -14,21 +13,6 @@ const FriendRequests = () => {
   const itemRef = useRef([]);
 
   useEffect(() => {
-    const getFriendRequests = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest?userID=${user.id}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      const data = await response.json();
-      setFriendRequests(data.friendRequests);
-    };
-    if (user) {
-      getFriendRequests();
-    }
-
     const getFriends = async () => {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`
@@ -44,12 +28,13 @@ const FriendRequests = () => {
   }, [user]);
 
   useEffect(() => {
-    if (friendRequests) {
-      setFriendRequestsLength(friendRequests.length);
+    if (user) {
+      setFriendRequests(user.friendRequests);
     }
-  }, [friendRequests]);
+  }, [user.friendRequests]);
 
-  const addFriend = async (requestID, index) => {
+
+  const addFriend = async (requestID) => {
     const data = {
       userID: user.id,
       requestID: requestID,
@@ -66,15 +51,18 @@ const FriendRequests = () => {
     );
 
     if (response.ok) {
-      if (itemRef.current[index]) {
-        itemRef.current[index].style.display = "none";
+      if (itemRef.current[requestID]) {
+        for (let i = 0; i < user.friendRequests.length; i++) {
+          if (user.friendRequests[i].id === requestID) {
+            user.friendRequests.splice(i, 1);
+          }
+        }
       }
     }
 
-    setFriendRequestsLength(friendRequestsLength - 1);
   };
 
-  const denyFriend = async (requestID, index) => {
+  const denyFriend = async (requestID) => {
     const data = {
       userID: user.id,
       requestID: requestID,
@@ -91,8 +79,14 @@ const FriendRequests = () => {
     );
 
     if (response.ok) {
-      if (itemRef.current[index]) {
-        itemRef.current[index].style.display = "none";
+      if (itemRef.current[requestID]) {
+        if (itemRef.current[requestID]) {
+          for (let i = 0; i < user.friendRequests.length; i++) {
+            if (user.friendRequests[i].id === requestID) {
+              user.friendRequests.splice(i, 1);
+            }
+          }
+        }
       }
     }
   };
@@ -228,22 +222,22 @@ const FriendRequests = () => {
             }`}
             role="list"
           >
-            {friendRequests.map((request, index) => (
+            {friendRequests.map((request) => (
               <li
                 className="friendRequestListItem"
-                key={index}
-                ref={(el) => (itemRef.current[index] = el)}
+                key={request.id}
+                ref={(el) => (itemRef.current[request.id] = el)}
                 role="listitem"
               >
                 <span>{request.username}</span>
                 <button
-                  onClick={() => addFriend(request.id, index)}
+                  onClick={() => addFriend(request.id)}
                   aria-label={`Accept friend request from ${request.username}`}
                 >
                   Accept
                 </button>
                 <button
-                  onClick={() => denyFriend(request.id, index)}
+                  onClick={() => denyFriend(request.id)}
                   aria-label={`Deny friend request from ${request.username}`}
                 >
                   Deny

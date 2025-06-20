@@ -273,7 +273,9 @@ const HomeChatComponent = () => {
     }
   };
 
-
+if(context?.user){
+  console.log(context.user)
+}
   return (
     <div
       className="mainContent fadeInStaggered--1"
