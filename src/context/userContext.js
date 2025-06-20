@@ -9,30 +9,30 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/userProfile`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Unauthorized or session expired");
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile`,
+        {
+          method: "GET",
+          credentials: "include",
         }
+      );
 
-        const data = await response.json();
-        setUser(data.user);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error("Unauthorized or session expired");
       }
-    };
 
+      const data = await response.json();
+      setUser(data.user);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
   }, []);
 
@@ -49,9 +49,9 @@ export const UserProvider = ({ children }) => {
       );
 
       const newData = await response.json();
-      
-      if (response.ok) {
-        setUser(newData);
+
+      if (newData.verified) {
+        await fetchUserData();
       } else {
         console.log(newData.message);
       }
