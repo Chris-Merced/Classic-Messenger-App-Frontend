@@ -5,9 +5,6 @@ import { UserContext } from "../context/userContext";
 import { WebsocketContext } from "../context/websocketContext";
 import { UserChatsContext } from "../context/chatListContext";
 
-//TODO:
-// Smooth out buggy scrollbar behavior on chat change
-// Smooth out scrollbar behavior on pagination
 
 const HomeChatComponent = () => {
   const [message, setMessage] = useState("");
@@ -275,6 +272,10 @@ const HomeChatComponent = () => {
       }
     }
   };
+
+  if(UserContext){
+    console.log(UserContext)
+  }
 
   return (
     <div
