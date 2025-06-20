@@ -62,14 +62,12 @@ const FriendRequests = () => {
             if (user.friendRequests[i].id === requestID) {
               user.friendRequests.splice(i, 1);
               console.log(user.friendRequests);
-              user.friendRequests = [...user.friendRequests]
+              user.friendRequests = [...user.friendRequests];
             }
           }
         }
 
-        userContext.modifyUser({...user})
-
-
+        userContext.modifyUser({ ...user });
       }
     } catch (err) {
       console.log("Error adding friend: \n" + err.message);
@@ -99,10 +97,14 @@ const FriendRequests = () => {
             for (let i = 0; i < user.friendRequests.length; i++) {
               if (user.friendRequests[i].id === requestID) {
                 user.friendRequests.splice(i, 1);
+                user.friendRequests = [...user.friendRequests];
               }
             }
           }
         }
+
+        userContext.modifyUser({...user})
+
       }
     } catch (err) {
       console.log("Error denying friend request: \n" + err.message);
