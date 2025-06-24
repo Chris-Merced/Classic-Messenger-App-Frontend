@@ -1606,6 +1606,9 @@ body.light-theme .signupHeader {
   button.sideBarExtender {
     all: unset;
     opacity: 1;
+    border: 1px solid;
+    box-shadow: 1px 2px 3px black;
+    border-color: #222;
     background-color: rgb(78, 78, 78);
     border-radius: 50%;
     height: 35px;
