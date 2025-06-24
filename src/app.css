@@ -1595,11 +1595,12 @@ body.light-theme .signupHeader {
     position: absolute;
     left: 100px;
     animation: translate ease-in 2s;
-    opacity: 1;
+    opacity: 0;
     z-index: 200;
   }
 
   .sideBar.show {
+    opacity: 1;
     transform: translateX(320px) translateY(-80px);
   }
 
@@ -1613,13 +1614,13 @@ body.light-theme .signupHeader {
     border-radius: 50%;
     height: 35px;
     width: 35px;
-    left: 285px;
     transition: transform 0.3s ease-in;
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     cursor: pointer;
+    z-index: 201;
   }
   .sideBarExtender.show {
     z-index: 201;

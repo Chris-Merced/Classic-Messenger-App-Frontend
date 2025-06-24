@@ -195,12 +195,8 @@ const SideBarComponent = () => {
 
   return listOfChats && userContext.user ? (
     <>
-      <div
-        className={`sideBar ${sideBarExtend ? "show" : "hide"} fadeInStaggered`}
-        role="navigation"
-        aria-label="Chat navigation"
-      >
-        <div>
+
+    <div>
           <button
             className={`sideBarExtender ${sideBarExtend ? "show" : "hide"}`}
             onClick={updateSideBarExtend}
@@ -210,6 +206,12 @@ const SideBarComponent = () => {
             ></img>
           </button>
         </div>
+      <div
+        className={`sideBar ${sideBarExtend ? "show" : "hide"} fadeInStaggered`}
+        role="navigation"
+        aria-label="Chat navigation"
+      >
+        
 
         <ul
           className={`chatList ${
