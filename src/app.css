@@ -1141,8 +1141,12 @@ body.light-theme .sideBarSearch {
   background-color: #9e9e9e;
 }
 
+input.sideBarSearch:focus{
+  width: 680%;
+}
+
 .sideBarSearch:focus {
-  width: 700%;
+  display: flex;
   padding-left: 40px;
   border: none;
   outline: none;

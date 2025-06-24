@@ -187,7 +187,6 @@ const SideBarComponent = () => {
 
   const updateSideBarExtend = (e) => {
     e.preventDefault();
-    console.log("hellow world");
     sideBarExtend ? setSideBarExtend(false) : setSideBarExtend(true);
   };
 
@@ -195,24 +194,21 @@ const SideBarComponent = () => {
 
   return listOfChats && userContext.user ? (
     <>
-
-    <div>
-          <button
-            className={`sideBarExtender ${sideBarExtend ? "show" : "hide"}`}
-            onClick={updateSideBarExtend}
-          >
-            <img
-              src={`${sideBarExtend ? "/ChevronLeft.svg" : "ChevronRight.svg"}`}
-            ></img>
-          </button>
-        </div>
+      <div>
+        <button
+          className={`sideBarExtender ${sideBarExtend ? "show" : "hide"}`}
+          onClick={updateSideBarExtend}
+        >
+          <img
+            src={`${sideBarExtend ? "/ChevronLeft.svg" : "ChevronRight.svg"}`}
+          ></img>
+        </button>
+      </div>
       <div
         className={`sideBar ${sideBarExtend ? "show" : "hide"} fadeInStaggered`}
         role="navigation"
         aria-label="Chat navigation"
       >
-        
-
         <ul
           className={`chatList ${
             sidebarSearch ? "show" : "hide"

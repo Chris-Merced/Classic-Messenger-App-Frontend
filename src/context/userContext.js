@@ -37,7 +37,6 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const modifyUser = (user) =>{
-    console.log("hello")
     setUser(user)
   }
 
