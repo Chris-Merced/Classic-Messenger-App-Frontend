@@ -1593,7 +1593,7 @@ body.light-theme .signupHeader {
 
   .sideBar {
     position: absolute;
-    left: 100px;
+    left: -203px;
     animation: translate ease-in 2s;
     opacity: 0;
     z-index: 200;
