@@ -1593,7 +1593,7 @@ body.light-theme .signupHeader {
 
   .sideBar {
     position: absolute;
-    left: -230px;
+    left: 100px;
     animation: translate ease-in 2s;
     opacity: 1;
     z-index: 200;
@@ -1613,7 +1613,7 @@ body.light-theme .signupHeader {
     border-radius: 50%;
     height: 35px;
     width: 35px;
-    transform: translateX();
+    left: 285px;
     transition: transform 0.3s ease-in;
     display: flex;
     justify-content: center;
@@ -1622,7 +1622,6 @@ body.light-theme .signupHeader {
     cursor: pointer;
   }
   .sideBarExtender.show {
-    transform: translateX(260px);
     z-index: 201;
   }
   .sideBarExtender.hide {

@@ -14,9 +14,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 //        the notification bubbles
 //default chats profile pictures on the side do not have proper links to profile
 
-
-  
-
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userContext = useContext(UserContext);
@@ -39,7 +36,6 @@ const SideBarComponent = () => {
       unmodifiedChatList.current = chatContext.chatList.userChats;
     }
   }, [chatContext.chatList]);
-
 
   useEffect(() => {
     setIsLight(document.body.classList.contains("light-theme"));
@@ -199,21 +195,22 @@ const SideBarComponent = () => {
 
   return listOfChats && userContext.user ? (
     <>
-      <div>
-        <button
-          className={`sideBarExtender ${sideBarExtend ? "show" : "hide"}`}
-          onClick={updateSideBarExtend}
-        >
-          <img
-            src={`${sideBarExtend ? "/ChevronLeft.svg" : "ChevronRight.svg"}`}
-          ></img>
-        </button>
-      </div>
       <div
         className={`sideBar ${sideBarExtend ? "show" : "hide"} fadeInStaggered`}
         role="navigation"
         aria-label="Chat navigation"
       >
+        <div>
+          <button
+            className={`sideBarExtender ${sideBarExtend ? "show" : "hide"}`}
+            onClick={updateSideBarExtend}
+          >
+            <img
+              src={`${sideBarExtend ? "/ChevronLeft.svg" : "ChevronRight.svg"}`}
+            ></img>
+          </button>
+        </div>
+
         <ul
           className={`chatList ${
             sidebarSearch ? "show" : "hide"
