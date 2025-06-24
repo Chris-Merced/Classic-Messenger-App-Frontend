@@ -10,8 +10,7 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
-//TODO: Modify the width behavior of the chat sidebar to accomodate
-//        the notification bubbles
+//TODO:
 //default chats profile pictures on the side do not have proper links to profile
 
 const SideBarComponent = () => {
