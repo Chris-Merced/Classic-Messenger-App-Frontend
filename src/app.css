@@ -705,6 +705,13 @@ a.signup {
   width: 200px;
 }
 
+
+li.chat{
+  position: relative;
+  display: flex;
+  gap: 5px;
+}
+
 .chatButton{
   white-space: nowrap;
   overflow: hidden;
@@ -712,6 +719,7 @@ a.signup {
 }
 
 .chatButton .show {
+  width: 20px;
   color: red;
 }
 
@@ -1033,18 +1041,20 @@ body.light-theme button.themeToggle:hover {
 }
 
 .online {
+  position: absolute;
+  transform: translateX(17px) translateY(13px);
   border: 2px solid;
   border-color: rgba(75, 74, 74, 0.5);
-  width: 20px;
+  min-width: 15px;
   height: 10px;
-  background-color: rgb(116, 175, 116);
+  background-color: rgb(19, 214, 19);
   border-radius: 50%;
   display: inline-block;
   box-shadow: 20px, 20px, 20px, rgba(114, 114, 114, 0.2);
 }
 
 body.light-theme .online {
-  background-color: rgba(99, 190, 111, 0.5);
+  background-color: rgba(0, 255, 34, 0.973);
   border-color: rgb(155, 155, 155);
 }
 
@@ -1596,9 +1606,15 @@ body.light-theme .signupHeader {
   button.sideBarExtender {
     all: unset;
     opacity: 1;
+    background-color: rgb(78, 78, 78);
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
     transform: translateX();
     transition: transform 0.3s ease-in;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     cursor: pointer;
   }
