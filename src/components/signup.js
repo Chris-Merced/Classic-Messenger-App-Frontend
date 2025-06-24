@@ -90,9 +90,6 @@ const signUpComponent = () => {
     }
   };
 
-  console.log("USER STATUS");
-  console.log(user);
-
   return (
     <>
       {user.user ? (
