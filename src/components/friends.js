@@ -12,8 +12,6 @@ const FriendRequests = () => {
   const [isFriendsList, setIsFriendsList] = useState(true);
   const itemRef = useRef([]);
 
-  //TODO: friends removal not working as intended
-  //      if user is added and then removed, removal does not occur in database
 
   useEffect(() => {
     const getFriends = async () => {
