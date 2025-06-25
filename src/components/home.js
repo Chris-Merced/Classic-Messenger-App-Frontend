@@ -180,7 +180,7 @@ const HomeChatComponent = () => {
     }
   }, [chat, socketRef.current]);
 
-  const getMessages = async (container = null) => {
+  const getMessages = async () => {
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
@@ -195,8 +195,7 @@ const HomeChatComponent = () => {
         }
       );
       const data = await response.json();
-      console.log("showing new data");
-      console.log(data);
+
       if (data.messages) {
         const timeFormattedArray = data.messages.map((message) => {
           const dateObj = new Date(message.time);
@@ -213,6 +212,8 @@ const HomeChatComponent = () => {
 
         if (data.recieverID && data.recieverID !== profileID) {
           setProfileID(data.recieverID);
+        }else{
+          setProfileID('')
         }
 
         setMessages((prev) => [...timeFormattedArray, ...prev]);
@@ -292,11 +293,20 @@ const HomeChatComponent = () => {
     >
       {user && (
         <>
-          {currentChat && (
-            <h1 role="heading" aria-level="1">
-              {currentChat.name ? currentChat.name : currentChat.reciever[0]}
-            </h1>
-          )}
+          {currentChat &&
+            (profileID ? (
+              <Link to={`/userProfile/${profileID}`}>
+                <h1 role="heading" aria-level="1">
+                  {currentChat.name
+                    ? currentChat.name
+                    : currentChat.reciever[0]}
+                </h1>
+              </Link>
+            ) : (
+              <h1 role="heading" aria-level="1">
+                {currentChat.name ? currentChat.name : currentChat.reciever[0]}
+              </h1>
+            ))}
           <div
             className="mainChat scroll-container"
             ref={mainChatRef}
