@@ -256,6 +256,7 @@ const SideBarComponent = () => {
                     !chat.profilePicture &&
                     !islight && (
                       <img
+                        onClick={() => changeChat(chat)}
                         className="sideBarProfilePicture"
                         src="/defaultProfileImageLight.webp"
                         alt="User profile placeholder"
@@ -266,6 +267,7 @@ const SideBarComponent = () => {
                     !chat.profilePicture &&
                     islight && (
                       <img
+                        onClick={() => changeChat(chat)}
                         className="sideBarProfilePicture"
                         src="/defaultProfileImage.png"
                         alt="User profile placeholder"
