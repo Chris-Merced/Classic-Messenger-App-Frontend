@@ -115,6 +115,7 @@ const SideBarComponent = () => {
       if (location.pathname !== "/") {
         navigate("/");
       }
+      setSideBarExtend(false)
     } else {
       chatContext.changeChat({
         name: null,
@@ -124,6 +125,7 @@ const SideBarComponent = () => {
       if (location.pathname !== "/") {
         navigate("/");
       }
+      setSideBarExtend(false)
     }
   };
 
