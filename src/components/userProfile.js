@@ -574,14 +574,19 @@ const UserProfile = () => {
                   </button>
                 )}
                 {friendStatus === false &&
-                  userContext?.user?.id != userIdentifier && (
+                  userContext?.user?.id != userIdentifier &&
+                  (requestSent ? (
+                    <button aria-label="Friend request sent">
+                      Request Sent!
+                    </button>
+                  ) : (
                     <button
                       onClick={sendFriendRequest}
                       aria-label={`Send friend request to ${profile.username}`}
                     >
                       Send Friend Request
                     </button>
-                  )}
+                  ))}
               </div>
               <div
                 role="contentinfo"
