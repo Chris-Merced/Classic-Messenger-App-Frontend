@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 import { WebsocketContext } from "../context/websocketContext";
 import { UserChatsContext } from "../context/chatListContext";
-
 
 const HomeChatComponent = () => {
   const [message, setMessage] = useState("");
@@ -180,39 +180,43 @@ const HomeChatComponent = () => {
   }, [chat, socketRef.current]);
 
   const getMessages = async (container = null) => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
-        chat.name
-      }&conversationID=${chat.conversationID}&userID=${
-        user ? user.id : ""
-      }&page=${pageRef.current}&limit=20`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      }
-    );
-    const data = await response.json();
-    if (data.messages) {
-      const timeFormattedArray = data.messages.map((message) => {
-        const dateObj = new Date(message.time);
-        return {
-          ...message,
-          time: new Date(message.time).toLocaleString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          }),
-          dateObj,
-        };
-      });
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
+          chat.name
+        }&conversationID=${chat.conversationID}&userID=${
+          user ? user.id : ""
+        }&page=${pageRef.current}&limit=20`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+      if (data.messages) {
+        const timeFormattedArray = data.messages.map((message) => {
+          const dateObj = new Date(message.time);
+          return {
+            ...message,
+            time: new Date(message.time).toLocaleString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            }),
+            dateObj,
+          };
+        });
 
-      setMessages((prev) => [...timeFormattedArray, ...prev]);
-      if (!mainChatRef.current) {
-        return null;
-      } else {
-        return true;
+        setMessages((prev) => [...timeFormattedArray, ...prev]);
+        if (!mainChatRef.current) {
+          return null;
+        } else {
+          return true;
+        }
       }
+    } catch (err) {
+      console.error("Error getting chat message: \n" + err.message);
     }
   };
 

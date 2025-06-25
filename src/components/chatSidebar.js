@@ -10,8 +10,6 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
-//TODO:
-//default chats profile pictures on the side do not have proper links to profile
 
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
@@ -106,6 +104,7 @@ const SideBarComponent = () => {
   }, [listOfChats]);
 
   const changeChat = (chat) => {
+    console.log(chat)
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,
