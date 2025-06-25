@@ -13,6 +13,7 @@ const HomeChatComponent = () => {
   const [conversationName, setConversationName] = useState("");
   const [chat, setChat] = useState();
   const [isBlocked, setIsBlocked] = useState("");
+  const [profileID, setProfileID] = useState("");
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
   const spanRef = useRef(null);
@@ -194,6 +195,8 @@ const HomeChatComponent = () => {
         }
       );
       const data = await response.json();
+      console.log("showing new data");
+      console.log(data);
       if (data.messages) {
         const timeFormattedArray = data.messages.map((message) => {
           const dateObj = new Date(message.time);
@@ -207,6 +210,10 @@ const HomeChatComponent = () => {
             dateObj,
           };
         });
+
+        if (data.recieverID && data.recieverID !== profileID) {
+          setProfileID(data.recieverID);
+        }
 
         setMessages((prev) => [...timeFormattedArray, ...prev]);
         if (!mainChatRef.current) {
