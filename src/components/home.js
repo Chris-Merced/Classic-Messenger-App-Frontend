@@ -14,6 +14,7 @@ const HomeChatComponent = () => {
   const [chat, setChat] = useState();
   const [isBlocked, setIsBlocked] = useState("");
   const [profileID, setProfileID] = useState("");
+  const [incomingMessage, setIncomingMessage] = useState(false)
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
   const spanRef = useRef(null);
@@ -48,10 +49,21 @@ const HomeChatComponent = () => {
   useLayoutEffect(() => {
     const container = mainChatRef.current;
     if (!container || pageRef.current === 0) return;
-
+    console.log("triggered")
+    console.log(pageRef)
     const newHeight = container.scrollHeight;
     const heightDifference = newHeight - previousHeightRef.current;
     container.scrollTop = heightDifference;
+  }, [messages]);
+
+
+
+  useEffect(() => {
+    const container = mainChatRef.current;
+    if (container && incomingMessage) {
+      container.scrollTop = container.scrollHeight;
+      setIncomingMessage(false);
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -83,7 +95,7 @@ const HomeChatComponent = () => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
         console.log(message.data);
-
+        setIncomingMessage(true);
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
         message = {
@@ -210,7 +222,7 @@ const HomeChatComponent = () => {
           };
         });
 
-        if (data.recieverID && data.recieverID !== profileID) {
+        if (data.recieverID) {
           setProfileID(data.recieverID);
         }else{
           setProfileID('')
@@ -295,7 +307,7 @@ const HomeChatComponent = () => {
         <>
           {currentChat &&
             (profileID ? (
-              <Link to={`/userProfile/${profileID}`}>
+              <Link className="conversationHeader" to={`/userProfile/${profileID}`}>
                 <h1 role="heading" aria-level="1">
                   {currentChat.name
                     ? currentChat.name

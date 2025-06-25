@@ -1081,6 +1081,15 @@ body.light-theme .online {
   height: 80vh;
 }
 
+.conversationHeader{
+    all: unset;
+    cursor: pointer;
+    border-bottom: 1px solid #636060;
+    width: 50vw
+
+  }
+
+
 .timeElapsed {
   display: flex;
   border-bottom: 1px solid;
@@ -1571,7 +1580,7 @@ body.light-theme .signupHeader {
     height: 100vh;
     max-height: 100vh;
   }
-
+  
   li.message {
     width: 100%;
   }
