@@ -595,7 +595,7 @@ const UserProfile = () => {
                 Created at {profile.created_at}
               </div>
               <div className="aboutMeData" role="region" aria-label="About Me section">
-                <div>About Me:</div>
+                <div className="aboutMeHeader">About Me:</div>
                 {profile.about_me ? (
                   <div>{profile.about_me}</div>
                 ) : (
