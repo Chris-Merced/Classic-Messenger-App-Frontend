@@ -54,12 +54,18 @@ const UserProfile = () => {
     };
 
     const checkIfFriends = async () => {
-      if (userContext?.user?.id) {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
+      try {
+        if (userContext?.user?.id) {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
+          );
+          const friendStatus = await response.json();
+          setFriendStatus(friendStatus.friendStatus);
+        }
+      } catch (err) {
+        console.log(
+          "Error while checking if users are friends: \n" + err.message
         );
-        const friendStatus = await response.json();
-        setFriendStatus(friendStatus.friendStatus);
       }
     };
 
@@ -95,7 +101,7 @@ const UserProfile = () => {
         }
       );
       const data = await response.json();
-      setRequestSent(data)
+      setRequestSent(data);
     };
 
     checkFriendRequest();
@@ -594,7 +600,11 @@ const UserProfile = () => {
               >
                 Created at {profile.created_at}
               </div>
-              <div className="aboutMeData" role="region" aria-label="About Me section">
+              <div
+                className="aboutMeData"
+                role="region"
+                aria-label="About Me section"
+              >
                 <div className="aboutMeHeader">About Me:</div>
                 {profile.about_me ? (
                   <div>{profile.about_me}</div>
