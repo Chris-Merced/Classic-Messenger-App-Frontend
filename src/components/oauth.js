@@ -81,29 +81,35 @@ const OAuth = () => {
         email: signupEmail,
         username,
       };
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/oauth/signup`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+            credentials: "include",
+          }
+        );
 
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/oauth/signup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-          credentials: "include",
+        const userInfo = await res.json();
+
+        if (userInfo.error) {
+          setDatabaseError(userInfo.error);
+        } else if (userInfo.message === "User Successfully Added") {
+          setDatabaseError(null);
+          const data = {
+            username: userInfo.username,
+            id: userInfo.id,
+          };
+          await user.oauthLogin(data);
+          window.location.href = "/";
         }
-      );
-
-      const userInfo = await res.json();
-
-      if (userInfo.error) {
-        setDatabaseError(userInfo.error);
-      } else if (userInfo.message === "User Successfully Added") {
-        setDatabaseError(null);
-        const data = {
-          username: userInfo.username,
-          id: userInfo.id,
-        };
-        await user.oauthLogin(data);
-        window.location.href = "/";
+      } catch (err) {
+        console.log(
+          "There was an error in signing user up through OAuth: \n" +
+            err.message
+        );
       }
     }
   };
