@@ -137,7 +137,7 @@ const UserProfile = () => {
 
         setProfile(data.user);
       } catch (err) {
-        setError("Error occured on profile retrieval", err);
+        setError("Error occured on profile retrieval: \n" + err.message);
       }
     };
 
@@ -148,12 +148,20 @@ const UserProfile = () => {
 
   useEffect(() => {
     const checkIfPublic = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`
-      );
-      const data = await response.json();
-      setIsPublic(data);
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`
+        );
+        const data = await response.json();
+        setIsPublic(data);
+      } catch (err) {
+        console.log(
+          "Error occured on checking if user profile is public: \n" +
+            err.message
+        );
+      }
     };
+
     if (userContext?.user?.id) {
       checkIfPublic();
     }
