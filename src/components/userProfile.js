@@ -287,7 +287,7 @@ const UserProfile = () => {
 
   const changeProfileStatus = async () => {
     const body = { userID: userContext.user.id, status: isPublic };
-
+    try{
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/userProfile/changeProfileStatus?userID=${userContext.user.id}`,
       {
@@ -306,6 +306,9 @@ const UserProfile = () => {
         setIsPublic(true);
       }
     }
+  }catch(err){
+    console.log("Error while changing user public/private profile status: \n" + err.message)
+  }
   };
 
   const isEditPage = () => {
