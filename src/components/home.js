@@ -14,7 +14,7 @@ const HomeChatComponent = () => {
   const [chat, setChat] = useState();
   const [isBlocked, setIsBlocked] = useState("");
   const [profileID, setProfileID] = useState("");
-  const [incomingMessage, setIncomingMessage] = useState(false)
+  const [incomingMessage, setIncomingMessage] = useState(false);
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
   const spanRef = useRef(null);
@@ -49,14 +49,12 @@ const HomeChatComponent = () => {
   useLayoutEffect(() => {
     const container = mainChatRef.current;
     if (!container || pageRef.current === 0) return;
-    console.log("triggered")
-    console.log(pageRef)
+    console.log("triggered");
+    console.log(pageRef);
     const newHeight = container.scrollHeight;
     const heightDifference = newHeight - previousHeightRef.current;
     container.scrollTop = heightDifference;
   }, [messages]);
-
-
 
   useEffect(() => {
     const container = mainChatRef.current;
@@ -94,85 +92,87 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
-        try{console.log(message.data);
-        setIncomingMessage(true);
-        message = JSON.parse(message.data);
-        const dateObj = new Date(message.time);
-        message = {
-          ...message,
-          time: new Date(message.time).toLocaleString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          }),
-          dateObj,
-        };
+        try {
+          console.log(message.data);
+          setIncomingMessage(true);
+          message = JSON.parse(message.data);
+          const dateObj = new Date(message.time);
+          message = {
+            ...message,
+            time: new Date(message.time).toLocaleString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            }),
+            dateObj,
+          };
 
-        if (message.conversationID === chat.conversationID) {
-          setMessages((prevMessages) => [...prevMessages, message]);
-          mainChatRef.current.scrollTop =
-            mainChatRef.current.scrollHeight + 100;
+          if (message.conversationID === chat.conversationID) {
+            setMessages((prevMessages) => [...prevMessages, message]);
+            mainChatRef.current.scrollTop =
+              mainChatRef.current.scrollHeight + 100;
 
-          if (
-            message.conversationID != 1 &&
-            context.user.username !== message.user
-          ) {
-            const data = {
-              conversationID: message.conversationID,
-              senderID: message.userID,
-            };
-
-            const response = await fetch(
-              `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
-              {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-                credentials: "include",
-              }
-            );
-
-            console.log(response.ok);
-          }
-        } else if (
-          message.conversationID !== chat.conversationID &&
-          message.conversationID != 1
-        ) {
-          let modifiedChatList = chatContext.chatList;
-
-          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
             if (
-              modifiedChatList.userChats[i].conversation_id ===
-              message.conversationID
+              message.conversationID != 1 &&
+              context.user.username !== message.user
             ) {
-              modifiedChatList.userChats[i].is_read = false;
+              const data = {
+                conversationID: message.conversationID,
+                senderID: message.userID,
+              };
+
+              const response = await fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
+                {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                  credentials: "include",
+                }
+              );
+
+              console.log(response.ok);
             }
-          }
-          chatContext.changeChatList({
-            ...chatContext.chatList,
-            userChats: [...modifiedChatList.userChats],
-          });
-        }
-
-        let modifiedChatList = chatContext.chatList;
-
-        for (let i = 0; i < modifiedChatList.userChats.length; i++) {
-          if (
-            modifiedChatList.userChats[i].conversation_id ===
-              message.conversationID &&
-            message.conversationID !== 1
+          } else if (
+            message.conversationID !== chat.conversationID &&
+            message.conversationID != 1
           ) {
-            const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
-            modifiedChatList.userChats.splice(1, 0, tempItem);
+            let modifiedChatList = chatContext.chatList;
+
+            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+              if (
+                modifiedChatList.userChats[i].conversation_id ===
+                message.conversationID
+              ) {
+                modifiedChatList.userChats[i].is_read = false;
+              }
+            }
             chatContext.changeChatList({
               ...chatContext.chatList,
               userChats: [...modifiedChatList.userChats],
             });
           }
+
+          let modifiedChatList = chatContext.chatList;
+
+          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+            if (
+              modifiedChatList.userChats[i].conversation_id ===
+                message.conversationID &&
+              message.conversationID !== 1
+            ) {
+              const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+              modifiedChatList.userChats.splice(1, 0, tempItem);
+              chatContext.changeChatList({
+                ...chatContext.chatList,
+                userChats: [...modifiedChatList.userChats],
+              });
+            }
+          }
+        } catch (err) {
+          console.log("Error handling websocket message: \n" + err.message);
         }
-      }catch(err){
-        console.log("Error handling websocket message: \n" + err.message)
-      }};
+      };
     };
 
     if (socketRef.current) {
@@ -226,8 +226,8 @@ const HomeChatComponent = () => {
 
         if (data.recieverID) {
           setProfileID(data.recieverID);
-        }else{
-          setProfileID('')
+        } else {
+          setProfileID("");
         }
 
         setMessages((prev) => [...timeFormattedArray, ...prev]);
@@ -244,19 +244,22 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     if (!chat || !chat.conversationID) return;
+    try {
+      const checkIfBlocked = async () => {
+        if (!chat.name) {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`
+          );
+          const data = await response.json();
+          setIsBlocked(data);
+        }
+      };
 
-    const checkIfBlocked = async () => {
-      if (!chat.name) {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`
-        );
-        const data = await response.json();
-        setIsBlocked(data);
-      }
-    };
-
-    getMessages();
-    checkIfBlocked();
+      getMessages();
+      checkIfBlocked();
+    } catch (err) {
+      console.log("Error while checking if user is blocked: \n" + err.message);
+    }
   }, [chat]);
 
   const sendMessage = async (e) => {
@@ -309,7 +312,10 @@ const HomeChatComponent = () => {
         <>
           {currentChat &&
             (profileID ? (
-              <Link className="conversationHeader" to={`/userProfile/${profileID}`}>
+              <Link
+                className="conversationHeader"
+                to={`/userProfile/${profileID}`}
+              >
                 <h1 role="heading" aria-level="1">
                   {currentChat.name
                     ? currentChat.name
