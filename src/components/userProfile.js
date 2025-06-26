@@ -187,14 +187,16 @@ const UserProfile = () => {
   useEffect(() => {
     if (userContext?.user?.id && userContext.user.id != userIdentifier) {
       const getMutualFriends = async () => {
-        try{const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
-        );
-        const data = await response.json();
-        setMutualFriends(data);
-      }catch(err){
-        console.log("Error retrieving mutual friends: \n" + err.message)
-      }};
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
+          );
+          const data = await response.json();
+          setMutualFriends(data);
+        } catch (err) {
+          console.log("Error retrieving mutual friends: \n" + err.message);
+        }
+      };
       getMutualFriends();
     }
   }, [userIdentifier]);
@@ -228,18 +230,21 @@ const UserProfile = () => {
       userID: userContext.user.id,
       profileID: userIdentifier,
     };
-
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    );
-    setRequestSent(true);
-    const newData = await response.json();
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/friendRequest`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }
+      );
+      setRequestSent(true);
+      const newData = await response.json();
+    } catch (err) {
+      console.log("Error while sending friend request: \n" + err.message);
+    }
   };
 
   const blockUser = async () => {
