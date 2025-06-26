@@ -170,11 +170,15 @@ const UserProfile = () => {
   useEffect(() => {
     if (userContext?.user?.id) {
       const checkIfBlockedByProfile = async () => {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
-        );
-        const data = await response.json();
-        setBlockedByProfile(data);
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
+          );
+          const data = await response.json();
+          setBlockedByProfile(data);
+        } catch (err) {
+          console.log("Error checking block status: \n" + err.message);
+        }
       };
       checkIfBlockedByProfile();
     }
@@ -183,12 +187,14 @@ const UserProfile = () => {
   useEffect(() => {
     if (userContext?.user?.id && userContext.user.id != userIdentifier) {
       const getMutualFriends = async () => {
-        const response = await fetch(
+        try{const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
         );
         const data = await response.json();
         setMutualFriends(data);
-      };
+      }catch(err){
+        console.log("Error retrieving mutual friends: \n" + err.message)
+      }};
       getMutualFriends();
     }
   }, [userIdentifier]);
