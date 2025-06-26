@@ -10,7 +10,6 @@ import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 const SideBarComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const userContext = useContext(UserContext);
@@ -79,6 +78,9 @@ const SideBarComponent = () => {
       clearInterval(intervalRef.current);
     }
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const getOnlineUsers = async () => {
       const usersList = listOfChats
         .filter((chat) => chat.participants && chat.participants.length === 1)
@@ -86,12 +88,17 @@ const SideBarComponent = () => {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/conversations/getOnlineUsers?userList=${usersList}`
+          `${process.env.REACT_APP_BACKEND_URL}/conversations/getOnlineUsers?userList=${usersList}`,
+          { signal }
         );
         const data = await response.json();
         setActiveUsers(data.activeUsers);
       } catch (error) {
-        console.error("Error fetching online users:", error);
+        if (error.name === "AbortError") {
+          console.log("Fetch Aborted");
+        } else {
+          console.error("Error fetching online users:", error);
+        }
       }
     };
 
@@ -100,11 +107,12 @@ const SideBarComponent = () => {
 
     return () => {
       clearInterval(intervalRef.current);
+      controller.abort();
     };
   }, [listOfChats]);
 
   const changeChat = (chat) => {
-    console.log(chat)
+    console.log(chat);
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,
@@ -114,7 +122,7 @@ const SideBarComponent = () => {
       if (location.pathname !== "/") {
         navigate("/");
       }
-      setSideBarExtend(false)
+      setSideBarExtend(false);
     } else {
       chatContext.changeChat({
         name: null,
@@ -124,7 +132,7 @@ const SideBarComponent = () => {
       if (location.pathname !== "/") {
         navigate("/");
       }
-      setSideBarExtend(false)
+      setSideBarExtend(false);
     }
   };
 
