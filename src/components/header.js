@@ -149,6 +149,7 @@ const HeaderComponent = () => {
       if (!onScroll) {
         setUsers([]);
       }
+      try{
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${search}&page=${pageRef.current}&limit=7`,
         {
@@ -163,6 +164,9 @@ const HeaderComponent = () => {
       } else {
         setUsers((prev) => [...prev, ...users]);
       }
+    }catch(err){
+      console.log("Error retrieving users by search: \n" + err.message)
+    }
     }
     if (search === "") {
       setUsers([]);
