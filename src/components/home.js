@@ -264,41 +264,45 @@ const HomeChatComponent = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    const data = {
-      message: message,
-      registration: false,
-      conversationName: conversationName,
-      conversationID: chat.conversationID,
-      user: user.username,
-      userID: user.id,
-      reciever: chat.reciever ? [...chat.reciever, user.username] : undefined,
-      time: new Date().toISOString(),
-    };
+    try {
+      const data = {
+        message: message,
+        registration: false,
+        conversationName: conversationName,
+        conversationID: chat.conversationID,
+        user: user.username,
+        userID: user.id,
+        reciever: chat.reciever ? [...chat.reciever, user.username] : undefined,
+        time: new Date().toISOString(),
+      };
 
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    );
-
-    if (response.ok) {
-      if (
-        socketRef.current &&
-        socketRef.current.readyState === WebSocket.OPEN
-      ) {
-        console.log("made it inside to send message");
-        socketRef.current.send(JSON.stringify(data));
-        setMessage("");
-        if (inputRef.current) {
-          inputRef.current.style.height = "auto";
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/conversations/messageToConversation`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
         }
-      } else {
-        console.log("console is not open");
+      );
+
+      if (response.ok) {
+        if (
+          socketRef.current &&
+          socketRef.current.readyState === WebSocket.OPEN
+        ) {
+          console.log("made it inside to send message");
+          socketRef.current.send(JSON.stringify(data));
+          setMessage("");
+          if (inputRef.current) {
+            inputRef.current.style.height = "auto";
+          }
+        } else {
+          console.log("console is not open");
+        }
       }
+    } catch (err) {
+      console.log("Error sending message: \n" + err.message);
     }
   };
 
