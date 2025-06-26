@@ -28,8 +28,7 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
-
-  //TODO: 
+  //TODO:
   // If you send a message then refresh the application thinks you have an unread
   //message in that chat
 

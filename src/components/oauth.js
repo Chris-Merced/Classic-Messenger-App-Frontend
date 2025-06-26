@@ -28,28 +28,35 @@ const OAuth = () => {
           "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         window.location.href = `${process.env.REACT_APP_FRONTEND_URL}`;
       } else {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/oauth`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(code),
-            credentials: "include",
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/oauth`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(code),
+              credentials: "include",
+            }
+          );
+
+          document.cookie =
+            "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+          const data = await response.json();
+          if (data.status === "signup incomplete") {
+            setIsSignup(true);
+            setSignupEmail(data.email);
+          } else {
+            console.log("CHECKING DATA STRCTURE");
+            console.log(data);
+            await user.oauthLogin(data);
+            window.location.href = "/";
           }
-        );
-
-        document.cookie =
-          "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-        const data = await response.json();
-        if (data.status === "signup incomplete") {
-          setIsSignup(true);
-          setSignupEmail(data.email);
-        } else {
-          console.log("CHECKING DATA STRCTURE");
-          console.log(data);
-          await user.oauthLogin(data);
-          window.location.href = "/";
+        } catch (err) {
+          console.log(
+            "Error checking if user is signed up through OAuth: \n" +
+              err.message
+          );
         }
       }
     };
@@ -65,7 +72,7 @@ const OAuth = () => {
       setUsernameError("Please enter in a username");
     } else if (!regex.test(username)) {
       setUsernameError(
-        "Please enter in a valid username (One word, can contain numbers)"
+        "Please enter in a valid username (One word, 16 characters, can contain numbers)"
       );
     } else {
       setUsernameError(null);
