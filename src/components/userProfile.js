@@ -251,31 +251,38 @@ const UserProfile = () => {
     const user = userContext.user;
 
     const body = { userID: user.id, blockedID: userIdentifier };
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockUser`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      }
-    );
-    const data = await response.json();
-    setIsBlocked(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockUser`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await response.json();
+      setIsBlocked(true);
+    } catch (err) {
+      console.log("Error while blocking user: \n" + err.message);
+    }
   };
 
   const unblockUser = async () => {
     const body = { userID: userContext.user.id, unblockedID: userIdentifier };
-
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/unblockUser`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      }
-    );
-    const data = await response.json();
-    setIsBlocked(false);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/unblockUser`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await response.json();
+      setIsBlocked(false);
+    } catch (err) {
+      console.log("Error while unblocking user: \n" + err.message);
+    }
   };
 
   const changeProfileStatus = async () => {
