@@ -70,14 +70,20 @@ const UserProfile = () => {
     };
 
     const checkIfBlocked = async () => {
-      if (userContext?.user?.id) {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
-        );
-        const data = await response.json();
-        if (data.isBlocked !== isBlocked) {
-          setIsBlocked(data.isBlocked);
+      try {
+        if (userContext?.user?.id) {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
+          );
+          const data = await response.json();
+          if (data.isBlocked !== isBlocked) {
+            setIsBlocked(data.isBlocked);
+          }
         }
+      } catch (err) {
+        console.log(
+          "Error checking if blocked on userProfile: \n" + err.message
+        );
       }
     };
     if (userContext?.user?.id) {
