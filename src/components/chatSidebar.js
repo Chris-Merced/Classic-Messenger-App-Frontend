@@ -112,7 +112,6 @@ const SideBarComponent = () => {
   }, [listOfChats]);
 
   const changeChat = (chat) => {
-    console.log(chat);
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,

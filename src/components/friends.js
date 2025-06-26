@@ -12,20 +12,35 @@ const FriendRequests = () => {
   const [isFriendsList, setIsFriendsList] = useState(true);
   const itemRef = useRef([]);
 
-
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const getFriends = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`
-      );
-      const data = await response.json();
-      if (data) {
-        setFriends(data.friendsList);
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`,
+          { signal }
+        );
+        const data = await response.json();
+        if (data) {
+          setFriends(data.friendsList);
+        }
+      } catch (err) {
+        if (err.name === "AbortError") {
+          console.log("Fetch Aborted");
+        } else {
+          console.log("Error fetching friends: \n" + err.message);
+        }
       }
     };
     if (user) {
       getFriends();
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [user]);
 
   useEffect(() => {
@@ -98,8 +113,7 @@ const FriendRequests = () => {
           }
         }
 
-        userContext.modifyUser({...user})
-
+        userContext.modifyUser({ ...user });
       }
     } catch (err) {
       console.log("Error denying friend request: \n" + err.message);
