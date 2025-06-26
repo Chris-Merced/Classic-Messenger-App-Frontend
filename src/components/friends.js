@@ -11,7 +11,7 @@ const FriendRequests = () => {
   const [isFriendRequests, setIsFriendRequests] = useState(true);
   const [isFriendsList, setIsFriendsList] = useState(true);
   const itemRef = useRef([]);
-
+  console.log(friends)
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -25,6 +25,7 @@ const FriendRequests = () => {
         const data = await response.json();
         if (data) {
           setFriends(data.friendsList);
+          
         }
       } catch (err) {
         if (err.name === "AbortError") {
@@ -120,8 +121,8 @@ const FriendRequests = () => {
     }
   };
 
-  const removeFriend = async (friendID) => {
-    const body = { userID: user.id, friendID: friendID };
+  const removeFriend = async (friendID, index) => {
+    try{const body = { userID: user.id, friendID: friendID };
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/userProfile/removeFriend`,
       {
@@ -131,9 +132,17 @@ const FriendRequests = () => {
         body: JSON.stringify(body),
       }
     );
+    if(response.ok){
+      setFriends(friends.filter((friend)=>friend.id!==friendID))
+    }
     const data = await response.json();
 
+
     console.log(data);
+  }catch(err){
+    console.log("Error removing friend from friends list:  \n" +  err.message)
+  }
+    
   };
 
   const changeIsFriendsList = () => {
@@ -207,7 +216,7 @@ const FriendRequests = () => {
                   </Link>
                   <button
                     className="friendsListItemButton"
-                    onClick={() => removeFriend(friend.id)}
+                    onClick={() => removeFriend(friend.id, index)}
                     aria-label={`Remove friend ${friend.username}`}
                   >
                     Remove Friend
