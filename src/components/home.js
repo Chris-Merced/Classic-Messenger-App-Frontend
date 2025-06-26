@@ -94,7 +94,7 @@ const HomeChatComponent = () => {
   useEffect(() => {
     const setupMessageHandler = async () => {
       socketRef.current.onmessage = async (message) => {
-        console.log(message.data);
+        try{console.log(message.data);
         setIncomingMessage(true);
         message = JSON.parse(message.data);
         const dateObj = new Date(message.time);
@@ -170,7 +170,9 @@ const HomeChatComponent = () => {
             });
           }
         }
-      };
+      }catch(err){
+        console.log("Error handling websocket message: \n" + err.message)
+      }};
     };
 
     if (socketRef.current) {
