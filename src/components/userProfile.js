@@ -287,28 +287,31 @@ const UserProfile = () => {
 
   const changeProfileStatus = async () => {
     const body = { userID: userContext.user.id, status: isPublic };
-    try{
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/changeProfileStatus?userID=${userContext.user.id}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        body: JSON.stringify(body),
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/changeProfileStatus?userID=${userContext.user.id}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          body: JSON.stringify(body),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-    const data = await response.json();
-    if (data.changed) {
-      if (isPublic) {
-        setIsPublic(false);
-      } else {
-        setIsPublic(true);
+      const data = await response.json();
+      if (data.changed) {
+        if (isPublic) {
+          setIsPublic(false);
+        } else {
+          setIsPublic(true);
+        }
       }
+    } catch (err) {
+      console.log(
+        "Error while changing user public/private profile status: \n" +
+          err.message
+      );
     }
-  }catch(err){
-    console.log("Error while changing user public/private profile status: \n" + err.message)
-  }
   };
 
   const isEditPage = () => {
@@ -323,63 +326,69 @@ const UserProfile = () => {
     if (!profilePictureEdit) {
       return;
     }
+    try {
+      setCursorPosition({ x: clientX, y: clientY });
 
-    setCursorPosition({ x: clientX, y: clientY });
+      const formData = new FormData();
+      formData.append("ProfilePicture", profilePictureEdit);
+      formData.append("userID", userContext.user.id);
 
-    const formData = new FormData();
-    formData.append("ProfilePicture", profilePictureEdit);
-    formData.append("userID", userContext.user.id);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`,
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        setProfilePictureEditConfirm(true);
 
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userprofile/profilePicture`,
-      {
-        method: "POST",
-        body: formData,
-        credentials: "include",
+        setTimeout(() => {
+          setProfilePictureEditConfirm(false);
+        }, 1500);
       }
-    );
-    if (response.ok) {
-      setProfilePictureEditConfirm(true);
-
-      setTimeout(() => {
-        setProfilePictureEditConfirm(false);
-      }, 1500);
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.log("Error while posting user profile picture: \n" + err.message);
     }
-    const data = await response.json();
-    console.log(data);
   };
 
   const changeAboutMe = async (e) => {
     e.preventDefault();
+    try {
+      let aboutMe = {
+        aboutMe: e.target[0].value
+          .trim()
+          .replace(/ {3,}/g, "  ")
+          .replace(/\n{3,}/g, "\n\n"),
+        userID: userContext.user.id,
+      };
 
-    let aboutMe = {
-      aboutMe: e.target[0].value
-        .trim()
-        .replace(/ {3,}/g, "  ")
-        .replace(/\n{3,}/g, "\n\n"),
-      userID: userContext.user.id,
-    };
+      setCursorPosition({ x: e.clientX, y: e.clientY });
 
-    setCursorPosition({ x: e.clientX, y: e.clientY });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/aboutMe`,
+        {
+          headers: { "Content-Type": "application/json" },
+          method: "PATCH",
+          credentials: "include",
+          body: JSON.stringify(aboutMe),
+        }
+      );
 
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/aboutMe`,
-      {
-        headers: { "Content-Type": "application/json" },
-        method: "PATCH",
-        credentials: "include",
-        body: JSON.stringify(aboutMe),
+      const data = await response.json();
+
+      if (response.ok) {
+        setAboutMeEdit(true);
+
+        setTimeout(() => {
+          setAboutMeEdit(false);
+        }, 1500);
       }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      setAboutMeEdit(true);
-
-      setTimeout(() => {
-        setAboutMeEdit(false);
-      }, 1500);
+    } catch (err) {
+      console.log("Error while changing user about me: \n" + err.message);
     }
   };
 
