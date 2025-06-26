@@ -31,6 +31,8 @@ const HomeChatComponent = () => {
   //TODO:
   // If you send a message then refresh the application thinks you have an unread
   //message in that chat
+  //
+  // Finish adding abortController to fetches where it is prudent
 
   useEffect(() => {
     const container = mainChatRef.current;
