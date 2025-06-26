@@ -842,7 +842,7 @@ body.light-theme .searchBar:hover {
   list-style: none;
   padding: 20px;
   gap: 10px;
-  transition: all ease 0.7s;
+  transition: all ease 3s;
   z-index: 1;
   box-shadow: 4px 4px 4px rgba(10, 10, 10, 0.562);
   transform: translateX(10px);

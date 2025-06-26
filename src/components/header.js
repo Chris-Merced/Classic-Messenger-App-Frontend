@@ -25,6 +25,7 @@ const HeaderComponent = () => {
   const windowWidth = useRef();
   const pageRef = useRef(0);
   const searchRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   const context = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
@@ -38,14 +39,13 @@ const HeaderComponent = () => {
     if (userData) {
       setUser(userData);
     }
-
   }, [userData]);
 
-  useEffect(()=>{
-    if(userData){
-      setFriendRequests(userData.friendRequests)
+  useEffect(() => {
+    if (userData) {
+      setFriendRequests(userData.friendRequests);
     }
- }, [userData?.friendRequests])
+  }, [userData?.friendRequests]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -142,6 +142,15 @@ const HeaderComponent = () => {
   };
 
   const searchDB = async (e, search, onScroll = false) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if(abortControllerRef.current !== null){
+      abortControllerRef.current.abort()
+    }
+
+    abortControllerRef.current = controller
+
     if (e) {
       e.preventDefault();
     }
@@ -149,24 +158,29 @@ const HeaderComponent = () => {
       if (!onScroll) {
         setUsers([]);
       }
-      try{
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${search}&page=${pageRef.current}&limit=7`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/userProfile/usersBySearch?username=${search}&page=${pageRef.current}&limit=7`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            signal,
+          }
+        );
+        const data = await response.json();
+        const users = data.users;
+        if (!users) {
+          setUsers(users);
+        } else {
+          setUsers((prev) => [...prev, ...users]);
         }
-      );
-      const data = await response.json();
-      const users = data.users;
-      if (!users) {
-        setUsers(users);
-      } else {
-        setUsers((prev) => [...prev, ...users]);
+      } catch (err) {
+        if (err.name === "AbortError") {
+          console.log("Fetch Aborted");
+        } else {
+          console.log("Error retrieving users by search: \n" + err.message);
+        }
       }
-    }catch(err){
-      console.log("Error retrieving users by search: \n" + err.message)
-    }
     }
     if (search === "") {
       setUsers([]);
@@ -376,65 +390,69 @@ const HeaderComponent = () => {
       </header>
 
       {!user &&
-
         location.pathname !== "/signup" &&
         location.pathname !== "/oauth" && (
-                <>
-                
-
-          
-          <section
-            className="loginHeader"
-            role="region"
-            aria-label="Login form"
-          >
-            {loginError && (
-              <div className="loginError" aria-label="Login Error">
-                {loginError}
-              </div>
-            )}
-            <form
-              className="loginForm"
-              onSubmit={loginHandler}
-              role="form"
-              aria-labelledby="login-heading"
+          <>
+            <section
+              className="loginHeader"
+              role="region"
+              aria-label="Login form"
             >
-              <h2 id="login-heading" className="sr-only">
-                Log In
-              </h2>
-              <div className="usernameForm">
-                <label className="usernameFormLabel" htmlFor="username">Username:</label>
-                <input
-                  className="usernameInput"
-                  name="username"
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-              <div className="passwordForm">
-                <label className="passwordFormLabel" htmlFor="password">Password:</label>
-                <input
-                  className="passwordInput"
-                  value={password}
-                  name="password"
-                  id="password"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <button className="loginButton" type="submit" aria-label="Log In">
-                Log In
+              {loginError && (
+                <div className="loginError" aria-label="Login Error">
+                  {loginError}
+                </div>
+              )}
+              <form
+                className="loginForm"
+                onSubmit={loginHandler}
+                role="form"
+                aria-labelledby="login-heading"
+              >
+                <h2 id="login-heading" className="sr-only">
+                  Log In
+                </h2>
+                <div className="usernameForm">
+                  <label className="usernameFormLabel" htmlFor="username">
+                    Username:
+                  </label>
+                  <input
+                    className="usernameInput"
+                    name="username"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+                <div className="passwordForm">
+                  <label className="passwordFormLabel" htmlFor="password">
+                    Password:
+                  </label>
+                  <input
+                    className="passwordInput"
+                    value={password}
+                    name="password"
+                    id="password"
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="loginButton"
+                  type="submit"
+                  aria-label="Log In"
+                >
+                  Log In
+                </button>
+              </form>
+              <button className="OAuthButton" onClick={initiateOauth}>
+                Log in Or Sign Up With <img src="googleLogo.png"></img>
               </button>
-            </form>
-            <button className="OAuthButton" onClick={initiateOauth}>
-              Log in Or Sign Up With <img src="googleLogo.png"></img>
-            </button>
-            <Link to="/signup" className="signup">
-              Signup
-            </Link>
-          </section>
-          <input className="makesLoginFormClickable"></input>
+              <Link to="/signup" className="signup">
+                Signup
+              </Link>
+            </section>
+            <input className="makesLoginFormClickable"></input>
           </>
         )}
     </>
