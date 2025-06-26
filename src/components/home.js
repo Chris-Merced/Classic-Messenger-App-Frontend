@@ -262,7 +262,7 @@ const HomeChatComponent = () => {
       getMessages();
       checkIfBlocked();
     } catch (err) {
-      console.log("Error while checking if user is blocked: \n" + err.message);
+      console.log("Error while checking if user is blocked within chat window: \n" + err.message);
     }
   }, [chat]);
 
