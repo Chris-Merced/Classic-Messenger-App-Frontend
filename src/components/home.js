@@ -22,6 +22,7 @@ const HomeChatComponent = () => {
   const scrollBottomRef = useRef(true);
   const previousHeightRef = useRef(0);
   const abortMessageControllerRef = useRef(null);
+  const abortBlockedControllerRef = useRef(null);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -269,12 +270,19 @@ const HomeChatComponent = () => {
   useEffect(() => {
     if (!chat || !chat.conversationID) return;
     try {
+      if (abortBlockedControllerRef.current !== null) {
+        abortBlockedControllerRef.current.abort();
+      }
 
+      const controller = new AbortController();
+      abortBlockedControllerRef.current = controller;
+      const signal = controller.signal;
 
       const checkIfBlocked = async () => {
         if (!chat.name) {
           const response = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`
+            `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`,
+            { signal }
           );
           const data = await response.json();
           setIsBlocked(data);
@@ -284,10 +292,14 @@ const HomeChatComponent = () => {
       getMessages();
       checkIfBlocked();
     } catch (err) {
-      console.log(
-        "Error while checking if user is blocked within chat window: \n" +
-          err.message
-      );
+      if (err.name === "AbortError") {
+        console.log("Fetch Aborted");
+      } else {
+        console.log(
+          "Error while checking if user is blocked within chat window: \n" +
+            err.message
+        );
+      }
     }
   }, [chat]);
 
