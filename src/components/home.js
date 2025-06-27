@@ -39,6 +39,13 @@ const HomeChatComponent = () => {
   //GetMessages is occuring twice, once on render in a useEffect below
   //Another time in a useeffect directly below when scrolltop is hit
   //possible fix: useLayoutEffect to auto set the scroll top to not be 0 and trigger fetch
+  // 
+  //when clicking on a user it sometimes doesn't load all of the messages
+  //ex: clicking ana will show messages up to june 25th
+  //    clicking again will show messages up to june 26th
+  //    could be due to new abort controllers or new block controller
+  //    may need to get rid of abortcontroller for getMessages until behavior
+  //    is figured out
 
   useEffect(() => {
     const container = mainChatRef.current;
