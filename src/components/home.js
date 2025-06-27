@@ -34,6 +34,10 @@ const HomeChatComponent = () => {
   //message in that chat
   //
   // Finish adding abortController to fetches where it is prudent
+  //
+  //GetMessages is occuring twice, once on render in a useEffect below
+  //Another time in a useeffect directly below when scrolltop is hit
+  //possible fix: useLayoutEffect to auto set the scroll top to not be 0 and trigger fetch
 
   useEffect(() => {
     const container = mainChatRef.current;
