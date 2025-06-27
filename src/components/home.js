@@ -21,7 +21,7 @@ const HomeChatComponent = () => {
   const pageRef = useRef(0);
   const scrollBottomRef = useRef(true);
   const previousHeightRef = useRef(0);
-  const abortControllerRef = useRef(null);
+  const abortMessageControllerRef = useRef(null);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -207,12 +207,12 @@ const HomeChatComponent = () => {
 
   const getMessages = async () => {
     try {
-      if (abortControllerRef.current !== null) {
-        abortControllerRef.current.abort();
+      if (abortMessageControllerRef.current !== null) {
+        abortMessageControllerRef.current.abort();
       }
 
       const controller = new AbortController();
-      abortControllerRef.current = controller;
+      abortMessageControllerRef.current = controller;
       const signal = controller.signal;
 
       const response = await fetch(
@@ -269,6 +269,8 @@ const HomeChatComponent = () => {
   useEffect(() => {
     if (!chat || !chat.conversationID) return;
     try {
+
+
       const checkIfBlocked = async () => {
         if (!chat.name) {
           const response = await fetch(
