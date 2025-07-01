@@ -15,6 +15,7 @@ const HomeChatComponent = () => {
   const [isBlocked, setIsBlocked] = useState("");
   const [profileID, setProfileID] = useState("");
   const [incomingMessage, setIncomingMessage] = useState(false);
+  const [initChatLoad, setInitChatLoad] = useState(false);
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
   const spanRef = useRef(null);
@@ -39,7 +40,7 @@ const HomeChatComponent = () => {
   //GetMessages is occuring twice, once on render in a useEffect below
   //Another time in a useeffect directly below when scrolltop is hit
   //possible fix: useLayoutEffect to auto set the scroll top to not be 0 and trigger fetch
-  // 
+  //
   //when clicking on a user it sometimes doesn't load all of the messages
   //ex: clicking ana will show messages up to june 25th
   //    clicking again will show messages up to june 26th
@@ -57,8 +58,12 @@ const HomeChatComponent = () => {
       scrollBottomRef.current = false;
       previousHeightRef.current = mainChatRef.current.scrollHeight;
       if (container.scrollTop === 0) {
-        pageRef.current += 1;
-        getMessages();
+        if (initChatLoad) {
+          pageRef.current += 1;
+          getMessages();
+          console.log("triggered scroll top");
+        }
+        setInitChatLoad(true);
       }
     };
     container.addEventListener("scroll", handleScroll);
@@ -91,6 +96,7 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     setChat({ ...currentChat });
+    setInitChatLoad(false)
   }, [currentChat]);
 
   useEffect(() => {
