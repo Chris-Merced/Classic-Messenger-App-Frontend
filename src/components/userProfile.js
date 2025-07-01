@@ -107,7 +107,11 @@ const UserProfile = () => {
         }
       );
       const data = await response.json();
-      setRequestSent(data);
+      if (response.ok) {
+        setRequestSent(data);
+      } else {
+        throw new Error(data.message);
+      }
     };
 
     checkFriendRequest();
