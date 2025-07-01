@@ -76,8 +76,12 @@ const UserProfile = () => {
             `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfBlocked?userID=${userContext.user.id}&blockedID=${userIdentifier}`
           );
           const data = await response.json();
-          if (data.isBlocked !== isBlocked) {
-            setIsBlocked(data.isBlocked);
+          if (response.ok) {
+            if (data.isBlocked !== isBlocked) {
+              setIsBlocked(data.isBlocked);
+            }
+          } else {
+            throw new Error(data.message);
           }
         }
       } catch (err) {
