@@ -191,8 +191,13 @@ const UserProfile = () => {
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/userProfile/mutualFriends?userID=${userContext.user.id}&profileID=${userIdentifier}`
           );
+
           const data = await response.json();
-          setMutualFriends(data);
+          if (response.ok) {
+            setMutualFriends(data);
+          } else {
+            throw new Error(data.message);
+          }
         } catch (err) {
           console.log("Error retrieving mutual friends: \n" + err.message);
         }
