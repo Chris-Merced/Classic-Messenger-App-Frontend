@@ -174,8 +174,14 @@ const UserProfile = () => {
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
           );
+
           const data = await response.json();
-          setBlockedByProfile(data);
+
+          if (response.ok) {
+            setBlockedByProfile(data);
+          } else {
+            throw new Error(data.message);
+          }
         } catch (err) {
           console.log("Error checking block status: \n" + err.message);
         }
