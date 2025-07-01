@@ -219,8 +219,8 @@ const UserProfile = () => {
 
             navigate("/");
           }
-        }else{
-          console.log("Invalid Conversation Credentials")
+        } else {
+          console.log("Invalid Conversation Credentials");
         }
       } catch (error) {
         console.error("Error in sendDirectMessage:", error);
@@ -243,8 +243,10 @@ const UserProfile = () => {
           body: JSON.stringify(data),
         }
       );
-      setRequestSent(true);
-      const newData = await response.json();
+      if (response.ok) {
+        setRequestSent(true);
+        const newData = await response.json();
+      }
     } catch (err) {
       console.log("Error while sending friend request: \n" + err.message);
     }
