@@ -261,7 +261,9 @@ const UserProfile = () => {
         }
       );
       const data = await response.json();
-      setIsBlocked(true);
+      if (response.ok) {
+        setIsBlocked(true);
+      }
     } catch (err) {
       console.log("Error while blocking user: \n" + err.message);
     }
@@ -279,7 +281,9 @@ const UserProfile = () => {
         }
       );
       const data = await response.json();
-      setIsBlocked(false);
+      if (response.ok) {
+        setIsBlocked(false);
+      }
     } catch (err) {
       console.log("Error while unblocking user: \n" + err.message);
     }
