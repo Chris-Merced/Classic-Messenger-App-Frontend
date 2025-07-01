@@ -60,7 +60,12 @@ const UserProfile = () => {
             `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
           );
           const friendStatus = await response.json();
-          setFriendStatus(friendStatus.friendStatus);
+
+          if (response.ok) {
+            setFriendStatus(friendStatus.friendStatus);
+          } else {
+            throw new Error(friendStatus.message);
+          }
         }
       } catch (err) {
         console.log(
