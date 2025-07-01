@@ -55,16 +55,13 @@ const HomeChatComponent = () => {
     setMessages([]);
     scrollBottomRef.current = true;
     const handleScroll = async () => {
-      console.log("triggered")
       scrollBottomRef.current = false;
       previousHeightRef.current = mainChatRef.current.scrollHeight;
       if (container.scrollTop === 0 && initChatLoadRef.current) {
           pageRef.current += 1;
           getMessages();
-          console.log("triggered scroll top");
       }
       if(container.scrollTop === 0){
-        console.log("made it")
         initChatLoadRef.current = true
       }
     };
@@ -74,9 +71,7 @@ const HomeChatComponent = () => {
 
   useLayoutEffect(() => {
     const container = mainChatRef.current;
-    if (!container || pageRef.current === 0) {console.log("container returned"); return;}
-    console.log("triggered");
-    console.log(pageRef);
+    if (!container || pageRef.current === 0) return;
     const newHeight = container.scrollHeight;
     const heightDifference = newHeight - previousHeightRef.current;
     container.scrollTop = heightDifference;
