@@ -152,8 +152,14 @@ const UserProfile = () => {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/profileStatus?profileID=${userIdentifier}`
         );
+
         const data = await response.json();
-        setIsPublic(data);
+
+        if (response.ok) {
+          setIsPublic(data);
+        } else {
+          throw new Error(data.message);
+        }
       } catch (err) {
         console.log(
           "Error occured on checking if user profile is public: \n" +
