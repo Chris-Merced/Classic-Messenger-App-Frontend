@@ -209,15 +209,18 @@ const UserProfile = () => {
           `${process.env.REACT_APP_BACKEND_URL}/conversations?userID=${user.id}&profileID=${profile.id}`
         );
         const data = await response.json();
+        if (response.ok) {
+          if (data.conversation_id) {
+            chatContext.changeChat({
+              name: null,
+              conversationID: data.conversation_id,
+              reciever: [profile.username],
+            });
 
-        if (data.conversation_id) {
-          chatContext.changeChat({
-            name: null,
-            conversationID: data.conversation_id,
-            reciever: [profile.username],
-          });
-
-          navigate("/");
+            navigate("/");
+          }
+        }else{
+          console.log("Invalid Conversation Credentials")
         }
       } catch (error) {
         console.error("Error in sendDirectMessage:", error);
