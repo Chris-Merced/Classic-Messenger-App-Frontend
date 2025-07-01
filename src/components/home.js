@@ -15,7 +15,6 @@ const HomeChatComponent = () => {
   const [isBlocked, setIsBlocked] = useState("");
   const [profileID, setProfileID] = useState("");
   const [incomingMessage, setIncomingMessage] = useState(false);
-  const [initChatLoad, setInitChatLoad] = useState(false);
   const mainChatRef = useRef(null);
   const inputRef = useRef(null);
   const spanRef = useRef(null);
@@ -24,6 +23,7 @@ const HomeChatComponent = () => {
   const previousHeightRef = useRef(0);
   const abortMessageControllerRef = useRef(null);
   const abortBlockedControllerRef = useRef(null);
+  const initChatLoadRef = useRef(false)
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -55,15 +55,17 @@ const HomeChatComponent = () => {
     setMessages([]);
     scrollBottomRef.current = true;
     const handleScroll = async () => {
+      console.log("triggered")
       scrollBottomRef.current = false;
       previousHeightRef.current = mainChatRef.current.scrollHeight;
-      if (container.scrollTop === 0) {
-        if (initChatLoad) {
+      if (container.scrollTop === 0 && initChatLoadRef.current) {
           pageRef.current += 1;
           getMessages();
           console.log("triggered scroll top");
-        }
-        setInitChatLoad(true);
+      }
+      if(container.scrollTop === 0){
+        console.log("made it")
+        initChatLoadRef.current = true
       }
     };
     container.addEventListener("scroll", handleScroll);
@@ -72,7 +74,7 @@ const HomeChatComponent = () => {
 
   useLayoutEffect(() => {
     const container = mainChatRef.current;
-    if (!container || pageRef.current === 0) return;
+    if (!container || pageRef.current === 0) {console.log("container returned"); return;}
     console.log("triggered");
     console.log(pageRef);
     const newHeight = container.scrollHeight;
@@ -96,7 +98,7 @@ const HomeChatComponent = () => {
 
   useEffect(() => {
     setChat({ ...currentChat });
-    setInitChatLoad(false)
+    initChatLoadRef.current = false;
   }, [currentChat]);
 
   useEffect(() => {
