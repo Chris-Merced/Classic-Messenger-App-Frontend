@@ -23,6 +23,7 @@ const HomeChatComponent = () => {
   const previousHeightRef = useRef(0);
   const abortMessageControllerRef = useRef(null);
   const abortBlockedControllerRef = useRef(null);
+  const abortIsReadControllerRef = useRef(null)
   const initChatLoadRef = useRef(false);
 
   const context = useContext(UserContext);
