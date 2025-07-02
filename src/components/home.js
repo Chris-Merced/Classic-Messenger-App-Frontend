@@ -23,7 +23,7 @@ const HomeChatComponent = () => {
   const previousHeightRef = useRef(0);
   const abortMessageControllerRef = useRef(null);
   const abortBlockedControllerRef = useRef(null);
-  const initChatLoadRef = useRef(false)
+  const initChatLoadRef = useRef(false);
 
   const context = useContext(UserContext);
   const socketRef = useContext(WebsocketContext);
@@ -34,7 +34,7 @@ const HomeChatComponent = () => {
   //TODO:
   // If you send a message then refresh the application thinks you have an unread
   //message in that chat
-  
+
   useEffect(() => {
     const container = mainChatRef.current;
     if (!container) return;
@@ -45,11 +45,11 @@ const HomeChatComponent = () => {
       scrollBottomRef.current = false;
       previousHeightRef.current = mainChatRef.current.scrollHeight;
       if (container.scrollTop === 0 && initChatLoadRef.current) {
-          pageRef.current += 1;
-          getMessages();
+        pageRef.current += 1;
+        getMessages();
       }
-      if(container.scrollTop === 0){
-        initChatLoadRef.current = true
+      if (container.scrollTop === 0) {
+        initChatLoadRef.current = true;
       }
     };
     container.addEventListener("scroll", handleScroll);
@@ -226,9 +226,10 @@ const HomeChatComponent = () => {
           signal,
         }
       );
+
       const data = await response.json();
 
-      if (data.messages) {
+      if (response.ok && data.messages) {
         const timeFormattedArray = data.messages.map((message) => {
           const dateObj = new Date(message.time);
           return {
@@ -249,6 +250,25 @@ const HomeChatComponent = () => {
         }
 
         setMessages((prev) => [...timeFormattedArray, ...prev]);
+
+        if (chat.conversationID !== 1) {
+          const isReadData = {
+            conversationID: chat.conversationID,
+            senderID: data.recieverID,
+          };
+
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(isReadData),
+              credentials: "include",
+            }
+          );
+
+        }
+
         if (!mainChatRef.current) {
           return null;
         } else {
