@@ -33,6 +33,9 @@ const HomeChatComponent = () => {
   const { currentChat } = chatContext;
 
 
+  //TODOs: Set up OAUTH to work appropriately with heroku
+
+
   useEffect(() => {
     const container = mainChatRef.current;
     if (!container) return;
