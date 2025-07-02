@@ -198,6 +198,8 @@ const HeaderComponent = () => {
   };
 
   const initiateOauth = () => {
+
+    console.log(process.env.REACT_APP_FRONTEND_URL)
     const rootURL = "https://accounts.google.com/o/oauth2/v2/auth";
     const state = uuidv4();
     document.cookie = `oauth_state=${state}; SameSite=Strict; path=/`;
