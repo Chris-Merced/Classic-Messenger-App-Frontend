@@ -253,6 +253,14 @@ const HomeChatComponent = () => {
         setMessages((prev) => [...timeFormattedArray, ...prev]);
 
         if (chat.conversationID !== 1) {
+          if(abortIsReadControllerRef.current !== null){
+            abortIsReadControllerRef.current.abort()
+          }
+
+          const abortIsReadController = new AbortController();
+          abortIsReadControllerRef.current = abortIsReadController
+          const signal = abortIsReadController.signal
+          
           const isReadData = {
             conversationID: chat.conversationID,
             senderID: data.recieverID,
@@ -265,6 +273,7 @@ const HomeChatComponent = () => {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(isReadData),
               credentials: "include",
+              signal,
             }
           );
 
