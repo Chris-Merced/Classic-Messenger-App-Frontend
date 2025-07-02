@@ -34,6 +34,9 @@ const HomeChatComponent = () => {
 
 
   //TODOs: Set up OAUTH to work appropriately with heroku
+  //
+  // Images are not properly loading 100 percent of the time
+  // neither on dev or production, consider moving images to AWS bucket
 
 
   useEffect(() => {
