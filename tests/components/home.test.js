@@ -14,7 +14,13 @@ import { WebsocketContext } from "../../src/context/websocketContext";
 import { UserChatsContext } from "../../src/context/chatListContext";
 
 const mockUser = { id: "u1", username: "alice" };
-const mockChat = { name: "main", conversationID: "conv1", reciever: ["bob"] };
+const mockChat = {
+  name: "main",
+  conversationID: "conv1",
+  reciever: ["bob"],
+  page: 0,
+  limit: 20,
+};
 const backendURL = "/api";
 const initialPayload = {
   messages: [
@@ -75,14 +81,14 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test("fetches messages for the current chat exactly once on mount", async () => {
+test("fetches messages for the current chat twice on mount", async () => {
   renderHome();
 
   await waitFor(() => {
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(global.fetch.mock.calls[0][0]).toBe(
       `${backendURL}/messages/byChatName?chatName=${mockChat.name}` +
-        `&conversationID=${mockChat.conversationID}&userID=${mockUser.id}`
+        `&conversationID=${mockChat.conversationID}&userID=${mockUser.id}&page=${mockChat.page}&limit=${mockChat.limit}`
     );
   });
 
