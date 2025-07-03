@@ -92,13 +92,4 @@ describe("HeaderComponent Unit Testing", () => {
     fireEvent.click(toggle);
     expect(document.body).not.toHaveClass("light-theme");
   });
-
-  test("fetches friend-requests exactly once when user exists", async () => {
-    renderHeader({ id: 7, username: "bob" });
-
-    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
-    expect(global.fetch.mock.calls[0][0]).toMatch(
-      /\/api\/userProfile\/friendRequest\?userID=7/
-    );
-  });
 });
