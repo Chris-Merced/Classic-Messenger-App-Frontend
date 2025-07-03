@@ -9,6 +9,13 @@ beforeAll(() => {
   process.env.REACT_APP_BACKEND_URL = "/api";
 
   global.fetch = jest.fn((endpoint) => {
+    if (endpoint.startsWith("/api/userProfile/friendRequestSent")) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(false),
+      });
+    }
+
     if (
       typeof endpoint === "string" &&
       endpoint.startsWith("/api/userProfile/publicProfile")
@@ -37,7 +44,9 @@ afterEach(() => {
 
 afterAll(() => {
   delete process.env.REACT_APP_BACKEND_URL;
-  global.fetch.mockRestore();
+  if (global.fetch.mockRestore) {
+    global.fetch.mockRestore();
+  }
 });
 
 describe("UserProfile Unit Tests", () => {

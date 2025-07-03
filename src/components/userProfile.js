@@ -59,7 +59,7 @@ const UserProfile = () => {
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/userProfile/checkIfFriends?userID=${userContext.user.id}&friendID=${userIdentifier}`
           );
-          
+
           const friendStatus = await response.json();
 
           if (response.ok) {
@@ -123,8 +123,9 @@ const UserProfile = () => {
         throw new Error(data.message);
       }
     };
-
-    checkFriendRequest();
+    if (userContext?.user?.id) {
+      checkFriendRequest();
+    }
     setRequestSent(null);
   }, []);
 
@@ -732,7 +733,7 @@ const UserProfile = () => {
           )}
         </div>
       ) : (
-        <div role="alert"></div>
+        <div role="alert">No user logged in</div>
       )}
     </div>
   );
