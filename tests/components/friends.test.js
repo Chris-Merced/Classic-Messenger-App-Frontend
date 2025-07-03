@@ -11,7 +11,11 @@ import { MemoryRouter } from "react-router-dom";
 import FriendRequests from "../../src/components/friends";
 import { UserContext } from "../../src/context/userContext";
 
-const fakeUser = { id: 123, username: "me" };
+const fakeUser = {
+  id: 123,
+  username: "me",
+  friendRequests: [{ id: "20", username: "Bob" }],
+};
 
 const renderWithUser = (user) =>
   render(
@@ -60,11 +64,10 @@ describe("FriendRequests Unit Testing", () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
-      expect(global.fetch.mock.calls[0][0]).toMatch(/friendRequest/);
-      expect(global.fetch.mock.calls[1][0]).toMatch(/getFriends/);
+      expect(global.fetch.mock.calls[0][0]).toMatch(/getFriends/);
 
-      expect(screen.getByText("Bob")).toBeInTheDocument();
       expect(screen.getByText("Alice")).toBeInTheDocument();
+      expect(screen.getByText("Bob")).toBeInTheDocument();
     });
   });
 

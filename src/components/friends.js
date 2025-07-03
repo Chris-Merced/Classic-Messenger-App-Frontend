@@ -6,7 +6,7 @@ import { UserContext } from "../context/userContext";
 const FriendRequests = () => {
   const userContext = useContext(UserContext);
   const user = userContext.user;
-  const [friendRequests, setFriendRequests] = useState("");
+  const [friendRequests, setFriendRequests] = useState([]);
   const [friends, setFriends] = useState([]);
   const [isFriendRequests, setIsFriendRequests] = useState(true);
   const [isFriendsList, setIsFriendsList] = useState(true);
@@ -51,7 +51,7 @@ const FriendRequests = () => {
     }else{
       setFriendRequests([])
     }
-  }, [user.friendRequests]);
+  }, [user]);
 
   const addFriend = async (requestID) => {
     try {
@@ -157,7 +157,7 @@ const FriendRequests = () => {
     console.log("friend request state" + !isFriendRequests);
   };
 
-  return friendRequests && userContext ? (
+  return user && userContext ? (
     <div className="friendsContent" role="region" aria-label="Friends overview">
       <div
         className="friendsListComponent"
