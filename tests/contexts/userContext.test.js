@@ -1,5 +1,11 @@
 import React, { useContext } from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import { UserProvider, UserContext } from "../../src/context/userContext";
@@ -58,10 +64,15 @@ describe("UserContext Crucial Unit Tests", () => {
 
   test("login POST sets user and logout clears it", async () => {
     global.fetch
-      .mockResolvedValueOnce({ ok: true, json: async () => ({}) })
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ id: 2, username: "Bob" }),
+        json: async () => ({ verified: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          user: { id: 2, username: "Bob", verified: true },
+        }),
       });
 
     renderWithProvider();
@@ -70,10 +81,12 @@ describe("UserContext Crucial Unit Tests", () => {
       expect(screen.getByRole("status")).toHaveTextContent("none")
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "login-btn" }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "login-btn" }));
+    });
 
-    await waitFor(() =>
-      expect(screen.getByRole("status")).toHaveTextContent("Bob")
+    await waitFor(()=>
+      () => expect(screen.getByRole("status")).toHaveTextContent("Bob")
     );
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/login",
