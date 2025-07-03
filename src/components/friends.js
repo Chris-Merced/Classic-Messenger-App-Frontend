@@ -11,7 +11,7 @@ const FriendRequests = () => {
   const [isFriendRequests, setIsFriendRequests] = useState(true);
   const [isFriendsList, setIsFriendsList] = useState(true);
   const itemRef = useRef([]);
-  console.log(friends)
+  
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -21,7 +21,8 @@ const FriendRequests = () => {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`,
           { signal }
-        );
+        )
+  ;
         const data = await response.json();
         if (data) {
           setFriends(data.friendsList);
@@ -45,8 +46,10 @@ const FriendRequests = () => {
   }, [user]);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.friendRequests) {
       setFriendRequests(user.friendRequests);
+    }else{
+      setFriendRequests([])
     }
   }, [user.friendRequests]);
 

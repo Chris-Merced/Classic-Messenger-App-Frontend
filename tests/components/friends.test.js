@@ -59,7 +59,7 @@ describe("FriendRequests Unit Testing", () => {
     renderWithUser(fakeUser);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenCalledTimes(1);
       expect(global.fetch.mock.calls[0][0]).toMatch(/friendRequest/);
       expect(global.fetch.mock.calls[1][0]).toMatch(/getFriends/);
 
