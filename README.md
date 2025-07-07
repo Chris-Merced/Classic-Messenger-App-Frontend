@@ -54,7 +54,7 @@ REACT_APP_OAUTH_CLIENTID=[your-google-oauth-client-id]
 4. **Start the Application:**
 
 ```bash
-npm start
+npm run dev
 ```
 
 Your frontend application will be running at `http://localhost:9000`.
