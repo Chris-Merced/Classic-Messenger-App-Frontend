@@ -10,7 +10,7 @@ Classic Messenger is a responsive, intuitive, and modern real-time messaging app
 * **State Management:** Efficiently handles global state using modern React patterns (Hooks, Context API).
 * **Responsive Design:** Fully responsive and mobile-friendly user interface, optimized for all device sizes.
 * **Friend Management:** Allows users to send, accept, or reject friend requests and manage friend lists intuitively.
-* **Private and Group Chats:** Supports both direct messaging and group conversations, including participant management.
+* **Private and Group Chats:** Supports both direct messaging and group conversations.
 * **User Profiles:** Enables profile customization, such as profile pictures and "About Me" sections.
 * **Error Handling & Form Validation:** Implements robust client-side validation and user-friendly error messaging.
 
