@@ -77,3 +77,7 @@ Feel free to fork and submit pull requests for features, enhancements, or bug fi
 ## Author
 
 Chris Merced
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
