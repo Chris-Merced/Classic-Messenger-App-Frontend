@@ -71,10 +71,18 @@ The frontend includes a comprehensive test suite using **Jest** and  **React Tes
 
 ### Test Coverage Includes:
 #### Components:
-- `chatSideBar.test.js`, `friends.test.js`, `header.test.js`, `home.test.js`, `oauth.test.js`, `signup.test.js`, `userProfile.test.js`
+- `chatSideBar.test.js` - Unit testing sidebar functions like pagination for both search and chat list loading as well as interaction to load appropriate chats
+- `friends.test.js` - Unit testing friends page for accurate depiction of passed through data and expected interactions of list items
+- `header.test.js` - Unit testing for expected interaction of login, logout, search, and theme functionality
+- `home.test.js` - Unit testing for loading crucial selected chat data
+- `oauth.test.js` - Unit testing for alternative login functionality
+- `signup.test.js` - Unit testing for expected functionality on user signup
+- `userProfile.test.js` - Unit testing for accurate depiction of data depending on relationship parameters
 
 #### Context Providers:
-- `chatListContext.test.js`, `userContext.test.js`, `websocketContext.test.js`
+- `chatListContext.test.js` - Unit testing to ensure context for user's chats are loaded and passed through to components accurately
+- `userContext.test.js` - Unit testing to ensure context for logged in user is accurately holding the appropriate data and passing to components
+- `websocketContext.test.js` - Unit testing to ensure that websocket is being instantiated correctly and made available to components
 
 ### Running Tests
 
