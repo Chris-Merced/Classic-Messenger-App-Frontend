@@ -67,7 +67,7 @@ Your frontend application will be running at `http://localhost:9000`.
 
 * ## Testing
 
-The frontend includes a comprehensive test suite using **Jest** and likely **React Testing Library**, targeting both component behavior and context-based application logic.
+The frontend includes a comprehensive test suite using **Jest** and  **React Testing Library**, targeting both component behavior and context-based application logic.
 
 ### Test Coverage Includes:
 #### Components:
