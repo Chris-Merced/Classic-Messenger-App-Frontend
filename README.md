@@ -65,6 +65,25 @@ Your frontend application will be running at `http://localhost:9000`.
 * **Messaging:** Initiate or join conversations from your friend list.
 * **Friend Requests:** Manage friend requests and explore user profiles effortlessly.
 
+* ## Testing
+
+The frontend includes a comprehensive test suite using **Jest** and likely **React Testing Library**, targeting both component behavior and context-based application logic.
+
+### Test Coverage Includes:
+#### Components:
+- `chatSideBar.test.js`, `friends.test.js`, `header.test.js`, `home.test.js`, `oauth.test.js`, `signup.test.js`, `userProfile.test.js`
+
+#### Context Providers:
+- `chatListContext.test.js`, `userContext.test.js`, `websocketContext.test.js`
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+npm test
+```
+
 ## Future Improvements
 
 * Integration of notifications and alerts.
