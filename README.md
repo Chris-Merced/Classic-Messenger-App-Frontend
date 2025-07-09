@@ -65,7 +65,7 @@ Your frontend application will be running at `http://localhost:9000`.
 * **Messaging:** Initiate or join conversations from your friend list.
 * **Friend Requests:** Manage friend requests and explore user profiles effortlessly.
 
-* ## Testing
+## Testing
 
 The frontend includes a comprehensive test suite using **Jest** and  **React Testing Library**, targeting both component behavior and context-based application logic.
 
