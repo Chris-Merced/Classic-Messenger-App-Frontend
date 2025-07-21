@@ -239,7 +239,7 @@ const SideBarComponent = () => {
             ></input>
             <img
               className="sideBarSearchIcon"
-              src="searchIcon.svg"
+              src="https://classic-messenger-profile-pics.s3.us-east-2.amazonaws.com/websiteAssets/searchIcon.svg"
               role="button"
               aria-label="Toggle search"
               aria-hidden="true"

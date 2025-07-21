@@ -542,7 +542,7 @@ const UserProfile = () => {
                 ) : (
                   <img
                     className="profileImage"
-                    src="/defaultProfileImage.png"
+                    src="/defaultProfileImageLight.webp"
                     alt="Default profile picture"
                   />
                 )}
