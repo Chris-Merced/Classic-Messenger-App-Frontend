@@ -25,6 +25,7 @@ export const UserProvider = ({ children }) => {
 
       const data = await response.json();
       setUser(data.user);
+      console.log(data.user)
     } catch (err) {
       setError(err.message);
     } finally {
@@ -38,6 +39,11 @@ export const UserProvider = ({ children }) => {
 
   const modifyUser = (user) =>{
     setUser(user)
+  }
+
+  const addFriendRequest = (request) =>{
+    let updatedUser = JSON.parse(JSON.stringify(user))
+    updatedUser.friendRequests.push(request)
   }
 
   const login = async (data) => {
@@ -85,6 +91,7 @@ export const UserProvider = ({ children }) => {
         login,
         oauthLogin,
         modifyUser,
+        addFriendRequest,
       }}
     >
       {children}

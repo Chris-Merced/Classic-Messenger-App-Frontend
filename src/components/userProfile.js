@@ -29,37 +29,40 @@ const UserProfile = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (chatContext?.chatList) {
-
       socketRef.current.onmessage = async (message) => {
         message = JSON.parse(message.data);
         let modifiedChatList = chatContext.chatList;
         console.log(message);
-        for (let i = 0; i < modifiedChatList.userChats.length; i++) {
-          if (
-            modifiedChatList.userChats[i].conversation_id ===
-            message.conversationID
-          ) {
-            modifiedChatList.userChats[i].is_read = false;
+        if (message.type === "message") {
+          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+            if (
+              modifiedChatList.userChats[i].conversation_id ===
+              message.conversationID
+            ) {
+              modifiedChatList.userChats[i].is_read = false;
+            }
           }
-        }
-        chatContext.changeChatList({
-          ...chatContext.chatList,
-          userChats: [...modifiedChatList.userChats],
-        });
+          chatContext.changeChatList({
+            ...chatContext.chatList,
+            userChats: [...modifiedChatList.userChats],
+          });
 
-        for (let i = 0; i < modifiedChatList.userChats.length; i++) {
-          if (
-            modifiedChatList.userChats[i].conversation_id ===
-              message.conversationID &&
-            message.conversationID !== 1
-          ) {
-            const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
-            modifiedChatList.userChats.splice(1, 0, tempItem);
-            chatContext.changeChatList({
-              ...chatContext.chatList,
-              userChats: [...modifiedChatList.userChats],
-            });
+          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+            if (
+              modifiedChatList.userChats[i].conversation_id ===
+                message.conversationID &&
+              message.conversationID !== 1
+            ) {
+              const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+              modifiedChatList.userChats.splice(1, 0, tempItem);
+              chatContext.changeChatList({
+                ...chatContext.chatList,
+                userChats: [...modifiedChatList.userChats],
+              });
+            }
           }
+        }else if(message.type==="friendRequest"){
+          chatContext.addFriendRequest()
         }
       };
     }
