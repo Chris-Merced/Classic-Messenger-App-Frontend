@@ -109,7 +109,7 @@ const UserProfile = () => {
         };
 
         setProfile(data.user);
-        console.log(data.user)
+        console.log(data.user);
       } catch (err) {
         setError("Error occured on profile retrieval", err);
       }
@@ -451,6 +451,8 @@ const UserProfile = () => {
       return;
     }
     try {
+      console.log(clientX);
+      console.log(clientY);
       setCursorPosition({ x: clientX, y: clientY });
 
       const formData = new FormData();
@@ -465,15 +467,24 @@ const UserProfile = () => {
           credentials: "include",
         }
       );
+      const data = await response.json();
+      console.log(data);
       if (response.ok) {
+        setCursorPosition({ x: clientX, y: clientY });
+
         setProfilePictureEditConfirm(true);
+        const updatedProfile = JSON.parse(JSON.stringify(profile))
+        updatedProfile.profile_picture = data.pictureURL
+        setProfile(updatedProfile)
 
         setTimeout(() => {
+          console.log(cursorPosition);
+          console.log(profilePictureEditConfirm);
+
           setProfilePictureEditConfirm(false);
         }, 1500);
       }
-      const data = await response.json();
-      console.log(data);
+      
     } catch (err) {
       console.log("Error while posting user profile picture: \n" + err.message);
     }
@@ -515,6 +526,7 @@ const UserProfile = () => {
       console.log("Error while changing user about me: \n" + err.message);
     }
   };
+
 
   return (
     <div>
@@ -623,8 +635,11 @@ const UserProfile = () => {
                       <div
                         className="profilePicturePopup"
                         style={{
+                          
                           top: `${cursorPosition.y}px`,
                           left: `${cursorPosition.x}px`,
+                          
+                          
                         }}
                         role="status"
                         aria-live="polite"
@@ -791,7 +806,7 @@ const UserProfile = () => {
               >
                 {isPublic ? (
                   <button
-                  className="changeProfileStatus"
+                    className="changeProfileStatus"
                     onClick={changeProfileStatus}
                     aria-label="Change profile to private"
                   >
@@ -810,7 +825,8 @@ const UserProfile = () => {
                 className="editProfile"
                 onClick={isEditPage}
                 aria-label="Edit profile"
-              >{editPage ? "Return" : "Edit Profile"}
+              >
+                {editPage ? "Return" : "Edit Profile"}
               </button>
             </div>
           )}
