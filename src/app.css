@@ -443,7 +443,45 @@ button.profileButton div {
 
 .userProfilePage button.changeProfilePicture {
   width: 50%;
+margin: 0px;
+color:#e6af49
 }
+.userProfilePage button.changeProfilePicture:hover {
+
+background-color: rgba(255, 166, 0, 0.034);
+}
+
+.userProfilePage button.aboutMeSubmit {
+  width: 50%;
+margin: 0px;
+color:#e6af49
+}
+.userProfilePage button.aboutMeSubmit:hover {
+
+background-color: rgba(255, 166, 0, 0.034);
+}
+
+.userProfilePage button.changeProfileStatus {
+  width: 50%;
+margin: 0px;
+color:#e6af49
+}
+.userProfilePage button.changeProfileStatus:hover {
+
+background-color: rgba(255, 166, 0, 0.034);
+
+}.userProfilePage button.editProfile {
+  width: 50%;
+margin: 0px;
+color:#e6af49
+}
+.userProfilePage button.editProfile:hover {
+
+background-color: rgba(255, 166, 0, 0.034);
+}
+
+
+
 
 .aboutMeSection {
   margin-top: 30px;
@@ -459,6 +497,7 @@ button.profileButton div {
 .aboutMeData {
   white-space: pre-wrap;
 }
+
 
 .editAboutMe {
   display: flex;

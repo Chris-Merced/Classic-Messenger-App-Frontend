@@ -791,6 +791,7 @@ const UserProfile = () => {
               >
                 {isPublic ? (
                   <button
+                  className="changeProfileStatus"
                     onClick={changeProfileStatus}
                     aria-label="Change profile to private"
                   >
