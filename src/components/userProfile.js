@@ -109,6 +109,7 @@ const UserProfile = () => {
         };
 
         setProfile(data.user);
+        console.log(data.user)
       } catch (err) {
         setError("Error occured on profile retrieval", err);
       }
