@@ -207,7 +207,11 @@ const SideBarComponent = () => {
           onClick={updateSideBarExtend}
         >
           <img
-            src={`${sideBarExtend ? "/ChevronLeft.svg" : "ChevronRight.svg"}`}
+            src={`${
+              sideBarExtend
+                ? "https://classic-messenger-profile-pics.s3.us-east-2.amazonaws.com/websiteAssets/ChevronLeft.svg"
+                : "https://classic-messenger-profile-pics.s3.us-east-2.amazonaws.com/websiteAssets/ChevronRight.svg"
+            }`}
           ></img>
         </button>
       </div>
