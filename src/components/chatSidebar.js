@@ -112,6 +112,7 @@ const SideBarComponent = () => {
   }, [listOfChats]);
 
   const changeChat = (chat) => {
+    console.log(chat)
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,
@@ -127,6 +128,7 @@ const SideBarComponent = () => {
         name: null,
         conversationID: chat.conversation_id,
         reciever: chat.participants,
+        pictureURL: chat.profilePicture
       });
       if (location.pathname !== "/") {
         navigate("/");

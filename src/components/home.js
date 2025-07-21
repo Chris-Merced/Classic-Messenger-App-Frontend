@@ -384,6 +384,8 @@ const HomeChatComponent = () => {
     }
   };
 
+  console.log(currentChat)
+
   return (
     <div
       className="mainContent fadeInStaggered--1"
@@ -398,6 +400,8 @@ const HomeChatComponent = () => {
                 className="conversationHeader"
                 to={`/userProfile/${profileID}`}
               >
+                              <img className="currentChatImage" src={currentChat.pictureURL}></img>
+
                 <h1 role="heading" aria-level="1">
                   {currentChat.name
                     ? currentChat.name
