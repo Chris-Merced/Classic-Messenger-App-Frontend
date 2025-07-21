@@ -60,9 +60,10 @@ const FriendRequests = () => {
               }
             }
           } else if (message.type === "friendRequest") {
+            console.log("MESSAGE INFO")
             console.log(message);
             userContext.addFriendRequest({
-              id: message.userID,
+              id: parseInt(message.requestID),
               username: message.user,
             });
           }
@@ -124,7 +125,8 @@ const FriendRequests = () => {
         userID: user.id,
         requestID: requestID,
       };
-
+      console.log("DATA FOR FRIEND REQUEST:")
+      console.log(data)
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/addFriend`,
         {
@@ -220,6 +222,10 @@ const FriendRequests = () => {
     setIsFriendRequests((prev) => !prev);
     console.log("friend request state" + !isFriendRequests);
   };
+
+  if(user.friendRequests){
+    console.log(user.friendRequests)
+  }
 
   return user && userContext ? (
     <div className="friendsContent" role="region" aria-label="Friends overview">

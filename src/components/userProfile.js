@@ -70,7 +70,7 @@ const UserProfile = () => {
           } else if (message.type === "friendRequest") {
             console.log(message);
             userContext.addFriendRequest({
-              id: message.userID,
+              id: parseInt(message.requestID),
               username: message.user,
             });
           }
@@ -350,6 +350,7 @@ const UserProfile = () => {
               registration: false,
               user: userContext.user.username,
               userID: userIdentifier,
+              requestID: userContext.user.id,
               reciever: [profile.username],
             };
             socketRef.current.send(JSON.stringify(data));

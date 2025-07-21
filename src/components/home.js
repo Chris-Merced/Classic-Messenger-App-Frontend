@@ -109,81 +109,89 @@ const HomeChatComponent = () => {
           console.log(message.data);
           setIncomingMessage(true);
           message = JSON.parse(message.data);
-          if (message.type !== "message") {
+          if (message.type === "message") {
             console.log("wrong type of data being sent");
-          }
-          const dateObj = new Date(message.time);
-          message = {
-            ...message,
-            time: new Date(message.time).toLocaleString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            }),
-            dateObj,
-          };
 
-          if (message.conversationID === chat.conversationID) {
-            setMessages((prevMessages) => [...prevMessages, message]);
-            mainChatRef.current.scrollTop =
-              mainChatRef.current.scrollHeight + 100;
+            const dateObj = new Date(message.time);
+            message = {
+              ...message,
+              time: new Date(message.time).toLocaleString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              }),
+              dateObj,
+            };
 
-            if (
-              message.conversationID != 1 &&
-              context.user.username !== message.user
-            ) {
-              const data = {
-                conversationID: message.conversationID,
-                senderID: message.userID,
-              };
+            if (message.conversationID === chat.conversationID) {
+              setMessages((prevMessages) => [...prevMessages, message]);
+              mainChatRef.current.scrollTop =
+                mainChatRef.current.scrollHeight + 100;
 
-              const response = await fetch(
-                `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
-                {
-                  method: "PATCH",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(data),
-                  credentials: "include",
-                }
-              );
-
-              console.log(response.ok);
-            }
-          } else if (
-            message.conversationID !== chat.conversationID &&
-            message.conversationID != 1
-          ) {
-            let modifiedChatList = chatContext.chatList;
-
-            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
               if (
-                modifiedChatList.userChats[i].conversation_id ===
-                message.conversationID
+                message.conversationID != 1 &&
+                context.user.username !== message.user
               ) {
-                modifiedChatList.userChats[i].is_read = false;
+                const data = {
+                  conversationID: message.conversationID,
+                  senderID: message.userID,
+                };
+
+                const response = await fetch(
+                  `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
+                  {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                    credentials: "include",
+                  }
+                );
+
+                console.log(response.ok);
               }
-            }
-            chatContext.changeChatList({
-              ...chatContext.chatList,
-              userChats: [...modifiedChatList.userChats],
-            });
-          }
-
-          let modifiedChatList = chatContext.chatList;
-
-          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
-            if (
-              modifiedChatList.userChats[i].conversation_id ===
-                message.conversationID &&
-              message.conversationID !== 1
+            } else if (
+              message.conversationID !== chat.conversationID &&
+              message.conversationID != 1
             ) {
-              const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
-              modifiedChatList.userChats.splice(1, 0, tempItem);
+              let modifiedChatList = chatContext.chatList;
+
+              for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+                if (
+                  modifiedChatList.userChats[i].conversation_id ===
+                  message.conversationID
+                ) {
+                  modifiedChatList.userChats[i].is_read = false;
+                }
+              }
               chatContext.changeChatList({
                 ...chatContext.chatList,
                 userChats: [...modifiedChatList.userChats],
               });
             }
+
+            let modifiedChatList = chatContext.chatList;
+
+            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+              if (
+                modifiedChatList.userChats[i].conversation_id ===
+                  message.conversationID &&
+                message.conversationID !== 1
+              ) {
+                const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+                modifiedChatList.userChats.splice(1, 0, tempItem);
+                chatContext.changeChatList({
+                  ...chatContext.chatList,
+                  userChats: [...modifiedChatList.userChats],
+                });
+              }
+            }
+          } else if (message.type === "friendRequest") {
+            console.log("MESSAGE INFO");
+            console.log(message);
+            context.addFriendRequest({
+              id: parseInt(message.requestID),
+              username: message.user,
+            });
           }
         } catch (err) {
           console.log("Error handling websocket message: \n" + err.message);
