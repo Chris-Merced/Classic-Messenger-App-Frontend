@@ -337,6 +337,7 @@ const HomeChatComponent = () => {
     e.preventDefault();
     try {
       const data = {
+        type:"message",
         message: message,
         registration: false,
         conversationName: conversationName,

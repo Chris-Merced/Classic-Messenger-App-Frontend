@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState, useContext, useRef } from "react";
 import { UserContext } from "../context/userContext";
 import { UserChatsContext } from "../context/chatListContext";
+import { WebsocketContext } from "../context/websocketContext";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
@@ -24,7 +25,16 @@ const UserProfile = () => {
   const { userIdentifier } = useParams();
   const userContext = useContext(UserContext);
   const chatContext = useContext(UserChatsContext);
+  const socketRef = useContext(WebsocketContext);
   const navigate = useNavigate();
+
+
+
+useEffect(()=>{
+  socketRef.current.onmessage = async () =>{
+    console.log("newly placed on message has been recieved")}
+  
+}, [])
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -277,7 +287,21 @@ const UserProfile = () => {
       );
       if (response.ok) {
         setRequestSent(true);
-        const newData = await response.json();
+        try{if (
+          socketRef.current &&
+          socketRef.current.readyState === WebSocket.OPEN
+        ) {
+          console.log("made it inside to send message");
+          socketRef.current.send(JSON.stringify(data));
+          setMessage("");
+          if (inputRef.current) {
+            inputRef.current.style.height = "auto";
+          }
+        } else {
+          console.log("console is not open");
+        }}catch(err){
+          console.log("Error sending request through websocket: " + err.message)
+        }
       }
     } catch (err) {
       console.log("Error while sending friend request: \n" + err.message);
