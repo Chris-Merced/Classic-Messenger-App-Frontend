@@ -810,8 +810,7 @@ const UserProfile = () => {
                 className="editProfile"
                 onClick={isEditPage}
                 aria-label="Edit profile"
-              >
-                Edit Profile
+              >{editPage ? "Return" : "Edit Profile"}
               </button>
             </div>
           )}
