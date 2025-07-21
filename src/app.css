@@ -289,7 +289,6 @@ body.light-theme .welcomeHeader {
   position: relative;
   display: flex;
   margin-left: auto;
-  margin-right: -2vw;
   align-items: center;
   gap: 10px;
   opacity: 0;
