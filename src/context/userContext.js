@@ -42,8 +42,13 @@ export const UserProvider = ({ children }) => {
   }
 
   const addFriendRequest = (request) =>{
+    console.log("current user: ")
+    console.log(user)
     let updatedUser = JSON.parse(JSON.stringify(user))
     updatedUser.friendRequests.push(request)
+    console.log("updated uyser")
+    console.log(updatedUser)
+    setUser(updatedUser)
   }
 
   const login = async (data) => {

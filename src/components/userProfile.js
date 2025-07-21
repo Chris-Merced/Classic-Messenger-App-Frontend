@@ -27,45 +27,60 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const socketRef = useContext(WebsocketContext);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (chatContext?.chatList) {
-      socketRef.current.onmessage = async (message) => {
-        message = JSON.parse(message.data);
-        let modifiedChatList = chatContext.chatList;
-        console.log(message);
-        if (message.type === "message") {
-          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
-            if (
-              modifiedChatList.userChats[i].conversation_id ===
-              message.conversationID
-            ) {
-              modifiedChatList.userChats[i].is_read = false;
+      try {
+        socketRef.current.onmessage = async (message) => {
+          message = JSON.parse(message.data);
+          let modifiedChatList = chatContext.chatList;
+          console.log(message);
+          if (message.type === "message") {
+            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+              if (
+                modifiedChatList.userChats[i].conversation_id ===
+                message.conversationID
+              ) {
+                modifiedChatList.userChats[i].is_read = false;
+              }
             }
-          }
-          chatContext.changeChatList({
-            ...chatContext.chatList,
-            userChats: [...modifiedChatList.userChats],
-          });
+            chatContext.changeChatList({
+              ...chatContext.chatList,
+              userChats: [...modifiedChatList.userChats],
+            });
 
-          for (let i = 0; i < modifiedChatList.userChats.length; i++) {
-            if (
-              modifiedChatList.userChats[i].conversation_id ===
-                message.conversationID &&
-              message.conversationID !== 1
-            ) {
-              const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
-              modifiedChatList.userChats.splice(1, 0, tempItem);
-              chatContext.changeChatList({
-                ...chatContext.chatList,
-                userChats: [...modifiedChatList.userChats],
-              });
+            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+              if (
+                modifiedChatList.userChats[i].conversation_id ===
+                  message.conversationID &&
+                message.conversationID !== 1
+              ) {
+                const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+                modifiedChatList.userChats.splice(1, 0, tempItem);
+                chatContext.changeChatList({
+                  ...chatContext.chatList,
+                  userChats: [...modifiedChatList.userChats],
+                });
+              }
             }
+          } else if (message.type === "friendRequest") {
+            console.log(message);
+            userContext.addFriendRequest({
+              id: message.userID,
+              username: message.user,
+            });
           }
-        }else if(message.type==="friendRequest"){
-          chatContext.addFriendRequest()
-        }
-      };
+        };
+      } catch (err) {
+        console.log("Error managing websocket message" + err.message);
+      }
     }
+    
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.onmessage = null;
+      }
+    };
   }, [chatContext]);
 
   useEffect(() => {
