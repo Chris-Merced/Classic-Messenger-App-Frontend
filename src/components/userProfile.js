@@ -534,7 +534,7 @@ const UserProfile = () => {
               aria-label="Profile content"
             >
               <div className="userHeader" role="banner">
-                {userContext?.user?.profile_picture ? (
+                {!userContext?.user?.profile_picture ? (
                   <img
                     className="profileImage"
                     src={profile.profile_picture}
@@ -543,7 +543,7 @@ const UserProfile = () => {
                 ) : (
                   <img
                     className="profileImage"
-                    src="/defaultProfileImageLight.webp"
+                    src="/defaultProfileImage.png"
                     alt="Default profile picture"
                   />
                 )}
