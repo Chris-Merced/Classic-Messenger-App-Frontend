@@ -28,13 +28,11 @@ const UserProfile = () => {
   const socketRef = useContext(WebsocketContext);
   const navigate = useNavigate();
 
-
-
-useEffect(()=>{
-  socketRef.current.onmessage = async () =>{
-    console.log("newly placed on message has been recieved")}
-  
-}, [])
+  useEffect(() => {
+    socketRef.current.onmessage = async () => {
+      console.log("newly placed on message has been recieved");
+    };
+  }, []);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -287,20 +285,27 @@ useEffect(()=>{
       );
       if (response.ok) {
         setRequestSent(true);
-        try{if (
-          socketRef.current &&
-          socketRef.current.readyState === WebSocket.OPEN
-        ) {
-          console.log("made it inside to send message");
-          socketRef.current.send(JSON.stringify(data));
-          setMessage("");
-          if (inputRef.current) {
-            inputRef.current.style.height = "auto";
+        try {
+          if (
+            socketRef.current &&
+            socketRef.current.readyState === WebSocket.OPEN
+          ) {
+            console.log("made it inside to send friend request");
+            const data = {
+              type: "friendRequest",
+              registration: false,
+              user: user.username,
+              userID: userIdentifier,
+              reciever: profile.username
+            };
+            socketRef.current.send(JSON.stringify(data));
+          } else {
+            console.log("console is not open");
           }
-        } else {
-          console.log("console is not open");
-        }}catch(err){
-          console.log("Error sending request through websocket: " + err.message)
+        } catch (err) {
+          console.log(
+            "Error sending request through websocket: " + err.message
+          );
         }
       }
     } catch (err) {
