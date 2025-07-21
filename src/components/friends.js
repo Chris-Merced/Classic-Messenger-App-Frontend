@@ -21,7 +21,6 @@ const FriendRequests = () => {
   useEffect(() => {
     if (chatContext?.chatList) {
       try {
-        console.log("made it to new useffect in friends");
 
         if (socketRef.current) {
           socketRef.current.onmessage = null;
@@ -60,8 +59,6 @@ const FriendRequests = () => {
               }
             }
           } else if (message.type === "friendRequest") {
-            console.log("MESSAGE INFO")
-            console.log(message);
             userContext.addFriendRequest({
               id: parseInt(message.requestID),
               username: message.user,
@@ -223,9 +220,6 @@ const FriendRequests = () => {
     console.log("friend request state" + !isFriendRequests);
   };
 
-  if(user.friendRequests){
-    console.log(user.friendRequests)
-  }
 
   return user && userContext ? (
     <div className="friendsContent" role="region" aria-label="Friends overview">

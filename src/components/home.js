@@ -32,8 +32,6 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
-  // Images are not properly loading 100 percent of the time
-  // neither on dev or production, consider moving images to AWS bucket
 
   useEffect(() => {
     const container = mainChatRef.current;
@@ -186,8 +184,6 @@ const HomeChatComponent = () => {
               }
             }
           } else if (message.type === "friendRequest") {
-            console.log("MESSAGE INFO");
-            console.log(message);
             context.addFriendRequest({
               id: parseInt(message.requestID),
               username: message.user,
