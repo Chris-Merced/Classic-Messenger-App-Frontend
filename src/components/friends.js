@@ -2,16 +2,83 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../context/userContext";
+import { UserChatsContext } from "../context/chatListContext";
+import { WebsocketContext } from "../context/websocketContext";
 
 const FriendRequests = () => {
-  const userContext = useContext(UserContext);
-  const user = userContext.user;
   const [friendRequests, setFriendRequests] = useState([]);
   const [friends, setFriends] = useState([]);
   const [isFriendRequests, setIsFriendRequests] = useState(true);
   const [isFriendsList, setIsFriendsList] = useState(true);
+
+  const userContext = useContext(UserContext);
+  const chatContext = useContext(UserChatsContext);
+  const socketRef = useContext(WebsocketContext);
   const itemRef = useRef([]);
-  
+
+  const user = userContext.user;
+
+  useEffect(() => {
+    if (chatContext?.chatList) {
+      try {
+        console.log("made it to new useffect in friends");
+
+        if (socketRef.current) {
+          socketRef.current.onmessage = null;
+        }
+
+        socketRef.current.onmessage = async (message) => {
+          message = JSON.parse(message.data);
+          let modifiedChatList = chatContext.chatList;
+          console.log(message);
+          if (message.type === "message") {
+            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+              if (
+                modifiedChatList.userChats[i].conversation_id ===
+                message.conversationID
+              ) {
+                modifiedChatList.userChats[i].is_read = false;
+              }
+            }
+            chatContext.changeChatList({
+              ...chatContext.chatList,
+              userChats: [...modifiedChatList.userChats],
+            });
+
+            for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+              if (
+                modifiedChatList.userChats[i].conversation_id ===
+                  message.conversationID &&
+                message.conversationID !== 1
+              ) {
+                const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+                modifiedChatList.userChats.splice(1, 0, tempItem);
+                chatContext.changeChatList({
+                  ...chatContext.chatList,
+                  userChats: [...modifiedChatList.userChats],
+                });
+              }
+            }
+          } else if (message.type === "friendRequest") {
+            console.log(message);
+            userContext.addFriendRequest({
+              id: message.userID,
+              username: message.user,
+            });
+          }
+        };
+      } catch (err) {
+        console.log("Error managing websocket message" + err.message);
+      }
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.onmessage = null;
+      }
+    };
+  }, [chatContext]);
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -21,12 +88,10 @@ const FriendRequests = () => {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/userProfile/getFriends?userID=${user.id}`,
           { signal }
-        )
-  ;
+        );
         const data = await response.json();
         if (data) {
           setFriends(data.friendsList);
-          
         }
       } catch (err) {
         if (err.name === "AbortError") {
@@ -48,8 +113,8 @@ const FriendRequests = () => {
   useEffect(() => {
     if (user && user.friendRequests) {
       setFriendRequests(user.friendRequests);
-    }else{
-      setFriendRequests([])
+    } else {
+      setFriendRequests([]);
     }
   }, [user]);
 
@@ -125,27 +190,26 @@ const FriendRequests = () => {
   };
 
   const removeFriend = async (friendID, index) => {
-    try{const body = { userID: user.id, friendID: friendID };
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/userProfile/removeFriend`,
-      {
-        method: "DELETE",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+    try {
+      const body = { userID: user.id, friendID: friendID };
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/removeFriend`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      if (response.ok) {
+        setFriends(friends.filter((friend) => friend.id !== friendID));
       }
-    );
-    if(response.ok){
-      setFriends(friends.filter((friend)=>friend.id!==friendID))
+      const data = await response.json();
+
+      console.log(data);
+    } catch (err) {
+      console.log("Error removing friend from friends list:  \n" + err.message);
     }
-    const data = await response.json();
-
-
-    console.log(data);
-  }catch(err){
-    console.log("Error removing friend from friends list:  \n" +  err.message)
-  }
-    
   };
 
   const changeIsFriendsList = () => {

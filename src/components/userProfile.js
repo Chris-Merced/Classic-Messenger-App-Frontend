@@ -31,6 +31,10 @@ const UserProfile = () => {
   useEffect(() => {
     if (chatContext?.chatList) {
       try {
+        if (socketRef.current) {
+          socketRef.current.onmessage = null;
+        }
+
         socketRef.current.onmessage = async (message) => {
           message = JSON.parse(message.data);
           let modifiedChatList = chatContext.chatList;
@@ -75,7 +79,7 @@ const UserProfile = () => {
         console.log("Error managing websocket message" + err.message);
       }
     }
-    
+
     return () => {
       if (socketRef.current) {
         socketRef.current.onmessage = null;
