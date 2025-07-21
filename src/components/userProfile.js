@@ -27,12 +27,43 @@ const UserProfile = () => {
   const chatContext = useContext(UserChatsContext);
   const socketRef = useContext(WebsocketContext);
   const navigate = useNavigate();
-
   useEffect(() => {
-    socketRef.current.onmessage = async () => {
-      console.log("newly placed on message has been recieved");
-    };
-  }, []);
+    if (chatContext?.chatList) {
+
+      socketRef.current.onmessage = async (message) => {
+        message = JSON.parse(message.data);
+        let modifiedChatList = chatContext.chatList;
+        console.log(message);
+        for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+          if (
+            modifiedChatList.userChats[i].conversation_id ===
+            message.conversationID
+          ) {
+            modifiedChatList.userChats[i].is_read = false;
+          }
+        }
+        chatContext.changeChatList({
+          ...chatContext.chatList,
+          userChats: [...modifiedChatList.userChats],
+        });
+
+        for (let i = 0; i < modifiedChatList.userChats.length; i++) {
+          if (
+            modifiedChatList.userChats[i].conversation_id ===
+              message.conversationID &&
+            message.conversationID !== 1
+          ) {
+            const tempItem = modifiedChatList.userChats.splice(i, 1)[0];
+            modifiedChatList.userChats.splice(1, 0, tempItem);
+            chatContext.changeChatList({
+              ...chatContext.chatList,
+              userChats: [...modifiedChatList.userChats],
+            });
+          }
+        }
+      };
+    }
+  }, [chatContext]);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -294,9 +325,9 @@ const UserProfile = () => {
             const data = {
               type: "friendRequest",
               registration: false,
-              user: user.username,
+              user: userContext.user.username,
               userID: userIdentifier,
-              reciever: profile.username
+              reciever: [profile.username],
             };
             socketRef.current.send(JSON.stringify(data));
           } else {

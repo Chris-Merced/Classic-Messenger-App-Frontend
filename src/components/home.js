@@ -23,7 +23,7 @@ const HomeChatComponent = () => {
   const previousHeightRef = useRef(0);
   const abortMessageControllerRef = useRef(null);
   const abortBlockedControllerRef = useRef(null);
-  const abortIsReadControllerRef = useRef(null)
+  const abortIsReadControllerRef = useRef(null);
   const initChatLoadRef = useRef(false);
 
   const context = useContext(UserContext);
@@ -32,12 +32,10 @@ const HomeChatComponent = () => {
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
 
-
   //TODOs: Set up OAUTH to work appropriately with heroku
   //
   // Images are not properly loading 100 percent of the time
   // neither on dev or production, consider moving images to AWS bucket
-
 
   useEffect(() => {
     const container = mainChatRef.current;
@@ -109,6 +107,9 @@ const HomeChatComponent = () => {
           console.log(message.data);
           setIncomingMessage(true);
           message = JSON.parse(message.data);
+          if (message.type !== "message") {
+            console.log("wrong type of data being sent");
+          }
           const dateObj = new Date(message.time);
           message = {
             ...message,
@@ -256,14 +257,14 @@ const HomeChatComponent = () => {
         setMessages((prev) => [...timeFormattedArray, ...prev]);
 
         if (chat.conversationID !== 1) {
-          if(abortIsReadControllerRef.current !== null){
-            abortIsReadControllerRef.current.abort()
+          if (abortIsReadControllerRef.current !== null) {
+            abortIsReadControllerRef.current.abort();
           }
 
           const abortIsReadController = new AbortController();
-          abortIsReadControllerRef.current = abortIsReadController
-          const signal = abortIsReadController.signal
-          
+          abortIsReadControllerRef.current = abortIsReadController;
+          const signal = abortIsReadController.signal;
+
           const isReadData = {
             conversationID: chat.conversationID,
             senderID: data.recieverID,
@@ -279,7 +280,6 @@ const HomeChatComponent = () => {
               signal,
             }
           );
-
         }
 
         if (!mainChatRef.current) {
@@ -337,7 +337,7 @@ const HomeChatComponent = () => {
     e.preventDefault();
     try {
       const data = {
-        type:"message",
+        type: "message",
         message: message,
         registration: false,
         conversationName: conversationName,
