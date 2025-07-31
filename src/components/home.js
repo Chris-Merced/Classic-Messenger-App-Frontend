@@ -383,15 +383,32 @@ const HomeChatComponent = () => {
     }
   };
 
-  const deleteMessage = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/admin/message`, {
-        method: "DELETE",
-        credentials: "include",
+  const deleteMessage = async (messageID) => {
+    try {
+      const data = {
+        id: context.user.id,
+        messageID: messageID,
+      };
 
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/admin/message`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+      if (response.ok) {
+        console.log("Message deleted");
+      } else {
+        console.log("Message could not be deleted");
       }
-    );
+    } catch (err) {
+      console.error("Error deleting message from database" + err.message);
+    }
   };
+  console.log(messages);
 
   return (
     <div
@@ -520,7 +537,9 @@ const HomeChatComponent = () => {
                   >
                     {message.message}
                     {context.user.is_admin === true && (
-                      <button onClick={deleteMessage}>Delete</button>
+                      <button onClick={() => deleteMessage(message.id)}>
+                        Delete
+                      </button>
                     )}
                   </div>
                 </li>
