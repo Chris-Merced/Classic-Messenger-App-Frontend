@@ -389,7 +389,6 @@ const HomeChatComponent = () => {
         id: context.user.id,
         messageID: messageID,
       };
-      console.log(messages);
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/admin/message`,
         {
@@ -399,8 +398,7 @@ const HomeChatComponent = () => {
           body: JSON.stringify(data),
         }
       );
-      console.log("message dletion function");
-      console.log(messages);
+      
       if (response.ok) {
         console.log("Message deleted");
         setMessages((prev) => prev.filter((msg) => msg.id !== messageID));
@@ -411,7 +409,6 @@ const HomeChatComponent = () => {
       console.error("Error deleting message from database" + err.message);
     }
   };
-  console.log(messages);
 
   return (
     <div
