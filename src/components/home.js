@@ -389,7 +389,7 @@ const HomeChatComponent = () => {
         id: context.user.id,
         messageID: messageID,
       };
-
+      console.log(messages);
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/admin/message`,
         {
@@ -399,8 +399,11 @@ const HomeChatComponent = () => {
           body: JSON.stringify(data),
         }
       );
+      console.log("message dletion function");
+      console.log(messages);
       if (response.ok) {
         console.log("Message deleted");
+        setMessages((prev) => prev.filter((msg) => msg.id !== messageID));
       } else {
         console.log("Message could not be deleted");
       }
@@ -449,7 +452,7 @@ const HomeChatComponent = () => {
           >
             <ul className="MessageList" role="list">
               {messages.map((message, index) => (
-                <li className="message" key={index} role="listitem">
+                <li className="message" key={message.id} role="listitem">
                   {index === 0 && (
                     <div
                       className="date"
