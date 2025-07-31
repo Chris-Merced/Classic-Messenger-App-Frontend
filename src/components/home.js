@@ -31,8 +31,6 @@ const HomeChatComponent = () => {
   const userData = context.user;
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
-  console.log("CONTEXT");
-  console.log(context.user);
 
   useEffect(() => {
     const container = mainChatRef.current;
