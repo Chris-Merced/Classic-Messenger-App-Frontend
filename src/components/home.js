@@ -31,7 +31,8 @@ const HomeChatComponent = () => {
   const userData = context.user;
   const chatContext = useContext(UserChatsContext);
   const { currentChat } = chatContext;
-
+  console.log("CONTEXT");
+  console.log(context.user);
 
   useEffect(() => {
     const container = mainChatRef.current;
@@ -384,7 +385,15 @@ const HomeChatComponent = () => {
     }
   };
 
-  console.log(currentChat)
+  const deleteMessage = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/admin/message`, {
+        method: "DELETE",
+        credentials: "include",
+
+      }
+    );
+  };
 
   return (
     <div
@@ -400,7 +409,10 @@ const HomeChatComponent = () => {
                 className="conversationHeader"
                 to={`/userProfile/${profileID}`}
               >
-                              <img className="currentChatImage" src={currentChat.pictureURL}></img>
+                <img
+                  className="currentChatImage"
+                  src={currentChat.pictureURL}
+                ></img>
 
                 <h1 role="heading" aria-level="1">
                   {currentChat.name
@@ -509,6 +521,9 @@ const HomeChatComponent = () => {
                     aria-label={`Message: ${message.message}`}
                   >
                     {message.message}
+                    {context.user.is_admin === true && (
+                      <button onClick={deleteMessage}>Delete</button>
+                    )}
                   </div>
                 </li>
               ))}

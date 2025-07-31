@@ -1619,6 +1619,9 @@ body.light-theme .signupHeader {
   }
 
   .messageText {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
     width: 80vw;
   }
 
