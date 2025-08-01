@@ -105,10 +105,19 @@ const HomeChatComponent = () => {
 
       socketRef.current.onmessage = async (message) => {
         try {
-          console.log(message.data);
           setIncomingMessage(true);
           message = JSON.parse(message.data);
           if (message.type === "message") {
+            let oldConversation=false;
+            for(let chat of chatContext.chatList.userChats){
+              if (chat.participants[0] === message.user){
+                console.log("fulfilled")
+                oldConversation=true;
+              }
+            }
+            if(!oldConversation){
+              chatContext.getChats();
+            }
 
             const dateObj = new Date(message.time);
             message = {
