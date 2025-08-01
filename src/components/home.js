@@ -342,8 +342,7 @@ const HomeChatComponent = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
     try {
-      const data = {
-        id: uuidv4(),
+      const data = {    
         type: "message",
         message: message,
         registration: false,
@@ -376,8 +375,9 @@ const HomeChatComponent = () => {
           if (inputRef.current) {
             inputRef.current.style.height = "auto";
           }
-          console.log(currentChat)
-          
+          if (messages.length===0){
+            chatContext.getChats();
+          }
         } else {
           console.log("console is not open");
         }
@@ -393,6 +393,7 @@ const HomeChatComponent = () => {
         id: context.user.id,
         messageID: messageID,
       };
+      console.log(messageID)
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/admin/message`,
         {
@@ -453,7 +454,7 @@ const HomeChatComponent = () => {
           >
             <ul className="MessageList" role="list">
               {messages.map((message, index) => (
-                <li className="message" key={message.id} role="listitem">
+                <li className="message" key={message.id || uuidv4()} role="listitem">
                   {index === 0 && (
                     <div
                       className="date"

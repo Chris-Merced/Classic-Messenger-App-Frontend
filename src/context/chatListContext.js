@@ -27,10 +27,11 @@ export const UserChats = ({ children }) => {
       );
 
       const data = await response.json();
+      
       if (!chatList) {
         setChatList(data);
       } else if (page === 0) {
-        //donothing
+        setChatList(data)
       } else {
         setChatList((prev) => {
           const newChatList = [...prev.userChats, ...data.userChats];

@@ -92,7 +92,6 @@ const SideBarComponent = () => {
           { signal }
         );
         const data = await response.json();
-        console.log(data.activeUsers)
         setActiveUsers(data.activeUsers);
       } catch (error) {
         if (error.name === "AbortError") {
