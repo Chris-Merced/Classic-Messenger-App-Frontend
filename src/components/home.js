@@ -5,6 +5,8 @@ import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 import { WebsocketContext } from "../context/websocketContext";
 import { UserChatsContext } from "../context/chatListContext";
+import { v4 as uuidv4 } from 'uuid';
+
 
 const HomeChatComponent = () => {
   const [message, setMessage] = useState("");
@@ -107,7 +109,6 @@ const HomeChatComponent = () => {
           setIncomingMessage(true);
           message = JSON.parse(message.data);
           if (message.type === "message") {
-            console.log("wrong type of data being sent");
 
             const dateObj = new Date(message.time);
             message = {
@@ -342,6 +343,7 @@ const HomeChatComponent = () => {
     e.preventDefault();
     try {
       const data = {
+        id: uuidv4(),
         type: "message",
         message: message,
         registration: false,
@@ -374,6 +376,8 @@ const HomeChatComponent = () => {
           if (inputRef.current) {
             inputRef.current.style.height = "auto";
           }
+          console.log(currentChat)
+          
         } else {
           console.log("console is not open");
         }

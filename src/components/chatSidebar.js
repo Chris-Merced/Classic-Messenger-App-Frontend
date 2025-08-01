@@ -92,6 +92,7 @@ const SideBarComponent = () => {
           { signal }
         );
         const data = await response.json();
+        console.log(data.activeUsers)
         setActiveUsers(data.activeUsers);
       } catch (error) {
         if (error.name === "AbortError") {
@@ -198,6 +199,8 @@ const SideBarComponent = () => {
     e.preventDefault();
     sideBarExtend ? setSideBarExtend(false) : setSideBarExtend(true);
   };
+
+
 
   if (!listOfChats || !userContext.user) return <div aria-hidden="true"></div>;
 
