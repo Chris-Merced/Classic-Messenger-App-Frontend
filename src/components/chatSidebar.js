@@ -111,8 +111,7 @@ const SideBarComponent = () => {
     };
   }, [listOfChats]);
 
-  const changeChat = (chat) => {
-    console.log(chat)
+  const changeChat = async (chat) => {
     if (chat.name) {
       chatContext.changeChat({
         name: chat.name,
@@ -124,16 +123,48 @@ const SideBarComponent = () => {
       }
       setSideBarExtend(false);
     } else {
+      console.log(chat);
+      console.log(chatContext.chatList);
+
+      console.log(chat.participants[0]);
+      const newResponse = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/userProfile/userIDByUsername?id=${chat.participants[0]}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      const data = await newResponse.json();
+      console.log(data);
+
       chatContext.changeChat({
         name: null,
         conversationID: chat.conversation_id,
         reciever: chat.participants,
-        pictureURL: chat.profilePicture
+        pictureURL: chat.profilePicture,
       });
+
       if (location.pathname !== "/") {
         navigate("/");
       }
+
       setSideBarExtend(false);
+      console.log(chat)
+
+      const isReadData = {
+        conversationID: chat.conversation_id,
+        senderID: data.id,
+      };
+
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(isReadData),
+          credentials: "include",
+        }
+      );
     }
   };
 
@@ -198,8 +229,6 @@ const SideBarComponent = () => {
     e.preventDefault();
     sideBarExtend ? setSideBarExtend(false) : setSideBarExtend(true);
   };
-
-
 
   if (!listOfChats || !userContext.user) return <div aria-hidden="true"></div>;
 

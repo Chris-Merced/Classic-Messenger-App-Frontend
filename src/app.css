@@ -1711,17 +1711,7 @@ body.light-theme .signupHeader {
   }
 }
 
-@keyframes slideIn {
-  0% {
-    transform: translateX(-2%);
-  }
-  50% {
-    transform: translateX(2%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
+
 
 @keyframes appear {
   0% {

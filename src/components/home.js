@@ -275,6 +275,7 @@ const HomeChatComponent = () => {
             conversationID: chat.conversationID,
             senderID: data.recieverID,
           };
+          
 
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
@@ -286,6 +287,7 @@ const HomeChatComponent = () => {
               signal,
             }
           );
+         
         }
 
         if (!mainChatRef.current) {
@@ -414,6 +416,7 @@ const HomeChatComponent = () => {
       console.error("Error deleting message from database" + err.message);
     }
   };
+
 
   return (
     <div
