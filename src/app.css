@@ -177,7 +177,7 @@ body.light-theme button.loginButton:hover {
 }
 
 .messageNotification {
-  width: 28px;
+  width: 14px;
   height: 14px;
   background-color: rgb(126, 0, 0);
   border-radius: 50%;
@@ -772,6 +772,9 @@ body.light-theme .chatList {
 
 .chat button {
   all: unset;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   background: none;
   padding: 10px;

@@ -330,16 +330,18 @@ const SideBarComponent = () => {
                         ? "page"
                         : undefined
                     }
-                  >
+                  ><div>
                     {chat.name ? chat.name : chat.participants}
-                  </button>
-                  {!chat.is_read && (
+                    </div>
+                    {!chat.is_read && (
                     <div
                       className="messageNotification"
                       role="status"
                       aria-label="Unread messages"
                     ></div>
                   )}
+                  </button>
+                  
                   {chat.participants &&
                   chat.participants.length === 1 &&
                   activeUsers[chat.participants] ? (
