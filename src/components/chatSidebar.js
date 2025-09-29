@@ -135,6 +135,7 @@ const SideBarComponent = () => {
         }
       );
       const data = await newResponse.json();
+      console.log("get user id data")
       console.log(data);
 
       chatContext.changeChat({
