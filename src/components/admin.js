@@ -35,7 +35,7 @@ function AdminPanel() {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/admin/ban?username=${username}&days=${ver}`,
         {
-          credentials: include,
+          credentials: "include",
           method: "POST",
           headers: { "Content-Type": "application/json" },
         }
