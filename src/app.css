@@ -119,6 +119,46 @@ section.loginHeader {
   background-color: rgba(163, 163, 163, 0.9);
 }
 
+.banFormInput{
+  all: unset;
+  border-radius: 15px;
+  background-color: rgba(179, 177, 177, 0.5);
+  border: 2px solid;
+  border-color: #9b9898;
+  padding-left: 20px;
+  height: 30px;
+  transition: background-color 0.6s ease;
+}
+
+
+.banHeader{
+  font-size: 2em;
+  font-weight:600
+}
+
+.banForm{
+  display: flex;
+  flex-direction: column;
+  gap:20px;
+}
+
+
+button.banButton {
+  all: unset;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 15px;
+  border: 2px solid;
+  border-color: #808080;
+  background-color: rgba(168, 168, 168, 0.5);
+  transition: all ease 0.7s;
+  width: 150px;
+  margin-left: auto;
+  margin-right: 5px;
+  gap: 5px;
+}
 button.loginButton {
   all: unset;
   display: flex;
