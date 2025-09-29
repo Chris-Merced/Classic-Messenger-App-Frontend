@@ -47,6 +47,7 @@ export const UserProvider = ({ children }) => {
   }
 
   const login = async (data) => {
+    console.log(data)
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/login`,
@@ -57,9 +58,10 @@ export const UserProvider = ({ children }) => {
           credentials: "include",
         }
       );
-
+      
+      
       const newData = await response.json();
-
+      console.log(newData)
       if (newData.verified) {
         await fetchUserData();
       } else {
