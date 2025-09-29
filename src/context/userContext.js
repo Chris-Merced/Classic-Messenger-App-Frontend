@@ -36,18 +36,18 @@ export const UserProvider = ({ children }) => {
     fetchUserData();
   }, []);
 
-  const modifyUser = (user) =>{
-    setUser(user)
-  }
+  const modifyUser = (user) => {
+    setUser(user);
+  };
 
-  const addFriendRequest = (request) =>{
-    let updatedUser = JSON.parse(JSON.stringify(user))
-    updatedUser.friendRequests.push(request)
-    setUser(updatedUser)
-  }
+  const addFriendRequest = (request) => {
+    let updatedUser = JSON.parse(JSON.stringify(user));
+    updatedUser.friendRequests.push(request);
+    setUser(updatedUser);
+  };
 
   const login = async (data) => {
-    console.log(data)
+    console.log(data);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/login`,
@@ -58,10 +58,9 @@ export const UserProvider = ({ children }) => {
           credentials: "include",
         }
       );
-      
-      
+
       const newData = await response.json();
-      console.log(newData)
+      console.log(newData);
       if (newData.verified) {
         await fetchUserData();
       } else {

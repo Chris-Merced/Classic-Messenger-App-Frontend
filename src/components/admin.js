@@ -7,7 +7,6 @@ function AdminPanel() {
   const [usernameError, setUsernameError] = useState("");
   const [daysError, setDaysError] = useState("");
   const [banSuccess, setBanSuccess] = useState(false);
-  console.log(userContext);
 
   async function handleBan(e) {
     e.preventDefault();
@@ -18,6 +17,7 @@ function AdminPanel() {
 
     const username = e.target.username.value;
     const days = e.target.days.value;
+    let error = false
 
     if (days === "perm") {
       //perm ban
@@ -28,12 +28,13 @@ function AdminPanel() {
         setDaysError("");
       } else {
         setDaysError("Invalid Input: Enter integer or 'perm' ");
+        error=true;
       }
     }
 
-    if (!daysError) {
+    if (!error) {
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/admin/ban?username=${username}&days=${ver}`,
+        `${process.env.REACT_APP_BACKEND_URL}/admin/ban?username=${username}&days=${days.trim()}`,
         {
           credentials: "include",
           method: "POST",
@@ -42,12 +43,15 @@ function AdminPanel() {
       );
       if (!res.ok) {
       } else {
+        const data = await res.json()
+        console.log(data)
         console.log("Successful ban");
         setBanSuccess(true);
         setTimeout(() => {
           setBanSuccess(false);
-        }, 1000);
+        }, 5000);
       }
+      
     }
   }
 
@@ -73,7 +77,7 @@ function AdminPanel() {
             </button>
           </form>
           {banSuccess && (
-            <div className="banSuccess">User Banned Successfuly</div>
+            <div className="banSuccess">User Banned Successfully!</div>
           )}
         </>
       ) : (
