@@ -23,7 +23,7 @@ Classic Messenger is a responsive, intuitive, and modern real-time messaging app
 
 ## Installation & Setup
 
-Note that this setup needs to be married with the installation provided in the backend repository: https://github.com/Chris-Merced/Classic-Messenger-App-Backend
+Note that this setup needs to be married with the installation provided in the Backend repository: https://github.com/Chris-Merced/Classic-Messenger-App-Backend
 
 ### Prerequisites
 
