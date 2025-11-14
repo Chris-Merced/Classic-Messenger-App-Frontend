@@ -16,7 +16,9 @@ const signUpComponent = () => {
   const [serverError, setServerError] = useState("");
 
   const user = useContext(UserContext);
-
+  //needs to be made more robust, implement regex
+  // password should not be allowed to contain spaces
+  
   const validatePassword = (password) => {
     if (password === "") {
       return "Please enter in a password";
@@ -37,7 +39,9 @@ const signUpComponent = () => {
     }
     return "";
   };
-
+  // needs to be more robust, implement regex
+  // email should not be allowed to contain spaces
+  // should double validate email pattern
   const validateEmail = (email) => {
     if (email === "") {
       return "Please enter in an email";
