@@ -410,6 +410,7 @@ const UserProfile = () => {
   const changeProfileStatus = async () => {
     const body = { userID: userContext.user.id, status: isPublic };
     try {
+      //Redundant query, backend uses body not query parameter
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/userProfile/changeProfileStatus?userID=${userContext.user.id}`,
         {
