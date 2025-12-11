@@ -315,7 +315,6 @@ const HomeChatComponent = () => {
     console.log(chat);
     if (!chat) return;
     setIsBlocked(false)
-    console.log("chat change");
     try {
       if (abortBlockedControllerRef.current !== null) {
         abortBlockedControllerRef.current.abort();
@@ -327,10 +326,8 @@ const HomeChatComponent = () => {
 
       console.log(chat);
       if (chat.conversationID) {
-        console.log("reached");
         const checkIfBlocked = async () => {
           if (!chat.name) {
-            console.log("made it")
             const response = await fetch(
               `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`,
               { signal }
@@ -339,7 +336,6 @@ const HomeChatComponent = () => {
             setIsBlocked(data);
           }
           
-          console.log("block check invoked");
         };
         checkIfBlocked()
       }
