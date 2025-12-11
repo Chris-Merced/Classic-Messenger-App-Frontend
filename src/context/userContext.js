@@ -24,6 +24,8 @@ export const UserProvider = ({ children }) => {
       }
 
       const data = await response.json();
+      console.log("fetusherresponse")
+      console.log(data)
       setUser(data.user);
     } catch (err) {
       setError(err.message);
