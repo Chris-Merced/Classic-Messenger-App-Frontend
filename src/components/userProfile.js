@@ -252,7 +252,7 @@ const UserProfile = () => {
       const checkIfBlockedByProfile = async () => {
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&profileID=${userIdentifier}`
+            `${process.env.REACT_APP_BACKEND_URL}/userProfile/blockedByProfile?userID=${userContext.user.id}&blockedID=${userIdentifier}`
           );
 
           const data = await response.json();
@@ -518,6 +518,8 @@ const UserProfile = () => {
       console.log("Error while changing user about me: \n" + err.message);
     }
   };
+
+  console.log(blockedByProfile);
 
   return (
     <div>

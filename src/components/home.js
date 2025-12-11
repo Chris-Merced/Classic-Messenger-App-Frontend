@@ -5,8 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../context/userContext";
 import { WebsocketContext } from "../context/websocketContext";
 import { UserChatsContext } from "../context/chatListContext";
-import { v4 as uuidv4 } from 'uuid';
-
+import { v4 as uuidv4 } from "uuid";
 
 const HomeChatComponent = () => {
   const [message, setMessage] = useState("");
@@ -108,14 +107,14 @@ const HomeChatComponent = () => {
           setIncomingMessage(true);
           message = JSON.parse(message.data);
           if (message.type === "message") {
-            let oldConversation=false;
-            for(let chat of chatContext.chatList.userChats){
-              if (chat.participants[0] === message.user){
-                console.log("fulfilled")
-                oldConversation=true;
+            let oldConversation = false;
+            for (let chat of chatContext.chatList.userChats) {
+              if (chat.participants[0] === message.user) {
+                console.log("fulfilled");
+                oldConversation = true;
               }
             }
-            if(!oldConversation){
+            if (!oldConversation) {
               chatContext.getChats();
             }
 
@@ -237,7 +236,7 @@ const HomeChatComponent = () => {
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
         }&conversationID=${chat.conversationID}&userID=${
-          user ? user.id : ""
+          user ? user.id : undefined
         }&page=${pageRef.current}&limit=20`,
         {
           method: "GET",
@@ -284,7 +283,6 @@ const HomeChatComponent = () => {
             conversationID: chat.conversationID,
             senderID: data.recieverID,
           };
-          
 
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/conversations/isRead`,
@@ -296,7 +294,6 @@ const HomeChatComponent = () => {
               signal,
             }
           );
-         
         }
 
         if (!mainChatRef.current) {
@@ -315,7 +312,10 @@ const HomeChatComponent = () => {
   };
 
   useEffect(() => {
-    if (!chat || !chat.conversationID) return;
+    console.log(chat);
+    if (!chat) return;
+    setIsBlocked(false)
+    console.log("chat change");
     try {
       if (abortBlockedControllerRef.current !== null) {
         abortBlockedControllerRef.current.abort();
@@ -325,19 +325,26 @@ const HomeChatComponent = () => {
       abortBlockedControllerRef.current = controller;
       const signal = controller.signal;
 
-      const checkIfBlocked = async () => {
-        if (!chat.name) {
-          const response = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`,
-            { signal }
-          );
-          const data = await response.json();
-          setIsBlocked(data);
-        }
-      };
+      console.log(chat);
+      if (chat.conversationID) {
+        console.log("reached");
+        const checkIfBlocked = async () => {
+          if (!chat.name) {
+            console.log("made it")
+            const response = await fetch(
+              `${process.env.REACT_APP_BACKEND_URL}/conversations/isBlocked?reciever=${chat.reciever[0]}&userID=${user.id}`,
+              { signal }
+            );
+            const data = await response.json();
+            setIsBlocked(data);
+          }
+          
+          console.log("block check invoked");
+        };
+        checkIfBlocked()
+      }
 
       getMessages();
-      checkIfBlocked();
     } catch (err) {
       if (err.name === "AbortError") {
         console.log("Fetch Aborted");
@@ -353,7 +360,7 @@ const HomeChatComponent = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
     try {
-      const data = {    
+      const data = {
         type: "message",
         message: message,
         registration: false,
@@ -386,7 +393,7 @@ const HomeChatComponent = () => {
           if (inputRef.current) {
             inputRef.current.style.height = "auto";
           }
-          if (messages.length===0){
+          if (messages.length === 0) {
             chatContext.getChats();
           }
         } else {
@@ -404,7 +411,7 @@ const HomeChatComponent = () => {
         id: context.user.id,
         messageID: messageID,
       };
-      console.log(messageID)
+      console.log(messageID);
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/admin/message`,
         {
@@ -414,7 +421,7 @@ const HomeChatComponent = () => {
           body: JSON.stringify(data),
         }
       );
-      
+
       if (response.ok) {
         console.log("Message deleted");
         setMessages((prev) => prev.filter((msg) => msg.id !== messageID));
@@ -426,7 +433,7 @@ const HomeChatComponent = () => {
     }
   };
 
-
+  console.log(isBlocked);
   return (
     <div
       className="mainContent fadeInStaggered--1"
@@ -466,7 +473,11 @@ const HomeChatComponent = () => {
           >
             <ul className="MessageList" role="list">
               {messages.map((message, index) => (
-                <li className="message" key={message.id || uuidv4()} role="listitem">
+                <li
+                  className="message"
+                  key={message.id || uuidv4()}
+                  role="listitem"
+                >
                   {index === 0 && (
                     <div
                       className="date"
