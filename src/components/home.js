@@ -77,8 +77,10 @@ const HomeChatComponent = () => {
   }, [context?.user]);
 
   useEffect(() => {
-    setChat({ ...currentChat });
-    initChatLoadRef.current = false;
+    if (currentChat) {
+      setChat({ ...currentChat });
+      initChatLoadRef.current = false;
+    }
   }, [currentChat]);
 
   useEffect(() => {
@@ -236,7 +238,7 @@ const HomeChatComponent = () => {
         `${process.env.REACT_APP_BACKEND_URL}/messages/byChatName?chatName=${
           chat.name
         }&conversationID=${chat.conversationID}&userID=${
-          user ? user.id : undefined
+          user ? user.id : 0
         }&page=${pageRef.current}&limit=20`,
         {
           method: "GET",
@@ -314,7 +316,7 @@ const HomeChatComponent = () => {
   useEffect(() => {
     console.log(chat);
     if (!chat) return;
-    setIsBlocked(false)
+    setIsBlocked(false);
     try {
       if (abortBlockedControllerRef.current !== null) {
         abortBlockedControllerRef.current.abort();
@@ -335,9 +337,8 @@ const HomeChatComponent = () => {
             const data = await response.json();
             setIsBlocked(data);
           }
-          
         };
-        checkIfBlocked()
+        checkIfBlocked();
       }
 
       getMessages();
