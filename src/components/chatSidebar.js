@@ -172,7 +172,7 @@ const SideBarComponent = () => {
   useEffect(() => {
     if (listOfChats && !userContext.hasInitializedRef.current) {
       let chat = listOfChats[0];
-
+      console.log(listOfChats)
       chatContext.changeChat({
         name: chat.name,
         conversationID: chat.conversation_id,
