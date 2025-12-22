@@ -74,7 +74,7 @@ function AdminPanel() {
   async function handleUnban(e) {
     e.preventDefault();
     const username = e.target.username.value;
-    if (typeof username !== "string" || username.length > 16) {
+    if (typeof username !== "string" || username.length > 16 || !username) {
       setUnbanUsernameError(true);
       return;
     }
@@ -111,7 +111,7 @@ function AdminPanel() {
 
     const username = e.target.username.value;
     
-    if (typeof username !== "string" || username.length > 16) {
+    if (typeof username !== "string" || username.length > 16 || !username) {
       setAdminError(true);
       return;
     }
