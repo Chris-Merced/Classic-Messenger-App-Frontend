@@ -1160,6 +1160,7 @@ body.light-theme .online {
 .conversationHeader {
   all: unset;
   display: flex;
+  align-items: center;
   gap:20px;
   padding-bottom: 5px;
   cursor: pointer;

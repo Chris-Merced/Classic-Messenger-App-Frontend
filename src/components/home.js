@@ -429,8 +429,7 @@ const HomeChatComponent = () => {
       console.error("Error deleting message from database" + err.message);
     }
   };
-
-  console.log(isBlocked);
+console.log(!currentChat?.pictureURL)
   return (
     <div
       className="mainContent fadeInStaggered--1"
@@ -444,11 +443,12 @@ const HomeChatComponent = () => {
               <Link
                 className="conversationHeader"
                 to={`/userProfile/${profileID}`}
-              >
+              >{currentChat?.pictureURL ?
                 <img
                   className="currentChatImage"
                   src={currentChat.pictureURL}
-                ></img>
+                ></img> : <img className="profileImage" src="/defaultProfileImage.png"></img>
+              }
 
                 <h1 role="heading" aria-level="1">
                   {currentChat.name
