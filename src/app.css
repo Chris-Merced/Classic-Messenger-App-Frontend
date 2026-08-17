@@ -1786,3 +1786,272 @@ body.light-theme .signupHeader {
     transform: scale(0.9);
   }
 }
+
+/* Terraform / "citibank" page */
+
+.terraformPage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 900px;
+  margin-left: 4vw;
+  margin-right: auto;
+  padding-bottom: 40px;
+  gap: 20px;
+}
+
+.terraformPageHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.terraformPageSubtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+body.light-theme .terraformPageSubtitle {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.terraformPageActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.terraformActionButton {
+  all: unset;
+  cursor: pointer;
+  border: 2px solid;
+  border-color: var(--border-color-dark);
+  background-color: rgba(146, 146, 146, 0.5);
+  border-radius: 15px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.terraformActionButton:hover {
+  background-color: rgba(184, 183, 183, 0.5);
+}
+
+.terraformActionButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+body.light-theme .terraformActionButton {
+  border-color: var(--border-color-light);
+  background-color: rgba(179, 177, 177, 0.5);
+}
+
+.tfGroupList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.tfGroup {
+  border: 2px solid;
+  border-color: var(--border-color-dark);
+  border-radius: 15px;
+  background-color: rgba(129, 129, 129, 0.15);
+  overflow: hidden;
+}
+
+body.light-theme .tfGroup {
+  border-color: var(--border-color-light);
+  background-color: rgba(122, 122, 122, 0.1);
+}
+
+.tfGroupHeader {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tfGroupHeader:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .tfGroupHeader:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.tfChevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.tfChevron.open {
+  transform: rotate(180deg);
+}
+
+.tfFileName {
+  font-family: "Consolas", "Menlo", monospace;
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tfLineCount {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .tfLineCount {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.tfGroupBodyWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.tfGroupBodyWrapper.open {
+  grid-template-rows: 1fr;
+}
+
+.tfGroupBodyInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.tfCodeToolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .tfCodeToolbar {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tfCopyButton {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 8px 10px;
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.2s ease;
+}
+
+.tfCopyButton:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+body.light-theme .tfCopyButton {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+body.light-theme .tfCopyButton:hover {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.tfCode {
+  margin: 0;
+  padding: 14px 16px 18px;
+  overflow-x: auto;
+  background-color: rgba(20, 20, 20, 0.35);
+  font-family: "Consolas", "Menlo", monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  white-space: pre;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body.light-theme .tfCode {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.tf-comment {
+  color: #7a7a7a;
+  font-style: italic;
+}
+
+.tf-string {
+  color: #b3d19c;
+}
+
+.tf-keyword {
+  color: #e6af49;
+  font-weight: 600;
+}
+
+.tf-literal {
+  color: #d19cc8;
+}
+
+.tf-number {
+  color: #9cc7d1;
+}
+
+body.light-theme .tf-comment {
+  color: #7d7d7d;
+}
+
+body.light-theme .tf-string {
+  color: #4f7a37;
+}
+
+body.light-theme .tf-keyword {
+  color: #a8681e;
+}
+
+body.light-theme .tf-literal {
+  color: #8a4680;
+}
+
+body.light-theme .tf-number {
+  color: #2c6672;
+}
+
+@media (max-width: 767px) {
+  .terraformPage {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: 0;
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+  }
+
+  .terraformPageHeader h1 {
+    font-size: 1.4rem;
+  }
+
+  .tfFileName {
+    font-size: 0.85rem;
+  }
+
+  .tfCode {
+    font-size: 0.75rem;
+    padding: 12px 12px 16px;
+  }
+
+  .terraformActionButton {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+}
