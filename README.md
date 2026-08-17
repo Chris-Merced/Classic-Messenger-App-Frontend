@@ -1,5 +1,9 @@
 # Classic Messenger App - Frontend
 
+[You can experience the Classic Messenger app here!](https://classic-messenger-app-frontend-c6da0795ba58.herokuapp.com/)
+
+[You can also peruse the Backend Logic as well here!](https://github.com/Chris-Merced/Classic-Messenger-App-Backend)
+
 Classic Messenger is a responsive, intuitive, and modern real-time messaging application built with React. The frontend seamlessly integrates with a backend API to provide secure and efficient messaging capabilities, user authentication, friend management, and a sleek user interface that enhances user experience.
 
 ## Features
@@ -22,6 +26,8 @@ Classic Messenger is a responsive, intuitive, and modern real-time messaging app
 * **CSS** for responsive and clean UI design.
 
 ## Installation & Setup
+
+[Note that this setup needs to be married with the installation provided in the Backend repository which can be found here](https://github.com/Chris-Merced/Classic-Messenger-App-Backend)
 
 ### Prerequisites
 
